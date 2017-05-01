@@ -26,6 +26,7 @@ namespace IndieStudio
 
     private:
         std::unique_ptr<Ogre::Root> mRoot;
+        Ogre::RenderWindow *mWindow;
     };
 }
 

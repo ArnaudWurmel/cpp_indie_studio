@@ -23,7 +23,7 @@ IndieStudio::AppManager::AppManager() {
  * If ogre failed and didn't throw a exception, this function return false
  */
 bool IndieStudio::AppManager::loadApp() {
-    mRoot = std::unique_ptr<Ogre::Root>(new Ogre::Root());
+    mRoot = std::unique_ptr<Ogre::Root>(new Ogre::Root("resources/plugins.cfg", "resources/ogre.cfg"));
     initResources();
     if (mRoot->restoreConfig() == false && mRoot->showConfigDialog() == false)
         return false;
@@ -39,6 +39,7 @@ void IndieStudio::AppManager::execApp() {
 /*
  * Load resources.cfg
  * If no resources.cfg will generate by default because config isn't set yet.
+ * Can throw if resources.cfg not found
  */
 void IndieStudio::AppManager::initResources() {
     Ogre::ConfigFile configFile;
@@ -46,7 +47,7 @@ void IndieStudio::AppManager::initResources() {
     Ogre::String typeName;
     Ogre::String archName;
 
-    configFile.load("resources.cfg");
+    configFile.load("resources/resources.cfg");
     Ogre::ConfigFile::SectionIterator section = configFile.getSectionIterator();
     while (section.hasMoreElements())
     {
@@ -65,6 +66,4 @@ void IndieStudio::AppManager::initResources() {
 /*
  * Destructor, delete mRoot thank to std::unique_ptr
  */
-IndieStudio::AppManager::~AppManager() {
-
-}
+IndieStudio::AppManager::~AppManager() {}
