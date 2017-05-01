@@ -19,8 +19,10 @@ namespace IndieStudio
 
     public:
         bool loadApp();
-
         void execApp();
+
+    private:
+        void initResources();
 
     private:
         std::unique_ptr<Ogre::Root> mRoot;

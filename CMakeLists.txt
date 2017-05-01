@@ -1,11 +1,10 @@
-cmake_minimum_required(VERSION 3.7)
+cmake_minimum_required(VERSION 3.0.2)
 project(cpp_indie_studio)
 
 set(CMAKE_MODULE_PATH "/usr/local/lib/OGRE/cmake/")
 include_directories ("/usr/local/share/OGRE/Samples/Common/include/")
+set(CMAKE_CXX_FLAGS "-std=c++14")
 #set(CMAKE_CXX_FLAGS "-Wall -W -Werror -ansi -pedantic -g")
-set(CMAKE_CXX_STANDARD 14)
-
 find_package(OGRE REQUIRED)
 include_directories (${OGRE_INCLUDE_DIRS})
 

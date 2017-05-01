@@ -1,2 +1,10 @@
 .idea/
 cmake-build-debug/
+CMakeFiles/
+cmake-build-debug
+Makefile
+cmake_install.cmake
+CMakeCache.txt
+*.log
+ogre.cfg
+cpp_indie_studio
