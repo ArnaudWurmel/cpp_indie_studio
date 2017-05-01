@@ -23,10 +23,14 @@ namespace IndieStudio
 
     private:
         void initResources();
+        void createCamera();
+        void createViewPort();
 
     private:
         std::unique_ptr<Ogre::Root> mRoot;
         Ogre::RenderWindow *mWindow;
+        Ogre::SceneManager *mSceneMgr;
+        Ogre::Camera *mCamera;
     };
 }
 

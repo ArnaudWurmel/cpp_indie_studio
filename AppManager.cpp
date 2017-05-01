@@ -27,13 +27,43 @@ bool IndieStudio::AppManager::loadApp() {
     initResources();
     if (mRoot->restoreConfig() == false && mRoot->showConfigDialog() == false)
         return false;
+    mWindow = mRoot->initialise(true, "Starfelleh");
+    Ogre::TextureManager::getSingleton().setDefaultNumMipmaps(5);
+    Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
+    mSceneMgr = mRoot->createSceneManager("DefaultSceneManager", "Game Scene Manager");
+    mSceneMgr->setAmbientLight(Ogre::ColourValue(1.0f, 1.0f, 1.0f));
+    createCamera();
+    createViewPort();
+    Ogre::Entity *ent = mSceneMgr->createEntity("Ninja", "ninja.mesh");
+    ent->setCastShadows(true);
+    mSceneMgr->getRootSceneNode()->createChildSceneNode()->attachObject(ent);
     return true;
+}
+
+void IndieStudio::AppManager::createViewPort() {
+    Ogre::Viewport* vp = mWindow->addViewport(mCamera);
+    vp->setBackgroundColour(Ogre::ColourValue(0,0,0));
+    mCamera->setAspectRatio(Ogre::Real(vp->getActualWidth()) / Ogre::Real(vp->getActualHeight()));
+}
+
+void IndieStudio::AppManager::createCamera() {
+    mCamera = mSceneMgr->createCamera("PlayerCam");
+    mCamera->setPosition(Ogre::Vector3(0,10,500));
+    mCamera->lookAt(Ogre::Vector3(0,0,0));
+    mCamera->setNearClipDistance(5);
 }
 
 /*
  * Render Loop of the application
  */
 void IndieStudio::AppManager::execApp() {
+    mRoot->startRendering();
+    while (true)
+    {
+        Ogre::WindowEventUtilities::messagePump();
+        if (mWindow->isClosed() || mRoot->renderOneFrame() == false)
+            return ;
+    }
 }
 
 /*
