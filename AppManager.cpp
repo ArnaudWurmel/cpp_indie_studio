@@ -34,9 +34,21 @@ bool IndieStudio::AppManager::loadApp() {
     mSceneMgr->setAmbientLight(Ogre::ColourValue(1.0f, 1.0f, 1.0f));
     createCamera();
     createViewPort();
-    Ogre::Entity *ent = mSceneMgr->createEntity("Ninja", "ninja.mesh");
+    Ogre::Entity *ent = mSceneMgr->createEntity("ninja", "ninja.mesh");
     ent->setCastShadows(true);
     mSceneMgr->getRootSceneNode()->createChildSceneNode()->attachObject(ent);
+    Ogre::Plane	plane(Ogre::Vector3::UNIT_Y, 0);
+    Ogre::MeshManager::getSingleton().createPlane("ground",
+						  Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+						  plane,
+						  1500, 1500, 20, 20,
+						  true,
+						  1, 5, 5,
+						  Ogre::Vector3::UNIT_Z);
+    Ogre::Entity* groundEntity = mSceneMgr->createEntity("ground");
+    mSceneMgr->getRootSceneNode()->createChildSceneNode()->attachObject(groundEntity);
+    groundEntity->setCastShadows(false);
+    groundEntity->setMaterialName("Examples/Rockwall");
     return true;
 }
 
@@ -48,7 +60,7 @@ void IndieStudio::AppManager::createViewPort() {
 
 void IndieStudio::AppManager::createCamera() {
     mCamera = mSceneMgr->createCamera("PlayerCam");
-    mCamera->setPosition(Ogre::Vector3(0,10,500));
+    mCamera->setPosition(Ogre::Vector3(0,300,500));
     mCamera->lookAt(Ogre::Vector3(0,0,0));
     mCamera->setNearClipDistance(5);
 }
