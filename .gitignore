@@ -8,3 +8,4 @@ CMakeCache.txt
 *.log
 ogre.cfg
 cpp_indie_studio
+*.cbp
