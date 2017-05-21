@@ -14,6 +14,12 @@ namespace   Indie
         SceneDisplayer(Ogre::SceneManager *);
         ~SceneDisplayer();
 
+    public:
+        void    initScene();
+
+    private:
+        void    createGround();
+
     private:
         Ogre::SceneManager  *mSceneManager;
     };

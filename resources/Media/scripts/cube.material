@@ -1,0 +1,10 @@
+material Bomberman/Block
+{
+	technique
+	{
+		pass
+		{
+			texture	box.jpg
+		}
+	}
+}

@@ -7,6 +7,7 @@
 
 # include <memory>
 # include <Ogre.h>
+# include "../EventListener/EventListener.hh"
 # include "../SceneDisplayer/SceneDisplayer.hh"
 
 namespace Indie
@@ -26,6 +27,8 @@ namespace Indie
 
     private:
         std::unique_ptr<Ogre::Root> mRoot;
+        std::unique_ptr<Indie::SceneDisplayer> mSceneDisplayer;
+        std::unique_ptr<Indie::EventListener>   mEventListener;
         Ogre::RenderWindow          *mRenderWindow;
         Ogre::SceneManager          *mSceneManager;
         Ogre::Camera                *mCamera;

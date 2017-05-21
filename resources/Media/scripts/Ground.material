@@ -1,0 +1,13 @@
+material Bomberman/Ground
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture tron.jpg
+			}
+		}
+	}
+}
