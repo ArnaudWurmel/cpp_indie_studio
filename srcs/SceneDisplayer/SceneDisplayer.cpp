@@ -12,9 +12,14 @@ Indie::SceneDisplayer::SceneDisplayer(Ogre::SceneManager *sceneManager) {
 
 void Indie::SceneDisplayer::initScene() {
     this->createGround();
-    std::cout << mSceneManager->getRootSceneNode()->_getWorldAABB().getSize().x << std::endl;
     Block   block(mSceneManager, Ogre::Vector3(0, 0, 0));
-    std::cout << mSceneManager->getRootSceneNode()->_getWorldAABB().getSize().x << std::endl;
+    std::cout << block.getPosition().x << std::endl;
+    std::cout << block.getPosition().y << std::endl;
+    std::cout << block.getPosition().z << std::endl;
+    std::cout << block.getSize().x << std::endl;
+    std::cout << block.getSize().y << std::endl;
+    std::cout << block.getSize().z << std::endl;
+
 }
 
 void Indie::SceneDisplayer::createGround() {
