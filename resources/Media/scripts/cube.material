@@ -18,6 +18,9 @@ material Bomberman/BreakableBlock
 	{
 		pass
 		{
+		    lighting off
+		    scene_blend alpha_blend
+
 			texture_unit
 			{
 				texture cubeBreakable.png

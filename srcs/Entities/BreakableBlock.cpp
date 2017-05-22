@@ -9,7 +9,7 @@ Indie::BreakableBlock::BreakableBlock(Ogre::SceneManager *sceneManager, Ogre::Ve
 }
 
 bool Indie::BreakableBlock::hittedByExplosion() const {
-    return false;
+    return true;
 }
 
 Indie::BreakableBlock::~BreakableBlock() {}
