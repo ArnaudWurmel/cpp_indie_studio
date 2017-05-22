@@ -12,7 +12,7 @@ material Bomberman/Block
 	}
 }
 
-material Bomberman/Breakable
+material Bomberman/BreakableBlock
 {
 	technique
 	{

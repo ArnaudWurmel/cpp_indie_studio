@@ -16,6 +16,7 @@ namespace Indie {
 
     public:
         static AEntity    *createBlock(Ogre::SceneManager *, Ogre::Vector3 const&);
+        static AEntity    *createDynamicBlock(Ogre::SceneManager *, Ogre::Vector3 const&);
     };
 }
 

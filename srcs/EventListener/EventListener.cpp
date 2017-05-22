@@ -83,7 +83,6 @@ void Indie::EventListener::handleKeyboard() {
     if (mKeyboard->isKeyDown(OIS::KC_DOWN))
         move = Ogre::Vector3(move.x, move.y - 10, move.z);
     mSceneManager->getCamera("MainCam")->setPosition(move);
-    std::cout << move.x << " " << move.y << " " << move.z << std::endl;
     //mSceneManager->getCamera("MainCam")->lookAt(Ogre::Vector3(0, 0, 0));
 }
 
