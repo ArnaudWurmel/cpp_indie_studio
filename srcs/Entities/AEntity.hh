@@ -19,8 +19,8 @@ namespace Indie
         virtual bool hittedByExplosion() const = 0;
 
     public:
-        virtual Ogre::Vector3 const&    getSize() const;
-        virtual Ogre::Vector3 const&    getPosition() const;
+        virtual Ogre::Vector3 getSize() const;
+        virtual Ogre::Vector3 const *   getPosition() const;
 
     protected:
         Ogre::SceneNode *mSceneNode;

@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include "SceneDisplayer.hh"
+#include "../Entities/EntityManager.hh"
 #include "../Entities/Block.hh"
 
 Indie::SceneDisplayer::SceneDisplayer(Ogre::SceneManager *sceneManager) {
@@ -11,15 +12,13 @@ Indie::SceneDisplayer::SceneDisplayer(Ogre::SceneManager *sceneManager) {
 }
 
 void Indie::SceneDisplayer::initScene() {
-    this->createGround();
-    Block   block(mSceneManager, Ogre::Vector3(0, 0, 0));
-    std::cout << block.getPosition().x << std::endl;
-    std::cout << block.getPosition().y << std::endl;
-    std::cout << block.getPosition().z << std::endl;
-    std::cout << block.getSize().x << std::endl;
-    std::cout << block.getSize().y << std::endl;
-    std::cout << block.getSize().z << std::endl;
+    MapParser   mapParser("resources/maps/level0");
 
+    this->createGround();
+    _map = mapParser.getMap();
+    if (_map.size() > 0) {
+        this->createMap();
+    }
 }
 
 void Indie::SceneDisplayer::createGround() {
@@ -37,6 +36,33 @@ void Indie::SceneDisplayer::createGround() {
     mSceneManager->getRootSceneNode()->createChildSceneNode()->attachObject(groundEntity);
     groundEntity->setCastShadows(false);
     groundEntity->setMaterialName("Bomberman/Ground");
+}
+
+void Indie::SceneDisplayer::createMap() {
+    std::vector<std::vector<MapParser::TileType> >::iterator    it;
+    int    i;
+    int    j;
+
+    it = _map.begin();
+    i = 0;
+    while (it != _map.end()) {
+        std::vector<MapParser::TileType>::iterator  it_line;
+        j = 0;
+        it_line = (*it).begin();
+        while (it_line != (*it).end()) {
+            Indie::AEntity  *entity = EntityManager::createEntity(*it_line, mSceneManager, Ogre::Vector3(-30 * i, 15, -30 * j));
+
+            if (entity != nullptr) {
+                _entityList.push_back(std::unique_ptr<AEntity>(entity));
+            }
+            else
+                std::cout << "Null ptr" << std::endl;
+            ++it_line;
+            ++j;
+        }
+        ++i;
+        ++it;
+    }
 }
 
 Indie::SceneDisplayer::~SceneDisplayer() {}
