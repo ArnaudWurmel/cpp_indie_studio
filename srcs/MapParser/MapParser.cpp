@@ -32,7 +32,6 @@ void    Indie::MapParser::loadMap(std::string const& mapPath)
             std::vector<TileType>   lineVector;
 
             while (it != line.end()) {
-                std::cout << *it << std::endl;
                 if (_convert.find(*it) != _convert.end()) {
                     lineVector.push_back(_convert[*it]);
                 }

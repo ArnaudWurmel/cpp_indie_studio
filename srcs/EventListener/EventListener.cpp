@@ -2,6 +2,7 @@
 // Created by wurmel on 21/05/17.
 //
 
+#include <iostream>
 #include "EventListener.hh"
 
 Indie::EventListener::EventListener(Ogre::SceneManager *sceneManager,
@@ -78,11 +79,12 @@ void Indie::EventListener::handleKeyboard() {
     if (mKeyboard->isKeyDown(OIS::KC_D))
         move = Ogre::Vector3(move.x, move.y, move.z - 1);
     if (mKeyboard->isKeyDown(OIS::KC_UP))
-        move = Ogre::Vector3(move.x, move.y + 1, move.z);
+        move = Ogre::Vector3(move.x, move.y + 10, move.z);
     if (mKeyboard->isKeyDown(OIS::KC_DOWN))
-        move = Ogre::Vector3(move.x, move.y - 1, move.z);
+        move = Ogre::Vector3(move.x, move.y - 10, move.z);
     mSceneManager->getCamera("MainCam")->setPosition(move);
-    mSceneManager->getCamera("MainCam")->lookAt(Ogre::Vector3(0, 0, 0));
+    std::cout << move.x << " " << move.y << " " << move.z << std::endl;
+    //mSceneManager->getCamera("MainCam")->lookAt(Ogre::Vector3(0, 0, 0));
 }
 
 Indie::EventListener::~EventListener() {}

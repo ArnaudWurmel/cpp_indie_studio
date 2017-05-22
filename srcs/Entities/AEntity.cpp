@@ -10,10 +10,8 @@ Indie::AEntity::AEntity(Ogre::SceneManager *sceneManager, Ogre::Vector3 const &e
     mSceneNode->attachObject(mEntity);
 }
 
-Ogre::Vector3 const*    Indie::AEntity::getPosition() const {
-    Ogre::AxisAlignedBox    aab = mEntity->getBoundingBox();
-
-    return aab.getAllCorners();
+Ogre::Vector3    Indie::AEntity::getPosition() const {
+    return mSceneNode->getPosition();
 }
 
 Ogre::Vector3    Indie::AEntity::getSize() const {

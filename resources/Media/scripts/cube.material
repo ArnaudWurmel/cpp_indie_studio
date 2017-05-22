@@ -4,7 +4,25 @@ material Bomberman/Block
 	{
 		pass
 		{
-			texture	tron.jpg
+			texture_unit
+			{
+				texture cubeFixe.png
+			}
 		}
 	}
 }
+
+material Bomberman/Breakable
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture cubeBreakable.png
+			}
+		}
+	}
+}
+

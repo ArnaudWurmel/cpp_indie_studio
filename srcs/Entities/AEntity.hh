@@ -20,7 +20,7 @@ namespace Indie
 
     public:
         virtual Ogre::Vector3 getSize() const;
-        virtual Ogre::Vector3 const *   getPosition() const;
+        virtual Ogre::Vector3 getPosition() const;
 
     protected:
         Ogre::SceneNode *mSceneNode;

@@ -27,7 +27,7 @@ void Indie::SceneDisplayer::createGround() {
             "ground",
             Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
             plane,
-            1500, 1500, 20, 20,
+            5000, 5000, 20, 20,
             true,
             1, 5, 5,
             Ogre::Vector3::UNIT_Z
@@ -50,13 +50,15 @@ void Indie::SceneDisplayer::createMap() {
         j = 0;
         it_line = (*it).begin();
         while (it_line != (*it).end()) {
-            Indie::AEntity  *entity = EntityManager::createEntity(*it_line, mSceneManager, Ogre::Vector3(-30 * i, 15, -30 * j));
+            Indie::AEntity  *entity = EntityManager::createEntity(*it_line, mSceneManager, Ogre::Vector3(-100 * i, 50, -100 * j));
 
             if (entity != nullptr) {
                 _entityList.push_back(std::unique_ptr<AEntity>(entity));
             }
-            else
-                std::cout << "Null ptr" << std::endl;
+            if (_map.size() / 2 == i && (*it).size() / 2 == j) {
+                mSceneManager->getCamera("MainCam")->setPosition(Ogre::Vector3(0, 100 * _map.size(), -100 * j));
+                mSceneManager->getCamera("MainCam")->lookAt(Ogre::Vector3(-100 * i, 0, -100 * j));
+            }
             ++it_line;
             ++j;
         }
