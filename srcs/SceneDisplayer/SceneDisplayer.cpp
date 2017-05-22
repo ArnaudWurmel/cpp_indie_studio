@@ -2,6 +2,7 @@
 // Created by wurmel on 13/05/17.
 //
 
+#include <iostream>
 #include "SceneDisplayer.hh"
 #include "../Entities/Block.hh"
 
@@ -11,7 +12,9 @@ Indie::SceneDisplayer::SceneDisplayer(Ogre::SceneManager *sceneManager) {
 
 void Indie::SceneDisplayer::initScene() {
     this->createGround();
+    std::cout << mSceneManager->getRootSceneNode()->_getWorldAABB().getSize().x << std::endl;
     Block   block(mSceneManager, Ogre::Vector3(0, 0, 0));
+    std::cout << mSceneManager->getRootSceneNode()->_getWorldAABB().getSize().x << std::endl;
 }
 
 void Indie::SceneDisplayer::createGround() {
@@ -30,6 +33,5 @@ void Indie::SceneDisplayer::createGround() {
     groundEntity->setCastShadows(false);
     groundEntity->setMaterialName("Bomberman/Ground");
 }
-
 
 Indie::SceneDisplayer::~SceneDisplayer() {}
