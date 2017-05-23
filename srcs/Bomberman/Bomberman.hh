@@ -27,7 +27,7 @@ namespace Indie
 
     private:
         std::unique_ptr<Ogre::Root> mRoot;
-        std::unique_ptr<Indie::SceneDisplayer> mSceneDisplayer;
+        std::shared_ptr<Indie::SceneDisplayer> mSceneDisplayer;
         std::unique_ptr<Indie::EventListener>   mEventListener;
         Ogre::RenderWindow          *mRenderWindow;
         Ogre::SceneManager          *mSceneManager;

@@ -8,6 +8,7 @@ Indie::AEntity::AEntity(Ogre::SceneManager *sceneManager, Ogre::Vector3 const &e
     mEntity = sceneManager->createEntity(entityName);
     mSceneNode = sceneManager->getRootSceneNode()->createChildSceneNode(entityPos);
     mSceneNode->attachObject(mEntity);
+    mTransformation = Ogre::Vector3(1, 1, 1);
 }
 
 Ogre::Vector3    Indie::AEntity::getPosition() const {
@@ -17,7 +18,21 @@ Ogre::Vector3    Indie::AEntity::getPosition() const {
 Ogre::Vector3    Indie::AEntity::getSize() const {
     Ogre::AxisAlignedBox    aab = mEntity->getBoundingBox();
 
-    return aab.getSize();
+    return Ogre::Vector3(aab.getSize().x * mTransformation.x, aab.getSize().y * mTransformation.y, aab.getSize().z * mTransformation.z);
+}
+
+bool Indie::AEntity::collide(const Indie::AEntity& other) const {
+
+    return false;
+}
+
+void Indie::AEntity::move(Ogre::Vector3 const& transform)
+{
+    mSceneNode->translate(transform);
+}
+
+void Indie::AEntity::rotate(const Indie::AEntity::Direction &dir) {
+    static_cast<void>(dir);
 }
 
 Indie::AEntity::~AEntity() {}

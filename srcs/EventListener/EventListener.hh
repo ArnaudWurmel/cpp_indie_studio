@@ -6,7 +6,7 @@
 #define CPP_INDIE_STUDIO_EVENTLISTENER_HH
 
 # include <map>
-
+# include "AEventRegister.hh"
 # include <OgreWindowEventUtilities.h>
 # include <Ogre.h>
 # include <OIS/OIS.h>
@@ -16,6 +16,12 @@ namespace Indie {
     public:
         EventListener(Ogre::SceneManager *, Ogre::RenderWindow *);
         ~EventListener();
+
+    public:
+        /*
+         * Start registering event if mEventRegister is set
+         */
+        void    setUpEventRegister(AEventRegister *);
 
     public:
         /*
@@ -33,6 +39,9 @@ namespace Indie {
 
     private:
         void    initOIS();
+
+    private:
+        AEventRegister  *mEventRegister;
 
     private:
         Ogre::SceneManager  *mSceneManager;

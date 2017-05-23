@@ -12,6 +12,18 @@ namespace Indie
     class   AEntity
     {
     public:
+        enum Direction
+        {
+            UP = 0,
+            DOWN,
+            LEFT,
+            RIGHT,
+            UP_LEFT,
+            UP_RIGHT,
+            DOWN_LEFT,
+            DOWN_RIGHT
+        };
+    public:
         AEntity(Ogre::SceneManager *, Ogre::Vector3 const&, const char *);
         virtual ~AEntity();
 
@@ -19,12 +31,17 @@ namespace Indie
         virtual bool hittedByExplosion() const = 0;
 
     public:
-        virtual Ogre::Vector3 getSize() const;
-        virtual Ogre::Vector3 getPosition() const;
+        Ogre::Vector3 getSize() const;
+        Ogre::Vector3 getPosition() const;
+        void    move(Ogre::Vector3 const&);
+        virtual bool collide(AEntity const&) const;
+        virtual void    rotate(Direction const& dir);
+
 
     protected:
         Ogre::SceneNode *mSceneNode;
         Ogre::Entity    *mEntity;
+        Ogre::Vector3   mTransformation;
     };
 }
 

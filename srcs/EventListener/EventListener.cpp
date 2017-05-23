@@ -9,6 +9,7 @@ Indie::EventListener::EventListener(Ogre::SceneManager *sceneManager,
                                     Ogre::RenderWindow *renderWindow) {
     mSceneManager = sceneManager;
     mRenderWindow = renderWindow;
+    mEventRegister = NULL;
     this->initOIS();
 }
 
@@ -24,6 +25,11 @@ void    Indie::EventListener::initOIS() {
     mInputManager = OIS::InputManager::createInputSystem(pl);
     mKeyboard = static_cast<OIS::Keyboard*>(mInputManager->createInputObject( OIS::OISKeyboard, false ));
     mMouse = static_cast<OIS::Mouse*>(mInputManager->createInputObject( OIS::OISMouse, false ));
+}
+
+void    Indie::EventListener::setUpEventRegister(AEventRegister *eventRegister) {
+    Ogre::LogManager::getSingletonPtr()->logMessage("Event register setted.");
+    mEventRegister = eventRegister;
 }
 
 /***************************************
@@ -68,22 +74,9 @@ bool Indie::EventListener::frameRenderingQueued(const Ogre::FrameEvent &evt) {
 }
 
 void Indie::EventListener::handleKeyboard() {
-    Ogre::Vector3   move(mSceneManager->getCamera("MainCam")->getPositionForViewUpdate());
-
-    if (mKeyboard->isKeyDown(OIS::KC_Z))
-        move = Ogre::Vector3(move.x - 10, move.y, move.z);
-    if (mKeyboard->isKeyDown(OIS::KC_S))
-        move = Ogre::Vector3(move.x + 10, move.y, move.z);
-    if (mKeyboard->isKeyDown(OIS::KC_Q))
-        move = Ogre::Vector3(move.x, move.y, move.z + 10);
-    if (mKeyboard->isKeyDown(OIS::KC_D))
-        move = Ogre::Vector3(move.x, move.y, move.z - 10);
-    if (mKeyboard->isKeyDown(OIS::KC_UP))
-        move = Ogre::Vector3(move.x, move.y + 10, move.z);
-    if (mKeyboard->isKeyDown(OIS::KC_DOWN))
-        move = Ogre::Vector3(move.x, move.y - 10, move.z);
-    mSceneManager->getCamera("MainCam")->setPosition(move);
-    mSceneManager->getCamera("MainCam")->lookAt(Ogre::Vector3(0, 0, 0));
+    if (mEventRegister) {
+        mEventRegister->registerKeyboardEvent(mKeyboard);
+    }
 }
 
 Indie::EventListener::~EventListener() {}

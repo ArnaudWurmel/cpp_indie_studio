@@ -23,11 +23,12 @@ bool Indie::Bomberman::loadApp() {
     mSceneManager = mRoot->createSceneManager("DefaultSceneManager", "Game Scene Manager");
     mSceneManager->setAmbientLight(Ogre::ColourValue(1.0f, 1.0f, 1.0f));
     this->createCamera();
-    mSceneDisplayer = std::unique_ptr<Indie::SceneDisplayer>(new Indie::SceneDisplayer(mSceneManager));
+    mSceneDisplayer = std::shared_ptr<Indie::SceneDisplayer>(new Indie::SceneDisplayer(mSceneManager));
     mSceneDisplayer->initScene();
     mEventListener = std::unique_ptr<Indie::EventListener>(new Indie::EventListener(mSceneManager, mRenderWindow));
     Ogre::WindowEventUtilities::addWindowEventListener(mRenderWindow, mEventListener.get());
     mRoot->addFrameListener(mEventListener.get());
+    mEventListener->setUpEventRegister(mSceneDisplayer.get());
     return true;
 }
 
@@ -35,7 +36,7 @@ void    Indie::Bomberman::createCamera() {
     Ogre::Viewport  *vp;
 
     mCamera = mSceneManager->createCamera("MainCam");
-    mCamera->setPosition(Ogre::Vector3(0, 2000, 0));
+    mCamera->setPosition(Ogre::Vector3(-10, 500, 0));
     mCamera->lookAt(Ogre::Vector3(0, 0, 0));
     mCamera->setNearClipDistance(5);
     vp = mRenderWindow->addViewport(mCamera);

@@ -23,6 +23,7 @@ namespace Indie
 
     public:
         bool hittedByExplosion() const;
+        virtual void    rotate(Direction const& dir);
 
     private:
         PlayerType  _pType;
