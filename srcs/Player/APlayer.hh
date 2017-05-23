@@ -21,6 +21,9 @@ namespace Indie
         APlayer(PlayerType const& pType, Ogre::Vector3 const&, Ogre::SceneManager *, const char *);
         ~APlayer();
 
+    public:
+        bool hittedByExplosion() const;
+
     private:
         PlayerType  _pType;
     };

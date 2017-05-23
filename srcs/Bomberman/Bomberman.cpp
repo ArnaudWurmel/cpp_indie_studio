@@ -35,7 +35,7 @@ void    Indie::Bomberman::createCamera() {
     Ogre::Viewport  *vp;
 
     mCamera = mSceneManager->createCamera("MainCam");
-    mCamera->setPosition(Ogre::Vector3(100, 200, 0));
+    mCamera->setPosition(Ogre::Vector3(0, 2000, 0));
     mCamera->lookAt(Ogre::Vector3(0, 0, 0));
     mCamera->setNearClipDistance(5);
     vp = mRenderWindow->addViewport(mCamera);

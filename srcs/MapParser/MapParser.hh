@@ -17,7 +17,9 @@ namespace   Indie {
             EMPTY = 0,
             STATIC_BLOCK = 1,
             DYNAMIC_BLOCK,
-            EXPLOSION
+            EXPLOSION,
+            PLAYER,
+            IA
         };
 
     public:

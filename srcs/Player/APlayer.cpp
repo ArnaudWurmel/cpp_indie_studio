@@ -12,4 +12,9 @@ Indie::APlayer::APlayer(const Indie::APlayer::PlayerType &pType,
 
 }
 
+
+bool Indie::APlayer::hittedByExplosion() const {
+    return true;
+}
+
 Indie::APlayer::~APlayer() {}

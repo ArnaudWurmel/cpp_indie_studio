@@ -71,19 +71,19 @@ void Indie::EventListener::handleKeyboard() {
     Ogre::Vector3   move(mSceneManager->getCamera("MainCam")->getPositionForViewUpdate());
 
     if (mKeyboard->isKeyDown(OIS::KC_Z))
-        move = Ogre::Vector3(move.x - 1, move.y, move.z);
+        move = Ogre::Vector3(move.x - 10, move.y, move.z);
     if (mKeyboard->isKeyDown(OIS::KC_S))
-        move = Ogre::Vector3(move.x + 1, move.y, move.z);
+        move = Ogre::Vector3(move.x + 10, move.y, move.z);
     if (mKeyboard->isKeyDown(OIS::KC_Q))
-        move = Ogre::Vector3(move.x, move.y, move.z + 1);
+        move = Ogre::Vector3(move.x, move.y, move.z + 10);
     if (mKeyboard->isKeyDown(OIS::KC_D))
-        move = Ogre::Vector3(move.x, move.y, move.z - 1);
+        move = Ogre::Vector3(move.x, move.y, move.z - 10);
     if (mKeyboard->isKeyDown(OIS::KC_UP))
         move = Ogre::Vector3(move.x, move.y + 10, move.z);
     if (mKeyboard->isKeyDown(OIS::KC_DOWN))
         move = Ogre::Vector3(move.x, move.y - 10, move.z);
     mSceneManager->getCamera("MainCam")->setPosition(move);
-    //mSceneManager->getCamera("MainCam")->lookAt(Ogre::Vector3(0, 0, 0));
+    mSceneManager->getCamera("MainCam")->lookAt(Ogre::Vector3(0, 0, 0));
 }
 
 Indie::EventListener::~EventListener() {}

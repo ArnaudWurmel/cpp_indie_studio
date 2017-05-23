@@ -5,7 +5,6 @@
 #include <iostream>
 #include "SceneDisplayer.hh"
 #include "../Entities/EntityManager.hh"
-#include "../Entities/Block.hh"
 
 Indie::SceneDisplayer::SceneDisplayer(Ogre::SceneManager *sceneManager) {
     mSceneManager = sceneManager;
@@ -50,14 +49,11 @@ void Indie::SceneDisplayer::createMap() {
         j = 0;
         it_line = (*it).begin();
         while (it_line != (*it).end()) {
-            Indie::AEntity  *entity = EntityManager::createEntity(*it_line, mSceneManager, Ogre::Vector3(-100 * i, 50, -100 * j));
-
+            long x = _map.size() * 100 / 2 - (i * 100);
+            long z = ((*it).size() * 100) / 2 - (100 * j);
+            Indie::AEntity  *entity = EntityManager::createEntity(*it_line, mSceneManager, Ogre::Vector3(x, 50, z));
             if (entity != nullptr) {
                 _entityList.push_back(std::unique_ptr<AEntity>(entity));
-            }
-            if (_map.size() / 2 == i && (*it).size() / 2 == j) {
-                mSceneManager->getCamera("MainCam")->setPosition(Ogre::Vector3(0, 100 * _map.size(), -100 * j));
-                mSceneManager->getCamera("MainCam")->lookAt(Ogre::Vector3(-100 * i, 0, -100 * j));
             }
             ++it_line;
             ++j;
