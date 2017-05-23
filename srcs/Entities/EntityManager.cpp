@@ -14,6 +14,7 @@ Indie::AEntity *Indie::EntityManager::createEntity(Indie::MapParser::TileType co
     functionPtr.insert(std::make_pair(MapParser::TileType::STATIC_BLOCK, &Indie::EntityManager::createBlock));
     functionPtr.insert(std::make_pair(MapParser::TileType::DYNAMIC_BLOCK, &Indie::EntityManager::createDynamicBlock));
     functionPtr.insert(std::make_pair(MapParser::TileType::PLAYER, &Indie::EntityManager::createHuman));
+    functionPtr.insert(std::make_pair(MapParser::TileType::DYNAMIC_PARTICLE, &Indie::EntityManager::createDynamicParticle));
     if (functionPtr.find(tileType) != functionPtr.end()) {
         return (*functionPtr[tileType])(sceneManager, entityPos);
     }
@@ -30,4 +31,8 @@ Indie::AEntity  *Indie::EntityManager::createDynamicBlock(Ogre::SceneManager *sc
 
 Indie::AEntity  *Indie::EntityManager::createHuman(Ogre::SceneManager *sceneManager, Ogre::Vector3 const& entityPos) {
     return new Indie::HumanPlayer(entityPos, sceneManager);
+}
+
+Indie::AEntity  *Indie::EntityManager::createDynamicParticle(Ogre::SceneManager *sceneManager, Ogre::Vector3 const& entityPos) {
+    return new Indie::BreakableBlock(sceneManager, entityPos, AEntity::BlockType::PARTICLE);
 }

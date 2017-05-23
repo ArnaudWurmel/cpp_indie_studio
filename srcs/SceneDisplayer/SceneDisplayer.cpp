@@ -65,6 +65,19 @@ void Indie::SceneDisplayer::createMap() {
     }
 }
 
+void    Indie::SceneDisplayer::updateScene() {
+    std::vector<std::unique_ptr<AEntity> >::iterator    it;
+
+    it = _entityList.begin();
+    while (it != _entityList.end()) {
+        if (!(*it)->updateFromLoop(mSceneManager)) {
+            _entityList.erase(it);
+        }
+        else
+            ++it;
+    }
+}
+
 Indie::SceneDisplayer::~SceneDisplayer() {}
 
 /**********************************
@@ -93,6 +106,19 @@ void    Indie::SceneDisplayer::registerKeyboardEvent(OIS::Keyboard *keyboard) {
     if (camera) {
         camera->setPosition(Ogre::Vector3(_player->getPosition().x - 200, camera->getPositionForViewUpdate().y, _player->getPosition().z));
         camera->lookAt(_player->getPosition());
+    }
+
+    if (keyboard->isKeyDown(OIS::KC_M)) {
+        std::vector<std::unique_ptr<AEntity> >::iterator    it;
+
+        it = _entityList.begin();
+        while (it != _entityList.end()) {
+            if ((*it)->hittedByExplosion()) {
+                (*it)->explode(mSceneManager);
+                return ;
+            }
+            ++it;
+        }
     }
 }
 

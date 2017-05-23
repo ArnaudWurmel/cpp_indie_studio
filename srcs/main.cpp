@@ -3,6 +3,8 @@
 //
 
 #include <iostream>
+#include <cstdlib>
+#include <ctime>
 #include <exception>
 #include "Bomberman/Bomberman.hh"
 
@@ -19,6 +21,7 @@
 {
     Indie::Bomberman    bomberman;
 
+    std::srand(std::time(0));
     try {
         if (!bomberman.loadApp())
         {

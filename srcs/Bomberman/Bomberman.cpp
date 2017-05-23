@@ -50,6 +50,7 @@ void    Indie::Bomberman::createCamera() {
 void Indie::Bomberman::runApp() {
     while (true) {
         Ogre::WindowEventUtilities::messagePump();
+        mSceneDisplayer->updateScene();
         if (mRenderWindow->isClosed() || !mRoot->renderOneFrame())
             return ;
     }

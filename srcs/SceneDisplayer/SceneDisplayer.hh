@@ -23,6 +23,7 @@ namespace   Indie
 
     public:
         void    initScene();
+        void    updateScene();
 
     private:
         void    createGround();

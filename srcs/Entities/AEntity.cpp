@@ -2,6 +2,7 @@
 // Created by wurmel on 21/05/17.
 //
 
+#include <iostream>
 #include "AEntity.hh"
 
 Indie::AEntity::AEntity(Ogre::SceneManager *sceneManager, Ogre::Vector3 const &entityPos, const char *entityName) {
@@ -33,6 +34,23 @@ void Indie::AEntity::move(Ogre::Vector3 const& transform)
 
 void Indie::AEntity::rotate(const Indie::AEntity::Direction &dir) {
     static_cast<void>(dir);
+}
+
+void    Indie::AEntity::setScale(Ogre::Vector3 const& scale) {
+    mSceneNode->setScale(scale);
+}
+
+void    Indie::AEntity::explode(Ogre::SceneManager *sceneManager) {
+    sceneManager->destroyEntity(mEntity);
+    mEntity = NULL;
+    sceneManager->destroySceneNode(mSceneNode);
+    mSceneNode = NULL;
+    std::cout << "End of destruction" << std::endl;
+}
+
+bool    Indie::AEntity::updateFromLoop(Ogre::SceneManager *sceneManager) {
+    static_cast<void>(sceneManager);
+    return true;
 }
 
 Indie::AEntity::~AEntity() {}

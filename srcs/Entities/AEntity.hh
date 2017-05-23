@@ -12,6 +12,12 @@ namespace Indie
     class   AEntity
     {
     public:
+        enum BlockType
+        {
+            NORMAL,
+            PARTICLE
+        };
+    public:
         enum Direction
         {
             UP = 0,
@@ -33,10 +39,12 @@ namespace Indie
     public:
         Ogre::Vector3 getSize() const;
         Ogre::Vector3 getPosition() const;
+        void    setScale(Ogre::Vector3 const&);
         void    move(Ogre::Vector3 const&);
         virtual bool collide(AEntity const&) const;
         virtual void    rotate(Direction const& dir);
-
+        virtual void    explode(Ogre::SceneManager *);
+        virtual bool    updateFromLoop(Ogre::SceneManager *);
 
     protected:
         Ogre::SceneNode *mSceneNode;
