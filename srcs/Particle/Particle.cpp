@@ -2,28 +2,25 @@
 // Created by wurmel on 23/05/17.
 //
 
+#include <iostream>
 #include <cstdlib>
 #include "Particle.hh"
+#include "../Config/Config.hh"
 
 Indie::Particle::Particle(Indie::AEntity *entity) {
     mEntity = std::unique_ptr<Indie::AEntity>(entity);
     _power = 10;
-    _dirVector = Ogre::Vector3(-10 + std::rand() % 20, 5 + (std::rand() % 10), -10 + std::rand() % 20);
-    _up = true;
+    t = 0;
+    _dirVector = Ogre::Vector3(-10 + std::rand() % 20, 20 + (std::rand() % 80), -10 + std::rand() % 20);
     mEntity->setScale(Ogre::Vector3(0.1f, 0.1f, 0.1f));
 }
 
 bool Indie::Particle::updateParticle() {
-    if (mEntity->getPosition().y >= _power)
-        _up = false;
-    if (_up) {
-        mEntity->move(_dirVector);
-        int rotate = static_cast<int>(mEntity->getPosition().y);
-        mEntity->rotate(static_cast<AEntity::Direction>(rotate % 8));
-    }
-    else {
-        mEntity->move(Ogre::Vector3(- _dirVector.x, - _dirVector.y, - _dirVector.z));
-    }
+    Ogre::Real y;
+
+    y = -(1.0f/2.0f) * Indie::Config::getGravity() * (t * t);
+    mEntity->move(Ogre::Vector3(_dirVector.x, y + _dirVector.y, _dirVector.z));
+    t += 1;
     return mEntity->getPosition().y >= 0;
 }
 

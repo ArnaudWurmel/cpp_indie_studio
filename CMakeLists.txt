@@ -11,7 +11,7 @@ include_directories (${OGRE_INCLUDE_DIRS})
 find_package(OIS REQUIRED)
 
 set(SOURCE_FILES
-        srcs/main.cpp srcs/SceneDisplayer/SceneDisplayer.cpp srcs/SceneDisplayer/SceneDisplayer.hh srcs/Bomberman/Bomberman.cpp srcs/Bomberman/Bomberman.hh srcs/Entities/Block.cpp srcs/Entities/Block.hh srcs/Entities/AEntity.hh srcs/Entities/AEntity.cpp srcs/EventListener/EventListener.cpp srcs/EventListener/EventListener.hh srcs/MapParser/MapParser.cpp srcs/MapParser/MapParser.hh srcs/Entities/EntityManager.cpp srcs/Entities/EntityManager.hh srcs/Entities/BreakableBlock.cpp srcs/Entities/BreakableBlock.hh srcs/Player/APlayer.cpp srcs/Player/APlayer.hh srcs/Player/HumanPlayer.cpp srcs/Player/HumanPlayer.hh srcs/EventListener/AEventRegister.hh srcs/Particle/Particle.cpp srcs/Particle/Particle.hh)
+        srcs/main.cpp srcs/SceneDisplayer/SceneDisplayer.cpp srcs/SceneDisplayer/SceneDisplayer.hh srcs/Bomberman/Bomberman.cpp srcs/Bomberman/Bomberman.hh srcs/Entities/Block.cpp srcs/Entities/Block.hh srcs/Entities/AEntity.hh srcs/Entities/AEntity.cpp srcs/EventListener/EventListener.cpp srcs/EventListener/EventListener.hh srcs/MapParser/MapParser.cpp srcs/MapParser/MapParser.hh srcs/Entities/EntityManager.cpp srcs/Entities/EntityManager.hh srcs/Entities/BreakableBlock.cpp srcs/Entities/BreakableBlock.hh srcs/Player/APlayer.cpp srcs/Player/APlayer.hh srcs/Player/HumanPlayer.cpp srcs/Player/HumanPlayer.hh srcs/EventListener/AEventRegister.hh srcs/Particle/Particle.cpp srcs/Particle/Particle.hh srcs/Config/Config.cpp srcs/Config/Config.hh)
 add_executable(cpp_indie_studio ${SOURCE_FILES})
 
 target_link_libraries(cpp_indie_studio ${OGRE_LIBRARY} ${OIS_LIBRARY})

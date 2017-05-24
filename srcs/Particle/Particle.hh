@@ -25,7 +25,7 @@ namespace Indie {
         std::unique_ptr<Indie::AEntity> mEntity;
         int _power;
         Ogre::Vector3   _dirVector;
-        bool            _up;
+        int t;
     };
 }
 
