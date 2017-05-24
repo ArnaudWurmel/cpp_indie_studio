@@ -7,8 +7,8 @@
 
 Indie::Particle::Particle(Indie::AEntity *entity) {
     mEntity = std::unique_ptr<Indie::AEntity>(entity);
-    _power = (std::rand() % 500) + 300;
-    _dirVector = Ogre::Vector3(std::rand() % 10, (std::rand() % 10) + 5, std::rand() % 10);
+    _power = 10;
+    _dirVector = Ogre::Vector3(-10 + std::rand() % 20, 5 + (std::rand() % 10), -10 + std::rand() % 20);
     _up = true;
     mEntity->setScale(Ogre::Vector3(0.1f, 0.1f, 0.1f));
 }

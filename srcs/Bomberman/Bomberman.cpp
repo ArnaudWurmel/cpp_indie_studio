@@ -2,6 +2,7 @@
 // Created by wurmel on 13/05/17.
 //
 
+#include <iostream>
 #include "Bomberman.hh"
 
 Indie::Bomberman::Bomberman() {
@@ -53,6 +54,7 @@ void Indie::Bomberman::runApp() {
         mSceneDisplayer->updateScene();
         if (mRenderWindow->isClosed() || !mRoot->renderOneFrame())
             return ;
+        std::cout << mRenderWindow->getLastFPS() << std::endl;
     }
 }
 

@@ -43,7 +43,6 @@ bool    Indie::BreakableBlock::updateFromLoop(Ogre::SceneManager *sceneManager) 
     it = _particleList.begin();
     while (it != _particleList.end()) {
         if (!(*it)->updateParticle()) {
-            std::cout << "Delete a particle" << std::endl;
             (*it)->explode(sceneManager);
             _particleList.erase(it);
         }

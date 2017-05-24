@@ -45,7 +45,6 @@ void    Indie::AEntity::explode(Ogre::SceneManager *sceneManager) {
     mEntity = NULL;
     sceneManager->destroySceneNode(mSceneNode);
     mSceneNode = NULL;
-    std::cout << "End of destruction" << std::endl;
 }
 
 bool    Indie::AEntity::updateFromLoop(Ogre::SceneManager *sceneManager) {
