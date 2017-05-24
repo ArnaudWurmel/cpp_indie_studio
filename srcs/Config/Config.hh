@@ -12,6 +12,7 @@ namespace Indie
     class Config {
     public:
         static Ogre::Real getGravity();
+        static Ogre::Real getMoveSpeed();
     };
 }
 
