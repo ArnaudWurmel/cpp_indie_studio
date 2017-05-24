@@ -5,6 +5,7 @@
 #include <iostream>
 #include "SceneDisplayer.hh"
 #include "../Entities/EntityManager.hh"
+#include "../Config/Config.hh"
 
 Indie::SceneDisplayer::SceneDisplayer(Ogre::SceneManager *sceneManager) {
     mSceneManager = sceneManager;
@@ -127,7 +128,7 @@ void    Indie::SceneDisplayer::registerMouseEvent(OIS::Mouse *mouse) {
 }
 
 void    Indie::SceneDisplayer::movePlayerDown(OIS::Keyboard *keyboard) {
-    _player->move(Ogre::Vector3(-5, 0, 0));
+    _player->move(Ogre::Vector3(-Indie::Config::getMoveSpeed(), 0, 0));
     if (keyboard->isKeyDown(OIS::KC_Q) && !keyboard->isKeyDown(OIS::KC_D))
         _player->rotate(AEntity::Direction::DOWN_LEFT);
     else if (keyboard->isKeyDown(OIS::KC_D) && !keyboard->isKeyDown(OIS::KC_Q))
@@ -137,7 +138,7 @@ void    Indie::SceneDisplayer::movePlayerDown(OIS::Keyboard *keyboard) {
 }
 
 void    Indie::SceneDisplayer::movePlayerLeft(OIS::Keyboard *keyboard) {
-    _player->move(Ogre::Vector3(0, 0, -5));
+    _player->move(Ogre::Vector3(0, 0, -Indie::Config::getMoveSpeed()));
     if (keyboard->isKeyDown(OIS::KC_S) && !keyboard->isKeyDown(OIS::KC_Z))
         _player->rotate(AEntity::Direction::DOWN_LEFT);
     else if (keyboard->isKeyDown(OIS::KC_Z) && !keyboard->isKeyDown(OIS::KC_S))
@@ -147,7 +148,7 @@ void    Indie::SceneDisplayer::movePlayerLeft(OIS::Keyboard *keyboard) {
 }
 
 void    Indie::SceneDisplayer::movePlayerUp(OIS::Keyboard *keyboard) {
-    _player->move(Ogre::Vector3(5, 0, 0));
+    _player->move(Ogre::Vector3(Indie::Config::getMoveSpeed(), 0, 0));
     if (keyboard->isKeyDown(OIS::KC_Q) && !keyboard->isKeyDown(OIS::KC_D))
         _player->rotate(AEntity::Direction::UP_LEFT);
     else if (keyboard->isKeyDown(OIS::KC_D) && !keyboard->isKeyDown(OIS::KC_Q))
@@ -157,7 +158,7 @@ void    Indie::SceneDisplayer::movePlayerUp(OIS::Keyboard *keyboard) {
 }
 
 void    Indie::SceneDisplayer::movePlayerRight(OIS::Keyboard *keyboard) {
-    _player->move(Ogre::Vector3(0, 0, 5));
+    _player->move(Ogre::Vector3(0, 0, Indie::Config::getMoveSpeed()));
     if (keyboard->isKeyDown(OIS::KC_Z) && !keyboard->isKeyDown(OIS::KC_S))
         _player->rotate(AEntity::Direction::UP_RIGHT);
     else if (keyboard->isKeyDown(OIS::KC_S) && !keyboard->isKeyDown(OIS::KC_Z))
