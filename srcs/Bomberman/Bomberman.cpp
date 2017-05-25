@@ -54,7 +54,6 @@ void Indie::Bomberman::runApp() {
         mSceneDisplayer->updateScene();
         if (mRenderWindow->isClosed() || !mRoot->renderOneFrame())
             return ;
-        std::cout << mRenderWindow->getLastFPS() << std::endl;
     }
 }
 

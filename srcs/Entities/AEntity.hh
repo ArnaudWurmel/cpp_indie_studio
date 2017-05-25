@@ -37,11 +37,12 @@ namespace Indie
         virtual bool hittedByExplosion() const = 0;
 
     public:
+        bool    isAlive() const;
         Ogre::Vector3 getSize() const;
         Ogre::Vector3 getPosition() const;
         void    setScale(Ogre::Vector3 const&);
         void    move(Ogre::Vector3 const&);
-        virtual bool collide(AEntity const&) const;
+        bool    checkCollide(AEntity const&);
         virtual void    rotate(Direction const& dir);
         virtual void    explode(Ogre::SceneManager *);
         virtual bool    updateFromLoop(Ogre::SceneManager *);
@@ -50,6 +51,7 @@ namespace Indie
         Ogre::SceneNode *mSceneNode;
         Ogre::Entity    *mEntity;
         Ogre::Vector3   mTransformation;
+        bool            mIsAlive;
     };
 }
 

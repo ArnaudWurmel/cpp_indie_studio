@@ -18,7 +18,7 @@ Indie::Particle::Particle(Indie::AEntity *entity) {
 bool Indie::Particle::updateParticle() {
     Ogre::Real y;
 
-    y = -(1.0f/2.0f) * Indie::Config::getGravity() * (t * t);
+    y = -(1.0f/16.0f) * Indie::Config::getGravity() * (t * t);
     mEntity->move(Ogre::Vector3(_dirVector.x, y + _dirVector.y, _dirVector.z));
     t += 1;
     return mEntity->getPosition().y >= 0;

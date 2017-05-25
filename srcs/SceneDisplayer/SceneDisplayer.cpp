@@ -19,7 +19,7 @@ void Indie::SceneDisplayer::initScene() {
     if (_map.size() > 0) {
         this->createMap();
     }
-    _player = std::unique_ptr<AEntity>(EntityManager::createEntity(MapParser::PLAYER, mSceneManager, Ogre::Vector3(0, 50, 0)));
+    _player = std::unique_ptr<AEntity>(EntityManager::createEntity(MapParser::PLAYER, mSceneManager, Ogre::Vector3(50, 25, -50)));
     initEventRegister();
 }
 
@@ -79,6 +79,69 @@ void    Indie::SceneDisplayer::updateScene() {
     }
 }
 
+bool Indie::SceneDisplayer::makeCollide(std::unique_ptr<Indie::AEntity> &entity, OIS::KeyCode const& keyCode) {
+    std::vector<std::unique_ptr<Indie::AEntity> >::iterator it = _entityList.begin();
+
+    if (_collideGetter.find(keyCode) != _collideGetter.end()) {
+        while (it != _entityList.end()) {
+            if (entity.get() != (*it).get()) {
+                if (!(this->*_collideGetter[keyCode])(entity, *it))
+                    return false;
+            }
+            ++it;
+        }
+    }
+    return true;
+}
+
+bool    Indie::SceneDisplayer::checkUp(std::unique_ptr<AEntity> const& entity, std::unique_ptr<AEntity> const& collider) const {
+    bool state = false;
+
+    _player->rotate(APlayer::Direction::UP);
+    _player->move(Ogre::Vector3(Indie::Config::getMoveSpeed(), 0, 0));
+    if (entity->checkCollide(*(collider.get()))) {
+        state = true;
+    }
+    _player->move(Ogre::Vector3(-Indie::Config::getMoveSpeed(), 0, 0));
+    return state;
+}
+
+bool    Indie::SceneDisplayer::checkDown(std::unique_ptr<AEntity> const& entity, std::unique_ptr<AEntity> const& collider) const {
+    bool state = false;
+
+    _player->rotate(APlayer::Direction::DOWN);
+    _player->move(Ogre::Vector3(-Indie::Config::getMoveSpeed(), 0, 0));
+    if (entity->checkCollide(*(collider.get()))) {
+        state = true;
+    }
+    _player->move(Ogre::Vector3(Indie::Config::getMoveSpeed(), 0, 0));
+    return state;
+}
+
+bool    Indie::SceneDisplayer::checkLeft(std::unique_ptr<AEntity> const& entity, std::unique_ptr<AEntity> const& collider) const {
+    bool state = false;
+
+    _player->rotate(APlayer::Direction::LEFT);
+    _player->move(Ogre::Vector3(0, 0, -Indie::Config::getMoveSpeed()));
+    if (entity->checkCollide(*(collider.get()))) {
+        state = true;
+    }
+    _player->move(Ogre::Vector3(0, 0, Indie::Config::getMoveSpeed()));
+    return state;
+}
+
+bool    Indie::SceneDisplayer::checkRight(std::unique_ptr<AEntity> const& entity, std::unique_ptr<AEntity> const& collider) const {
+    bool state = false;
+
+    _player->rotate(APlayer::Direction::RIGHT);
+    _player->move(Ogre::Vector3(0, 0, Indie::Config::getMoveSpeed()));
+    if (entity->checkCollide(*(collider.get()))) {
+        state = true;
+    }
+    _player->move(Ogre::Vector3(0, 0, -Indie::Config::getMoveSpeed()));
+    return state;
+}
+
 Indie::SceneDisplayer::~SceneDisplayer() {}
 
 /**********************************
@@ -92,6 +155,11 @@ void Indie::SceneDisplayer::initEventRegister() {
     _functionPtr.insert(std::make_pair(OIS::KC_Q, &Indie::SceneDisplayer::movePlayerLeft));
     _functionPtr.insert(std::make_pair(OIS::KC_UP, &Indie::SceneDisplayer::moveCameraUp));
     _functionPtr.insert(std::make_pair(OIS::KC_DOWN, &Indie::SceneDisplayer::moveCameraDown));
+
+    _collideGetter.insert(std::make_pair(OIS::KC_Z, &Indie::SceneDisplayer::checkUp));
+    _collideGetter.insert(std::make_pair(OIS::KC_S, &Indie::SceneDisplayer::checkDown));
+    _collideGetter.insert(std::make_pair(OIS::KC_Q, &Indie::SceneDisplayer::checkLeft));
+    _collideGetter.insert(std::make_pair(OIS::KC_D, &Indie::SceneDisplayer::checkRight));
 }
 
 void    Indie::SceneDisplayer::registerKeyboardEvent(OIS::Keyboard *keyboard) {
@@ -99,7 +167,7 @@ void    Indie::SceneDisplayer::registerKeyboardEvent(OIS::Keyboard *keyboard) {
 
     it = _functionPtr.begin();
     while (it != _functionPtr.end()) {
-        if (keyboard->isKeyDown((*it).first))
+        if (keyboard->isKeyDown((*it).first) && makeCollide(_player, (*it).first))
             (this->*(*it).second)(keyboard);
         ++it;
     }
