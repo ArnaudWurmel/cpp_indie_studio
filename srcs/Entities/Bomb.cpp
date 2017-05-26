@@ -18,7 +18,6 @@ bool    Indie::Bomb::hittedByExplosion() const {
 
 bool    Indie::Bomb::updateFromLoop(Ogre::SceneManager *sceneManager) {
     static_cast<void>(sceneManager);
-    std::cout << _explodeTime << std::endl;
     if (!_explodeTime)
         return false;
     _explodeTime -= 1;
