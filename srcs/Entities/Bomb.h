@@ -5,8 +5,11 @@
 #ifndef CPP_INDIE_STUDIO_BOMB_H
 #define CPP_INDIE_STUDIO_BOMB_H
 
+# include <vector>
+# include <memory>
 # include "AEntity.hh"
 # include "../Config/Config.hh"
+# include "Explosion.hh"
 
 namespace Indie {
     class   APlayer;
@@ -21,9 +24,12 @@ namespace Indie {
     public:
         bool    hittedByExplosion() const;
         bool    updateFromLoop(Ogre::SceneManager *);
+        void    explode(Ogre::SceneManager *);
 
     private:
         unsigned int    _explodeTime;
+        APlayer const&  _delegate;
+        std::vector<std::unique_ptr<Indie::AEntity> >    _explosionList;
     };
 }
 

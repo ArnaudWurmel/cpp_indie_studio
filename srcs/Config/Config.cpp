@@ -20,4 +20,10 @@ unsigned int Indie::Config::getExplodeTime() {
     return 180;
 }
 
+unsigned int    Indie::Config::getBombRange() {
+    return 2;
+}
 
+unsigned int    Indie::Config::getExplosionTime() {
+    return 30;
+}

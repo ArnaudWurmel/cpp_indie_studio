@@ -30,7 +30,7 @@ bool    Indie::AEntity::checkCollide(AEntity const& other) {
     Ogre::AxisAlignedBox    myBox = mSceneNode->_getWorldAABB();
     Ogre::AxisAlignedBox    otherBox = other.mSceneNode->_getWorldAABB();
 
-    if (myBox.intersects(otherBox)) {
+    if (myBox.intersects(otherBox) || (other.getPosition().x == getPosition().x && other.getPosition().z == getPosition().z)) {
         return false;
     }
     return !myBox.intersects(otherBox);
@@ -51,11 +51,13 @@ void    Indie::AEntity::setScale(Ogre::Vector3 const& scale) {
 }
 
 void    Indie::AEntity::explode(Ogre::SceneManager *sceneManager) {
-    mIsAlive = false;
-    sceneManager->destroyEntity(mEntity);
-    mEntity = NULL;
-    sceneManager->destroySceneNode(mSceneNode);
-    mSceneNode = NULL;
+    if (mIsAlive) {
+        mIsAlive = false;
+        sceneManager->destroyEntity(mEntity);
+        mEntity = NULL;
+        sceneManager->destroySceneNode(mSceneNode);
+        mSceneNode = NULL;
+    }
 }
 
 bool    Indie::AEntity::updateFromLoop(Ogre::SceneManager *sceneManager) {

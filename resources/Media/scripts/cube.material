@@ -27,3 +27,18 @@ material Bomberman/BreakableBlock
 	}
 }
 
+material Bomberman/Explosion
+{
+	technique
+	{
+		pass
+		{
+
+			texture_unit
+			{
+				texture explosion.jpg
+			}
+		}
+	}
+}
+

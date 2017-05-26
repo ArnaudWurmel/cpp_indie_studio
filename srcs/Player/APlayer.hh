@@ -32,6 +32,8 @@ namespace Indie
         Ogre::Real const&   getMoveSpeed() const;
         void            setMoveSpeed(Ogre::Real const&);
 
+        unsigned int    getBombRange() const;
+
         void            addABomb();
         void            plantABomb(Ogre::SceneManager *);
 
@@ -44,6 +46,7 @@ namespace Indie
     private:
         Ogre::Real      _moveSpeed;
         unsigned int    _nbBombs;
+        unsigned int    _bombRange;
         bool            _godMode;
 
     private:

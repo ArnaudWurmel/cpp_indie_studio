@@ -57,7 +57,7 @@ void Indie::SceneDisplayer::createMap() {
             long z = ((*it).size() * 100) / 2 - (100 * j);
             Indie::AEntity  *entity = EntityManager::createEntity(*it_line, mSceneManager, Ogre::Vector3(x, 50, z));
             if (entity != nullptr) {
-                _entityList.push_back(std::unique_ptr<AEntity>(entity));
+                _entityList.push_back(std::shared_ptr<AEntity>(entity));
             }
             ++it_line;
             ++j;
@@ -68,7 +68,7 @@ void Indie::SceneDisplayer::createMap() {
 }
 
 void    Indie::SceneDisplayer::updateScene() {
-    std::vector<std::unique_ptr<AEntity> >::iterator    it;
+    std::vector<std::shared_ptr<AEntity> >::iterator    it;
 
     _player->updateFromLoop(mSceneManager);
     it = _entityList.begin();
@@ -82,7 +82,7 @@ void    Indie::SceneDisplayer::updateScene() {
 }
 
 bool Indie::SceneDisplayer::makeCollide(std::unique_ptr<Indie::APlayer> &entity, OIS::KeyCode const& keyCode) {
-    std::vector<std::unique_ptr<Indie::AEntity> >::iterator it = _entityList.begin();
+    std::vector<std::shared_ptr<Indie::AEntity> >::iterator it = _entityList.begin();
 
     if (_collideGetter.find(keyCode) != _collideGetter.end()) {
         while (it != _entityList.end()) {
@@ -96,7 +96,7 @@ bool Indie::SceneDisplayer::makeCollide(std::unique_ptr<Indie::APlayer> &entity,
     return true;
 }
 
-bool    Indie::SceneDisplayer::checkUp(std::unique_ptr<APlayer>& entity, std::unique_ptr<AEntity> const& collider) const {
+bool    Indie::SceneDisplayer::checkUp(std::unique_ptr<APlayer>& entity, std::shared_ptr<AEntity> const& collider) const {
     bool state = false;
 
     entity->rotate(APlayer::Direction::UP);
@@ -108,7 +108,7 @@ bool    Indie::SceneDisplayer::checkUp(std::unique_ptr<APlayer>& entity, std::un
     return state;
 }
 
-bool    Indie::SceneDisplayer::checkDown(std::unique_ptr<APlayer>& entity, std::unique_ptr<AEntity> const& collider) const {
+bool    Indie::SceneDisplayer::checkDown(std::unique_ptr<APlayer>& entity, std::shared_ptr<AEntity> const& collider) const {
     bool state = false;
 
     entity->rotate(APlayer::Direction::DOWN);
@@ -120,7 +120,7 @@ bool    Indie::SceneDisplayer::checkDown(std::unique_ptr<APlayer>& entity, std::
     return state;
 }
 
-bool    Indie::SceneDisplayer::checkLeft(std::unique_ptr<APlayer>& entity, std::unique_ptr<AEntity> const& collider) const {
+bool    Indie::SceneDisplayer::checkLeft(std::unique_ptr<APlayer>& entity, std::shared_ptr<AEntity> const& collider) const {
     bool state = false;
 
     entity->rotate(APlayer::Direction::LEFT);
@@ -132,7 +132,7 @@ bool    Indie::SceneDisplayer::checkLeft(std::unique_ptr<APlayer>& entity, std::
     return state;
 }
 
-bool    Indie::SceneDisplayer::checkRight(std::unique_ptr<APlayer>& entity, std::unique_ptr<AEntity> const& collider) const {
+bool    Indie::SceneDisplayer::checkRight(std::unique_ptr<APlayer>& entity, std::shared_ptr<AEntity> const& collider) const {
     bool state = false;
 
     entity->rotate(APlayer::Direction::RIGHT);
@@ -179,7 +179,7 @@ void    Indie::SceneDisplayer::registerKeyboardEvent(OIS::Keyboard *keyboard) {
         camera->lookAt(_player->getPosition());
     }
     if (keyboard->isKeyDown(OIS::KC_M)) {
-        std::vector<std::unique_ptr<AEntity> >::iterator    it;
+        std::vector<std::shared_ptr<AEntity> >::iterator    it;
 
         it = _entityList.begin();
         while (it != _entityList.end()) {

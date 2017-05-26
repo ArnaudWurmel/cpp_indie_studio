@@ -4,9 +4,45 @@
 
 #include <map>
 #include <functional>
+#include <exception>
 #include "EntityManager.hh"
 #include "../Entities/BreakableBlock.hh"
 #include "../Player/HumanPlayer.hh"
+
+Indie::EntityManager    *Indie::EntityManager::getEntityManager(bool reset) {
+    static Indie::EntityManager *entityManager = NULL;
+
+    if (reset && entityManager) {
+        delete entityManager;
+        entityManager = NULL;
+    }
+    else if (entityManager == NULL)
+        entityManager = new EntityManager();
+    return (entityManager);
+}
+
+void    Indie::EntityManager::addExplosableEntity(AEntity *entity) {
+    Indie::EntityManager    *entityManager = getEntityManager();
+
+    if (entityManager)
+        entityManager->_entityList.push_back(std::shared_ptr<AEntity>(entity));
+}
+
+std::vector<std::shared_ptr<Indie::AEntity> >& Indie::EntityManager::getEntityList() {
+    Indie::EntityManager    *entityManager = getEntityManager();
+
+    if (entityManager)
+        return (entityManager->_entityList);
+    throw std::exception();
+}
+
+Indie::EntityManager::EntityManager() {
+
+}
+
+Indie::EntityManager::~EntityManager() {
+    _entityList.clear();
+}
 
 Indie::AEntity *Indie::EntityManager::createEntity(Indie::MapParser::TileType const& tileType, Ogre::SceneManager *sceneManager, Ogre::Vector3 const& entityPos) {
     std::map<MapParser::TileType, Indie::AEntity *(*)(Ogre::SceneManager *, Ogre::Vector3 const&)>    functionPtr;
@@ -26,7 +62,10 @@ Indie::AEntity *Indie::EntityManager::createBlock(Ogre::SceneManager *sceneManag
 }
 
 Indie::AEntity  *Indie::EntityManager::createDynamicBlock(Ogre::SceneManager *sceneManager, Ogre::Vector3 const& entityPos) {
-    return new Indie::BreakableBlock(sceneManager, entityPos);
+    AEntity *entity = new Indie::BreakableBlock(sceneManager, entityPos);
+
+    EntityManager::addExplosableEntity(entity);
+    return (entity);
 }
 
 Indie::AEntity  *Indie::EntityManager::createHuman(Ogre::SceneManager *sceneManager, Ogre::Vector3 const& entityPos) {

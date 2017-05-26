@@ -5,12 +5,23 @@
 #ifndef CPP_INDIE_STUDIO_ENTITYMANAGER_HH
 #define CPP_INDIE_STUDIO_ENTITYMANAGER_HH
 
+# include <vector>
 # include "AEntity.hh"
 # include "../MapParser/MapParser.hh"
 # include "Block.hh"
 
 namespace Indie {
     class EntityManager {
+    public:
+        EntityManager();
+        ~EntityManager();
+
+        static EntityManager*   getEntityManager(bool reset = false);
+
+        static void addExplosableEntity(AEntity *);
+        static std::vector<std::shared_ptr<Indie::AEntity> >&   getEntityList();
+
+
     public:
         static AEntity  *createEntity(MapParser::TileType const&, Ogre::SceneManager *, Ogre::Vector3 const&);
 
@@ -19,6 +30,9 @@ namespace Indie {
         static AEntity    *createDynamicBlock(Ogre::SceneManager *, Ogre::Vector3 const&);
         static AEntity    *createDynamicParticle(Ogre::SceneManager *, Ogre::Vector3 const&);
         static AEntity    *createHuman(Ogre::SceneManager *, Ogre::Vector3 const&);
+
+    private:
+        std::vector<std::shared_ptr<Indie::AEntity> >   _entityList;
     };
 }
 

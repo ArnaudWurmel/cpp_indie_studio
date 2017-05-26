@@ -14,6 +14,7 @@ Indie::APlayer::APlayer(const Indie::APlayer::PlayerType &pType,
     mSceneNode->showBoundingBox(true);
     _moveSpeed = Indie::Config::getMoveSpeed();
     _nbBombs = Indie::Config::getInitialNbBomb();
+    _bombRange = Indie::Config::getBombRange();
     _godMode = false;
 }
 
@@ -35,13 +36,10 @@ bool    Indie::APlayer::updateFromLoop(Ogre::SceneManager *sceneManager) {
 
     it = _bombList.begin();
     while (it != _bombList.end()) {
-        if (!(*it)->updateFromLoop(sceneManager)) {
-            (*it)->explode(sceneManager);
+        if (!(*it)->updateFromLoop(sceneManager))
             _bombList.erase(it);
-        }
-        else {
+        else
             ++it;
-        }
     }
     return true;
 }
@@ -71,6 +69,10 @@ void    Indie::APlayer::plantABomb(Ogre::SceneManager *sceneManager) {
     if (_bombList.size() < _nbBombs) {
         _bombList.push_back(std::unique_ptr<Indie::Bomb>(new Indie::Bomb(sceneManager, *this)));
     }
+}
+
+unsigned int    Indie::APlayer::getBombRange() const {
+    return _bombRange;
 }
 
 void    Indie::APlayer::godMode() {

@@ -22,7 +22,8 @@ namespace Indie
         static Ogre::Real getMoveSpeed();
         static unsigned int getInitialNbBomb();
         static unsigned int getExplodeTime();
-
+        static unsigned int getBombRange();
+        static unsigned int getExplosionTime();
     };
 }
 
