@@ -13,7 +13,7 @@ Ogre::Real Indie::Config::getMoveSpeed() {
 }
 
 unsigned int Indie::Config::getInitialNbBomb() {
-    return 2;
+    return 1;
 }
 
 unsigned int Indie::Config::getExplodeTime() {

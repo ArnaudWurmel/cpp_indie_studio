@@ -16,6 +16,9 @@ namespace Indie {
         ~Bomb();
 
     public:
+        static  Ogre::Vector3   getBombPosition(const APlayer&);
+
+    public:
         bool    hittedByExplosion() const;
         bool    updateFromLoop(Ogre::SceneManager *);
 

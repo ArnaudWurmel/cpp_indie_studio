@@ -13,7 +13,7 @@ Indie::SceneDisplayer::SceneDisplayer(Ogre::SceneManager *sceneManager) {
 }
 
 void Indie::SceneDisplayer::initScene() {
-    MapParser   mapParser("resources/maps/level0");
+    MapParser&  mapParser = MapParser::getMapParser("resources/maps/level0");
 
     this->createGround();
     _map = mapParser.getMap();
@@ -167,12 +167,6 @@ void Indie::SceneDisplayer::initEventRegister() {
 void    Indie::SceneDisplayer::registerKeyboardEvent(OIS::Keyboard *keyboard) {
     std::map<OIS::KeyCode, void (Indie::SceneDisplayer::*)(OIS::Keyboard *)>::iterator it;
 
-    if (keyboard->isKeyDown(OIS::KC_G)) {
-        _player->godMode();
-    }
-    if (keyboard->isKeyDown(OIS::KC_SPACE)) {
-        _player->plantABomb(mSceneManager);
-    }
     it = _functionPtr.begin();
     while (it != _functionPtr.end()) {
         if (keyboard->isKeyDown((*it).first) && (_player->isGodMode() || makeCollide(_player, (*it).first)))
@@ -196,6 +190,18 @@ void    Indie::SceneDisplayer::registerKeyboardEvent(OIS::Keyboard *keyboard) {
             ++it;
         }
     }
+}
+
+bool    Indie::SceneDisplayer::keyPressed(const OIS::KeyEvent &ke) {
+    if (ke.key == OIS::KC_SPACE)
+        _player->plantABomb(mSceneManager);
+    else if (ke.key == OIS::KC_G)
+        _player->godMode();
+    return true;
+}
+
+bool    Indie::SceneDisplayer::keyReleased(const OIS::KeyEvent &ke) {
+    static_cast<void>(ke);
 }
 
 void    Indie::SceneDisplayer::registerMouseEvent(OIS::Mouse *mouse) {

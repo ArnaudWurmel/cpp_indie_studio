@@ -7,6 +7,14 @@
 #include <Ogre.h>
 #include "MapParser.hh"
 
+Indie::MapParser&   Indie::MapParser::getMapParser(std::string const& mapPath) {
+    static Indie::MapParser *mapParser = NULL;
+
+    if (mapParser == NULL)
+        mapParser = new Indie::MapParser(mapPath);
+    return (*mapParser);
+}
+
 Indie::MapParser::MapParser(std::string const& mapPath) : _map(0)
 {
     _convert.insert(std::make_pair(' ', Indie::MapParser::TileType::EMPTY));

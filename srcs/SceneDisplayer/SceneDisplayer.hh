@@ -43,6 +43,8 @@ namespace   Indie
         void    initEventRegister();
         void    registerKeyboardEvent(OIS::Keyboard *keyboard);
         void    registerMouseEvent(OIS::Mouse *mouse);
+        bool    keyPressed(const OIS::KeyEvent& ke);
+        bool    keyReleased(const OIS::KeyEvent& ke);
 
     private:
         void    movePlayerUp(OIS::Keyboard *);
