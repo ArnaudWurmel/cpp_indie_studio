@@ -3,6 +3,8 @@
 //
 
 #include <iostream>
+#include <thread>
+#include <chrono>
 #include "EventListener.hh"
 
 Indie::EventListener::EventListener(Ogre::SceneManager *sceneManager,
@@ -63,13 +65,17 @@ void Indie::EventListener::windowClosed(Ogre::RenderWindow *renderWindow) {
 }
 
 bool Indie::EventListener::frameRenderingQueued(const Ogre::FrameEvent &evt) {
-    if(mRenderWindow->isClosed())
-        return false;
-    mKeyboard->capture();
-    mMouse->capture();
-    if(mKeyboard->isKeyDown(OIS::KC_ESCAPE))
-        return false;
-    handleKeyboard();
+    static std::chrono::milliseconds   ms = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
+
+    if ((std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()) - ms) > std::chrono::milliseconds(20)) {
+        if(mRenderWindow->isClosed())
+            return false;
+        mKeyboard->capture();
+        mMouse->capture();
+        if(mKeyboard->isKeyDown(OIS::KC_ESCAPE))
+            return false;
+        handleKeyboard();
+    }
     return true;
 }
 
