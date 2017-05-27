@@ -43,7 +43,11 @@ void Indie::AEntity::move(Ogre::Vector3 const& transform)
 }
 
 void Indie::AEntity::rotate(const Indie::AEntity::Direction &dir) {
-    static_cast<void>(dir);
+    int orientation[8] = {90, 270, 180, 0, 135, 45, 225, 315};
+
+    if (dir < 8) {
+        mSceneNode->setOrientation(Ogre::Quaternion(Ogre::Degree(orientation[dir]), Ogre::Vector3(0, 1, 0)));
+    }
 }
 
 void    Indie::AEntity::setScale(Ogre::Vector3 const& scale) {
@@ -63,6 +67,14 @@ void    Indie::AEntity::explode(Ogre::SceneManager *sceneManager) {
 bool    Indie::AEntity::updateFromLoop(Ogre::SceneManager *sceneManager) {
     static_cast<void>(sceneManager);
     return true;
+}
+
+bool Indie::AEntity::isAlive() const {
+    return mIsAlive;
+}
+
+void    Indie::AEntity::setMaterialName(std::string const& materialName) {
+    mEntity->setMaterialName(materialName);
 }
 
 Indie::AEntity::~AEntity() {}

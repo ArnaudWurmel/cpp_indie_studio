@@ -13,17 +13,25 @@
 namespace Indie {
     class EntityManager {
     public:
+        enum    EntityType {
+            BLOCK = 0,
+            DYNAMIC_BLOCK,
+            HUMAN,
+            PARTICLE,
+            EMPTY
+        };
+    public:
         EntityManager();
         ~EntityManager();
 
         static EntityManager*   getEntityManager(bool reset = false);
 
-        static void addExplosableEntity(AEntity *);
+        static void addEntity(AEntity *);
         static std::vector<std::shared_ptr<Indie::AEntity> >&   getEntityList();
 
 
     public:
-        static AEntity  *createEntity(MapParser::TileType const&, Ogre::SceneManager *, Ogre::Vector3 const&);
+        static AEntity  *createEntity(EntityType const&, Ogre::SceneManager *, Ogre::Vector3 const&);
 
     public:
         static AEntity    *createBlock(Ogre::SceneManager *, Ogre::Vector3 const&);

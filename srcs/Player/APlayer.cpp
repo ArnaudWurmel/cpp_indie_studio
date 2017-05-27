@@ -23,14 +23,6 @@ bool Indie::APlayer::hittedByExplosion() const {
     return true;
 }
 
-void Indie::APlayer::rotate(const Indie::AEntity::Direction &dir) {
-    int    orientation[8] = {90, 270, 180, 0, 135, 45, 225, 315};
-
-    if (dir < 8) {
-        mSceneNode->setOrientation(Ogre::Quaternion(Ogre::Degree(orientation[dir]), Ogre::Vector3(0, 1, 0)));
-    }
-}
-
 bool    Indie::APlayer::updateFromLoop(Ogre::SceneManager *sceneManager) {
     std::vector<std::unique_ptr<Bomb> >::iterator   it;
 

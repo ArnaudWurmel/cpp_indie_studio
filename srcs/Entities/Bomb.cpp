@@ -19,6 +19,7 @@ Ogre::Vector3   Indie::Bomb::getBombPosition(const APlayer& player) {
         ret.z = player.getPosition().z - (static_cast<int>(player.getPosition().z) % 100) + 50;
     else
         ret.z = player.getPosition().z - (static_cast<int>(player.getPosition().z) % 100) - 50;
+    ret.y = 35;
     return (ret);
 }
 
@@ -56,16 +57,41 @@ bool    Indie::Bomb::updateFromLoop(Ogre::SceneManager *sceneManager) {
     return true;
 }
 
+bool    Indie::Bomb::haveEntityWithPos(Ogre::Vector3 const& entityPos, bool& shouldContinue) const {
+    std::vector<std::shared_ptr<AEntity> >::iterator    it = EntityManager::getEntityList().begin();
+    bool    ret = shouldContinue;
+
+    while (it != EntityManager::getEntityList().end()) {
+        if ((*it)->getPosition().x == entityPos.x && (*it)->getPosition().z == entityPos.z) {
+            shouldContinue = false;
+            if (ret)
+                return false;
+            return true;
+        }
+        ++it;
+    }
+    return false;
+}
+
 void    Indie::Bomb::explode(Ogre::SceneManager *sceneManager) {
     unsigned int    i;
+    bool            leftContinue = true;
+    bool            rightContinue = true;
+    bool            upContinue = true;
+    bool            downContinue = true;
 
     i = 0;
     _explosionList.push_back(std::unique_ptr<Indie::AEntity>(new Indie::Explosion(sceneManager, Ogre::Vector3(getPosition().x, getPosition().y - 35, getPosition().z))));
     while (i < _delegate.getBombRange()) {
-        _explosionList.push_back(std::unique_ptr<Indie::AEntity>(new Indie::Explosion(sceneManager, Ogre::Vector3(getPosition().x - (100 * (i + 1)), getPosition().y - 35, getPosition().z))));
-        _explosionList.push_back(std::unique_ptr<Indie::AEntity>(new Indie::Explosion(sceneManager, Ogre::Vector3(getPosition().x + (100 * (i + 1)), getPosition().y - 35, getPosition().z))));
-        _explosionList.push_back(std::unique_ptr<Indie::AEntity>(new Indie::Explosion(sceneManager, Ogre::Vector3(getPosition().x, getPosition().y - 35, getPosition().z - (100 * (i + 1))))));
-        _explosionList.push_back(std::unique_ptr<Indie::AEntity>(new Indie::Explosion(sceneManager, Ogre::Vector3(getPosition().x, getPosition().y - 35, getPosition().z + (100 * (i + 1))))));
+
+        if (downContinue && !haveEntityWithPos(Ogre::Vector3(getPosition().x - (100 * (i + 1)), getPosition().y - 35, getPosition().z), downContinue))
+            _explosionList.push_back(std::unique_ptr<Indie::AEntity>(new Indie::Explosion(sceneManager, Ogre::Vector3(getPosition().x - (100 * (i + 1)), getPosition().y - 35, getPosition().z))));
+        if (upContinue && !haveEntityWithPos(Ogre::Vector3(getPosition().x + (100 * (i + 1)), getPosition().y - 35, getPosition().z), upContinue))
+            _explosionList.push_back(std::unique_ptr<Indie::AEntity>(new Indie::Explosion(sceneManager, Ogre::Vector3(getPosition().x + (100 * (i + 1)), getPosition().y - 35, getPosition().z))));
+        if (leftContinue && !haveEntityWithPos(Ogre::Vector3(getPosition().x, getPosition().y - 35, getPosition().z - (100 * (i + 1))), leftContinue))
+            _explosionList.push_back(std::unique_ptr<Indie::AEntity>(new Indie::Explosion(sceneManager, Ogre::Vector3(getPosition().x, getPosition().y - 35, getPosition().z - (100 * (i + 1))))));
+        if (rightContinue && !haveEntityWithPos(Ogre::Vector3(getPosition().x, getPosition().y - 35, getPosition().z + (100 * (i + 1))), rightContinue))
+            _explosionList.push_back(std::unique_ptr<Indie::AEntity>(new Indie::Explosion(sceneManager, Ogre::Vector3(getPosition().x, getPosition().y - 35, getPosition().z + (100 * (i + 1))))));
         ++i;
     }
     std::vector<std::unique_ptr<Indie::AEntity> >::iterator   explosionIt = _explosionList.begin();
@@ -75,8 +101,12 @@ void    Indie::Bomb::explode(Ogre::SceneManager *sceneManager) {
         std::vector<std::shared_ptr<Indie::AEntity> >::iterator itEntity = entityList.begin();
 
         while (itEntity != entityList.end()) {
-            if (!(*itEntity)->checkCollide(*(*explosionIt))) {
-                (*itEntity)->explode(sceneManager);
+            if ((*itEntity)->hittedByExplosion()) {
+                if (!(*itEntity)->checkCollide(*(*explosionIt))) {
+                    (*itEntity)->explode(sceneManager);
+                }
+                else
+                    ++itEntity;
             }
             else
                 ++itEntity;

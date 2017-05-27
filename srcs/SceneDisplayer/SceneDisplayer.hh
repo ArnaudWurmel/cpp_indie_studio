@@ -61,7 +61,7 @@ namespace   Indie
     private:
         Ogre::SceneManager  *mSceneManager;
         std::vector<std::vector<Indie::MapParser::TileType> >   _map;
-        std::vector<std::shared_ptr<AEntity>>    _entityList;
+        //std::vector<std::shared_ptr<AEntity>>    _entityList;
         std::unique_ptr<Indie::APlayer>  _player;
     };
 }

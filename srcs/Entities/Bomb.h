@@ -27,6 +27,9 @@ namespace Indie {
         void    explode(Ogre::SceneManager *);
 
     private:
+        bool    haveEntityWithPos(Ogre::Vector3 const&, bool&) const;
+
+    private:
         unsigned int    _explodeTime;
         APlayer const&  _delegate;
         std::vector<std::unique_ptr<Indie::AEntity> >    _explosionList;

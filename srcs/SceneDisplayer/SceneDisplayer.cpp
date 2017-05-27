@@ -43,9 +43,13 @@ void Indie::SceneDisplayer::createGround() {
 
 void Indie::SceneDisplayer::createMap() {
     std::vector<std::vector<MapParser::TileType> >::iterator    it;
+    std::map<MapParser::TileType, EntityManager::EntityType>    converter;
     int    i;
     int    j;
 
+    converter.insert(std::make_pair(MapParser::TileType::STATIC_BLOCK, EntityManager::EntityType::BLOCK));
+    converter.insert(std::make_pair(MapParser::TileType::DYNAMIC_BLOCK, EntityManager::EntityType::DYNAMIC_BLOCK));
+    converter.insert(std::make_pair(MapParser::TileType::EMPTY, EntityManager::EntityType::EMPTY));
     it = _map.begin();
     i = 0;
     while (it != _map.end()) {
@@ -55,10 +59,7 @@ void Indie::SceneDisplayer::createMap() {
         while (it_line != (*it).end()) {
             long x = _map.size() * 100 / 2 - (i * 100);
             long z = ((*it).size() * 100) / 2 - (100 * j);
-            Indie::AEntity  *entity = EntityManager::createEntity(*it_line, mSceneManager, Ogre::Vector3(x, 50, z));
-            if (entity != nullptr) {
-                _entityList.push_back(std::shared_ptr<AEntity>(entity));
-            }
+            EntityManager::createEntity(converter[*it_line], mSceneManager, Ogre::Vector3(x, 50, z));
             ++it_line;
             ++j;
         }
@@ -71,10 +72,10 @@ void    Indie::SceneDisplayer::updateScene() {
     std::vector<std::shared_ptr<AEntity> >::iterator    it;
 
     _player->updateFromLoop(mSceneManager);
-    it = _entityList.begin();
-    while (it != _entityList.end()) {
+    it = EntityManager::getEntityList().begin();
+    while (it != EntityManager::getEntityList().end()) {
         if (!(*it)->updateFromLoop(mSceneManager)) {
-            _entityList.erase(it);
+            EntityManager::getEntityList().erase(it);
         }
         else
             ++it;
@@ -82,10 +83,10 @@ void    Indie::SceneDisplayer::updateScene() {
 }
 
 bool Indie::SceneDisplayer::makeCollide(std::unique_ptr<Indie::APlayer> &entity, OIS::KeyCode const& keyCode) {
-    std::vector<std::shared_ptr<Indie::AEntity> >::iterator it = _entityList.begin();
+    std::vector<std::shared_ptr<Indie::AEntity> >::iterator it = EntityManager::getEntityList().begin();
 
     if (_collideGetter.find(keyCode) != _collideGetter.end()) {
-        while (it != _entityList.end()) {
+        while (it != EntityManager::getEntityList().end()) {
             if (entity.get() != (*it).get()) {
                 if (!(this->*_collideGetter[keyCode])(entity, *it))
                     return false;
@@ -181,8 +182,8 @@ void    Indie::SceneDisplayer::registerKeyboardEvent(OIS::Keyboard *keyboard) {
     if (keyboard->isKeyDown(OIS::KC_M)) {
         std::vector<std::shared_ptr<AEntity> >::iterator    it;
 
-        it = _entityList.begin();
-        while (it != _entityList.end()) {
+        it = EntityManager::getEntityList().begin();
+        while (it != EntityManager::getEntityList().end()) {
             if ((*it)->hittedByExplosion()) {
                 (*it)->explode(mSceneManager);
                 return ;

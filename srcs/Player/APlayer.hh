@@ -26,7 +26,6 @@ namespace Indie
     public:
         bool hittedByExplosion() const;
         bool    updateFromLoop(Ogre::SceneManager *);
-        void    rotate(Direction const& dir);
 
     public:
         Ogre::Real const&   getMoveSpeed() const;

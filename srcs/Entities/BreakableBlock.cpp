@@ -13,22 +13,19 @@ Indie::BreakableBlock::BreakableBlock(Ogre::SceneManager *sceneManager, Ogre::Ve
 }
 
 bool Indie::BreakableBlock::hittedByExplosion() const {
-    if (mSceneNode != NULL && mSceneNode != NULL && _blockType == NORMAL && _particleList.size() == 0)
-        return true;
-    return false;
+    return mSceneNode != NULL && _blockType == NORMAL && _particleList.size() == 0;
 }
 
 void Indie::BreakableBlock::explode(Ogre::SceneManager *sceneManager) {
     if (_blockType == NORMAL) {
         int nb_entity;
         int i;
-        nb_entity = (rand() % 100) + 100;
+        nb_entity = (rand() % 100) + 20;
         i = 0;
         while (i < nb_entity) {
-            Indie::AEntity  *entity = EntityManager::createEntity(MapParser::DYNAMIC_PARTICLE, sceneManager, mSceneNode->getPosition());
-
+            Indie::AEntity  *entity = EntityManager::createEntity(EntityManager::EntityType::PARTICLE, sceneManager, mSceneNode->getPosition());
             if (entity != nullptr) {
-                _particleList.push_back(std::unique_ptr<Particle>(new Particle(entity)));
+                _particleList.push_back(std::unique_ptr<Particle>(new Particle(entity, "Bomberman/BreakableBlock")));
             }
             ++i;
         }
