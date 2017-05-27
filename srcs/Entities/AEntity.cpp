@@ -38,13 +38,17 @@ bool    Indie::AEntity::checkCollide(AEntity const& other) {
 
 void Indie::AEntity::move(Ogre::Vector3 const& transform)
 {
-    mSceneNode->translate(transform);
-    mSceneNode->_update(true, false);
+    if (mIsAlive) {
+        mSceneNode->translate(transform);
+        mSceneNode->_update(true, false);
+    }
 }
 
 void Indie::AEntity::rotate(const Indie::AEntity::Direction &dir) {
     int orientation[8] = {90, 270, 180, 0, 135, 45, 225, 315};
 
+    if (!mIsAlive)
+        return ;
     if (dir < 8) {
         mSceneNode->setOrientation(Ogre::Quaternion(Ogre::Degree(orientation[dir]), Ogre::Vector3(0, 1, 0)));
     }
