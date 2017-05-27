@@ -18,7 +18,7 @@ namespace   Indie
         ~ExplosableEntity();
 
     public:
-        void    createAllParticles(Ogre::SceneManager *, Ogre::Vector3 const&);
+        void    createAllParticles(Ogre::SceneManager *, Ogre::Vector3 const&, Ogre::Real const&);
         void    addParticlesColor(std::string const&);
         bool    updateParticles(Ogre::SceneManager *);
 

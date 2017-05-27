@@ -7,10 +7,11 @@
 
 # include <Ogre.h>
 # include "APlayer.hh"
+# include "../Entities/ExplosableEntity.hh"
 
 namespace Indie
 {
-    class HumanPlayer : public APlayer {
+    class HumanPlayer : public APlayer{
     public:
         HumanPlayer(Ogre::Vector3 const& entityPos, Ogre::SceneManager *sceneManager);
         ~HumanPlayer();

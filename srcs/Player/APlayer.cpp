@@ -20,7 +20,7 @@ Indie::APlayer::APlayer(const Indie::APlayer::PlayerType &pType,
 
 
 bool Indie::APlayer::hittedByExplosion() const {
-    return true;
+    return isAlive();
 }
 
 bool    Indie::APlayer::updateFromLoop(Ogre::SceneManager *sceneManager) {
@@ -33,7 +33,14 @@ bool    Indie::APlayer::updateFromLoop(Ogre::SceneManager *sceneManager) {
         else
             ++it;
     }
-    return true;
+    return isAlive() || updateParticles(sceneManager);
+}
+
+void    Indie::APlayer::explode(Ogre::SceneManager *sceneManager) {
+    if (mSceneNode != NULL && mEntity != NULL) {
+        createAllParticles(sceneManager, getPosition(), getSize().y * 200);
+        Indie::AEntity::explode(sceneManager);
+    }
 }
 
 /****************************

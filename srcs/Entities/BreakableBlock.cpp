@@ -15,13 +15,13 @@ Indie::BreakableBlock::BreakableBlock(Ogre::SceneManager *sceneManager, Ogre::Ve
 }
 
 bool Indie::BreakableBlock::hittedByExplosion() const {
-    return mSceneNode != NULL && _blockType == NORMAL && _particleList.size() == 0;
+    return mSceneNode != NULL && _blockType == NORMAL;
 }
 
 void Indie::BreakableBlock::explode(Ogre::SceneManager *sceneManager) {
     if (mEntity != NULL && mSceneNode != NULL)
     {
-        createAllParticles(sceneManager, mSceneNode->getPosition());
+        createAllParticles(sceneManager, mSceneNode->getPosition(), getSize().y);
         Indie::AEntity::explode(sceneManager);
     }
 }

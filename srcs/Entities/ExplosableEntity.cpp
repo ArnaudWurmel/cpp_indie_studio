@@ -9,15 +9,13 @@ Indie::ExplosableEntity::ExplosableEntity() {
 
 }
 
-void    Indie::ExplosableEntity::createAllParticles(Ogre::SceneManager *sceneManager, Ogre::Vector3 const& startPos) {
-    int nb_entity;
+void    Indie::ExplosableEntity::createAllParticles(Ogre::SceneManager *sceneManager, Ogre::Vector3 const& startPos, Ogre::Real const& nbEntity) {
     int i;
 
     if (_materialName.size() == 0)
         return ;
-    nb_entity = (rand() % 100) + 100;
     i = 0;
-    while (i < nb_entity) {
+    while (i < nbEntity) {
         Indie::AEntity  *entity = EntityManager::createEntity(EntityManager::EntityType::PARTICLE, sceneManager, startPos);
 
         if (entity != nullptr) {

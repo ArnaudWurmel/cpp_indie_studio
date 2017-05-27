@@ -177,7 +177,7 @@ void    Indie::SceneDisplayer::registerKeyboardEvent(OIS::Keyboard *keyboard) {
         ++it;
     }
     Ogre::Camera    *camera = mSceneManager->getCamera("MainCam");
-    if (camera) {
+    if (camera && EntityManager::getMainPlayer()->isAlive()) {
         camera->setPosition(Ogre::Vector3(EntityManager::getMainPlayer()->getPosition().x - 200, camera->getPositionForViewUpdate().y, EntityManager::getMainPlayer()->getPosition().z));
         camera->lookAt(EntityManager::getMainPlayer()->getPosition());
     }

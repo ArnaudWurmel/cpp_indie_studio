@@ -8,6 +8,8 @@ Indie::HumanPlayer::HumanPlayer(Ogre::Vector3 const &entityPos, Ogre::SceneManag
 {
     mSceneNode->setScale(Ogre::Vector3(50.0f, 53.459f, 50.0f));
     mTransformation = Ogre::Vector3(50.0f, 50.0f, 50.0f);
+    addParticlesColor("Particles/Pink");
+    addParticlesColor("Particles/Grey");
 }
 
 Indie::HumanPlayer::~HumanPlayer() {}

@@ -20,7 +20,7 @@ Ogre::Vector3    Indie::AEntity::getPosition() const {
 Ogre::Vector3    Indie::AEntity::getSize() const {
     Ogre::AxisAlignedBox    aab = mEntity->getBoundingBox();
 
-    return Ogre::Vector3(aab.getSize().x * mTransformation.x, aab.getSize().y * mTransformation.y, aab.getSize().z * mTransformation.z);
+    return Ogre::Vector3(aab.getSize().x, aab.getSize().y, aab.getSize().z);
 }
 
 bool    Indie::AEntity::checkCollide(AEntity const& other) {
@@ -33,6 +33,8 @@ bool    Indie::AEntity::checkCollide(AEntity const& other) {
     if (myBox.intersects(otherBox) || (other.getPosition().x == getPosition().x && other.getPosition().z == getPosition().z)) {
         return false;
     }
+    if (getPosition().x >= other.getPosition().x - (other.getSize().x / 2) && getPosition().x <= other.getPosition().x + (other.getSize().x / 2) && getPosition().z >= other.getPosition().z - (other.getSize().z / 2) && getPosition().z <= other.getPosition().z + (other.getSize().z / 2))
+        return false;
     return !myBox.intersects(otherBox);
 }
 

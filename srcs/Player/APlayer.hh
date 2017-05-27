@@ -12,7 +12,7 @@
 
 namespace Indie
 {
-    class APlayer : public Indie::AEntity {
+    class APlayer : public Indie::AEntity, public Indie::ExplosableEntity {
     public:
         enum PlayerType
         {
@@ -26,6 +26,7 @@ namespace Indie
     public:
         bool hittedByExplosion() const;
         bool    updateFromLoop(Ogre::SceneManager *);
+        void    explode(Ogre::SceneManager *);
 
     public:
         Ogre::Real const&   getMoveSpeed() const;

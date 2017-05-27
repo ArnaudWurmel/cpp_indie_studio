@@ -24,7 +24,6 @@ namespace Indie {
         bool    updateFromLoop(Ogre::SceneManager *);
 
     private:
-        std::vector<std::unique_ptr<Indie::Particle> >   _particleList;
         BlockType  _blockType;
     };
 }
