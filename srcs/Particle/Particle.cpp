@@ -12,7 +12,7 @@ Indie::Particle::Particle(Indie::AEntity *entity, std::string const& materialNam
     mEntity->setMaterialName(materialName);
     t = 0;
     _dirVector = Ogre::Vector3(-20 + std::rand() % 40, 20 + (std::rand() % 20), -20 + std::rand() % 40);
-    mEntity->setScale(Ogre::Vector3(0.2f, 0.2f, 0.2f));
+    mEntity->setScale(Ogre::Vector3(0.1f, 0.1f, 0.1f));
 }
 
 bool Indie::Particle::updateParticle() {

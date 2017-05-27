@@ -20,7 +20,7 @@ void Indie::SceneDisplayer::initScene() {
     if (_map.size() > 0) {
         this->createMap();
     }
-    _player = std::unique_ptr<APlayer>(new HumanPlayer(Ogre::Vector3(50, 25, -50), mSceneManager));
+    EntityManager::createEntity(EntityManager::EntityType::HUMAN, mSceneManager, Ogre::Vector3(50, 25, -50));
     initEventRegister();
 }
 
@@ -68,10 +68,11 @@ void Indie::SceneDisplayer::createMap() {
     }
 }
 
-void    Indie::SceneDisplayer::updateScene() {
+bool    Indie::SceneDisplayer::updateScene() {
     std::vector<std::shared_ptr<AEntity> >::iterator    it;
 
-    _player->updateFromLoop(mSceneManager);
+    if (!EntityManager::getMainPlayer()->updateFromLoop(mSceneManager))
+        return false;
     it = EntityManager::getEntityList().begin();
     while (it != EntityManager::getEntityList().end()) {
         if (!(*it)->updateFromLoop(mSceneManager)) {
@@ -80,6 +81,7 @@ void    Indie::SceneDisplayer::updateScene() {
         else
             ++it;
     }
+    return true;
 }
 
 bool Indie::SceneDisplayer::makeCollide(std::unique_ptr<Indie::APlayer> &entity, OIS::KeyCode const& keyCode) {
@@ -141,7 +143,7 @@ bool    Indie::SceneDisplayer::checkRight(std::unique_ptr<APlayer>& entity, std:
     if (entity->checkCollide(*(collider.get()))) {
         state = true;
     }
-    _player->move(Ogre::Vector3(0, 0, -entity->getMoveSpeed()));
+    entity->move(Ogre::Vector3(0, 0, -entity->getMoveSpeed()));
     return state;
 }
 
@@ -170,14 +172,14 @@ void    Indie::SceneDisplayer::registerKeyboardEvent(OIS::Keyboard *keyboard) {
 
     it = _functionPtr.begin();
     while (it != _functionPtr.end()) {
-        if (keyboard->isKeyDown((*it).first) && (_player->isGodMode() || makeCollide(_player, (*it).first)))
+        if (keyboard->isKeyDown((*it).first) && (EntityManager::getMainPlayer()->isGodMode() || makeCollide(EntityManager::getMainPlayer(), (*it).first)))
             (this->*(*it).second)(keyboard);
         ++it;
     }
     Ogre::Camera    *camera = mSceneManager->getCamera("MainCam");
     if (camera) {
-        camera->setPosition(Ogre::Vector3(_player->getPosition().x - 200, camera->getPositionForViewUpdate().y, _player->getPosition().z));
-        camera->lookAt(_player->getPosition());
+        camera->setPosition(Ogre::Vector3(EntityManager::getMainPlayer()->getPosition().x - 200, camera->getPositionForViewUpdate().y, EntityManager::getMainPlayer()->getPosition().z));
+        camera->lookAt(EntityManager::getMainPlayer()->getPosition());
     }
     if (keyboard->isKeyDown(OIS::KC_M)) {
         std::vector<std::shared_ptr<AEntity> >::iterator    it;
@@ -195,9 +197,9 @@ void    Indie::SceneDisplayer::registerKeyboardEvent(OIS::Keyboard *keyboard) {
 
 bool    Indie::SceneDisplayer::keyPressed(const OIS::KeyEvent &ke) {
     if (ke.key == OIS::KC_SPACE)
-        _player->plantABomb(mSceneManager);
+        EntityManager::getMainPlayer()->plantABomb(mSceneManager);
     else if (ke.key == OIS::KC_G)
-        _player->godMode();
+        EntityManager::getMainPlayer()->godMode();
     return true;
 }
 
@@ -210,43 +212,43 @@ void    Indie::SceneDisplayer::registerMouseEvent(OIS::Mouse *mouse) {
 }
 
 void    Indie::SceneDisplayer::movePlayerDown(OIS::Keyboard *keyboard) {
-    _player->move(Ogre::Vector3(-_player->getMoveSpeed(), 0, 0));
+    EntityManager::getMainPlayer()->move(Ogre::Vector3(-EntityManager::getMainPlayer()->getMoveSpeed(), 0, 0));
     if (keyboard->isKeyDown(OIS::KC_Q) && !keyboard->isKeyDown(OIS::KC_D))
-        _player->rotate(AEntity::Direction::DOWN_LEFT);
+        EntityManager::getMainPlayer()->rotate(AEntity::Direction::DOWN_LEFT);
     else if (keyboard->isKeyDown(OIS::KC_D) && !keyboard->isKeyDown(OIS::KC_Q))
-        _player->rotate(AEntity::Direction::DOWN_RIGHT);
+        EntityManager::getMainPlayer()->rotate(AEntity::Direction::DOWN_RIGHT);
     else
-        _player->rotate(AEntity::Direction::DOWN);
+        EntityManager::getMainPlayer()->rotate(AEntity::Direction::DOWN);
 }
 
 void    Indie::SceneDisplayer::movePlayerLeft(OIS::Keyboard *keyboard) {
-    _player->move(Ogre::Vector3(0, 0, -_player->getMoveSpeed()));
+    EntityManager::getMainPlayer()->move(Ogre::Vector3(0, 0, -EntityManager::getMainPlayer()->getMoveSpeed()));
     if (keyboard->isKeyDown(OIS::KC_S) && !keyboard->isKeyDown(OIS::KC_Z))
-        _player->rotate(AEntity::Direction::DOWN_LEFT);
+        EntityManager::getMainPlayer()->rotate(AEntity::Direction::DOWN_LEFT);
     else if (keyboard->isKeyDown(OIS::KC_Z) && !keyboard->isKeyDown(OIS::KC_S))
-        _player->rotate(AEntity::Direction::UP_LEFT);
+        EntityManager::getMainPlayer()->rotate(AEntity::Direction::UP_LEFT);
     else
-        _player->rotate(AEntity::Direction::LEFT);
+        EntityManager::getMainPlayer()->rotate(AEntity::Direction::LEFT);
 }
 
 void    Indie::SceneDisplayer::movePlayerUp(OIS::Keyboard *keyboard) {
-    _player->move(Ogre::Vector3(_player->getMoveSpeed(), 0, 0));
+    EntityManager::getMainPlayer()->move(Ogre::Vector3(EntityManager::getMainPlayer()->getMoveSpeed(), 0, 0));
     if (keyboard->isKeyDown(OIS::KC_Q) && !keyboard->isKeyDown(OIS::KC_D))
-        _player->rotate(AEntity::Direction::UP_LEFT);
+        EntityManager::getMainPlayer()->rotate(AEntity::Direction::UP_LEFT);
     else if (keyboard->isKeyDown(OIS::KC_D) && !keyboard->isKeyDown(OIS::KC_Q))
-        _player->rotate(AEntity::Direction::UP_RIGHT);
+        EntityManager::getMainPlayer()->rotate(AEntity::Direction::UP_RIGHT);
     else
-        _player->rotate(AEntity::Direction::UP);
+        EntityManager::getMainPlayer()->rotate(AEntity::Direction::UP);
 }
 
 void    Indie::SceneDisplayer::movePlayerRight(OIS::Keyboard *keyboard) {
-    _player->move(Ogre::Vector3(0, 0, _player->getMoveSpeed()));
+    EntityManager::getMainPlayer()->move(Ogre::Vector3(0, 0, EntityManager::getMainPlayer()->getMoveSpeed()));
     if (keyboard->isKeyDown(OIS::KC_Z) && !keyboard->isKeyDown(OIS::KC_S))
-        _player->rotate(AEntity::Direction::UP_RIGHT);
+        EntityManager::getMainPlayer()->rotate(AEntity::Direction::UP_RIGHT);
     else if (keyboard->isKeyDown(OIS::KC_S) && !keyboard->isKeyDown(OIS::KC_Z))
-        _player->rotate(AEntity::Direction::DOWN_RIGHT);
+        EntityManager::getMainPlayer()->rotate(AEntity::Direction::DOWN_RIGHT);
     else
-        _player->rotate(AEntity::Direction::RIGHT);
+        EntityManager::getMainPlayer()->rotate(AEntity::Direction::RIGHT);
 }
 
 void    Indie::SceneDisplayer::moveCameraUp(OIS::Keyboard *keyboard) {
@@ -254,15 +256,15 @@ void    Indie::SceneDisplayer::moveCameraUp(OIS::Keyboard *keyboard) {
 
     static_cast<void>(keyboard);
     if (camera) {
-        camera->setPosition(Ogre::Vector3(_player->getPosition().x - 200, camera->getPositionForViewUpdate().y + 10, _player->getPosition().z));
-        camera->lookAt(_player->getPosition());
+        camera->setPosition(Ogre::Vector3(EntityManager::getMainPlayer()->getPosition().x - 200, camera->getPositionForViewUpdate().y + 10, EntityManager::getMainPlayer()->getPosition().z));
+        camera->lookAt(EntityManager::getMainPlayer()->getPosition());
     }
 }
 
 void    Indie::SceneDisplayer::moveCameraDown(OIS::Keyboard *keyboard) {
     Ogre::Camera    *camera = mSceneManager->getCamera("MainCam");
     if (camera) {
-        camera->setPosition(Ogre::Vector3(_player->getPosition().x - 200, camera->getPositionForViewUpdate().y - 10, _player->getPosition().z));
-        camera->lookAt(_player->getPosition());
+        camera->setPosition(Ogre::Vector3(EntityManager::getMainPlayer()->getPosition().x - 200, camera->getPositionForViewUpdate().y - 10, EntityManager::getMainPlayer()->getPosition().z));
+        camera->lookAt(EntityManager::getMainPlayer()->getPosition());
     }
 }

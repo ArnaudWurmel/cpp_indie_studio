@@ -10,10 +10,11 @@
 # include "AEntity.hh"
 # include "../Config/Config.hh"
 # include "Explosion.hh"
+# include "ExplosableEntity.hh"
 
 namespace Indie {
     class   APlayer;
-    class Bomb : public AEntity {
+    class Bomb : public AEntity, public ExplosableEntity {
     public:
         Bomb(Ogre::SceneManager *, APlayer const&);
         ~Bomb();

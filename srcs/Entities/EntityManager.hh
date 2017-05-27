@@ -9,6 +9,7 @@
 # include "AEntity.hh"
 # include "../MapParser/MapParser.hh"
 # include "Block.hh"
+# include "../Player/APlayer.hh"
 
 namespace Indie {
     class EntityManager {
@@ -25,9 +26,11 @@ namespace Indie {
         ~EntityManager();
 
         static EntityManager*   getEntityManager(bool reset = false);
-
         static void addEntity(AEntity *);
         static std::vector<std::shared_ptr<Indie::AEntity> >&   getEntityList();
+
+        static void setMainPlayer(Indie::APlayer *);
+        static std::unique_ptr<Indie::APlayer>& getMainPlayer();
 
 
     public:
@@ -41,6 +44,8 @@ namespace Indie {
 
     private:
         std::vector<std::shared_ptr<Indie::AEntity> >   _entityList;
+        std::vector<std::unique_ptr<Indie::APlayer> >   _playerList;
+        std::unique_ptr<Indie::APlayer> _mainPlayer;
     };
 }
 

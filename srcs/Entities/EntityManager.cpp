@@ -36,9 +36,22 @@ std::vector<std::shared_ptr<Indie::AEntity> >& Indie::EntityManager::getEntityLi
     throw std::exception();
 }
 
-Indie::EntityManager::EntityManager() {
+void    Indie::EntityManager::setMainPlayer(Indie::APlayer *player) {
+    Indie::EntityManager    *entityManager = getEntityManager();
 
+    if (entityManager)
+        entityManager->_mainPlayer = std::unique_ptr<Indie::APlayer>(player);
 }
+
+std::unique_ptr<Indie::APlayer>&    Indie::EntityManager::getMainPlayer() {
+    Indie::EntityManager    *entityManager = getEntityManager();
+
+    if (entityManager)
+        return (entityManager->_mainPlayer);
+    throw std::exception();
+}
+
+Indie::EntityManager::EntityManager() {}
 
 Indie::EntityManager::~EntityManager() {
     _entityList.clear();
@@ -72,9 +85,12 @@ Indie::AEntity  *Indie::EntityManager::createDynamicBlock(Ogre::SceneManager *sc
 }
 
 Indie::AEntity  *Indie::EntityManager::createHuman(Ogre::SceneManager *sceneManager, Ogre::Vector3 const& entityPos) {
-    return new Indie::HumanPlayer(entityPos, sceneManager);
+    Indie::HumanPlayer  *player = new Indie::HumanPlayer(entityPos, sceneManager);
+
+    setMainPlayer(player);
+    return player;
 }
 
 Indie::AEntity  *Indie::EntityManager::createDynamicParticle(Ogre::SceneManager *sceneManager, Ogre::Vector3 const& entityPos) {
-    return new Indie::BreakableBlock(sceneManager, entityPos, AEntity::BlockType::PARTICLE);
+    return new Indie::Block(sceneManager, entityPos);
 }

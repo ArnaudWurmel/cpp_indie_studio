@@ -23,7 +23,7 @@ namespace   Indie
 
     public:
         void    initScene();
-        void    updateScene();
+        bool    updateScene();
 
     private:
         void    createGround();
@@ -61,8 +61,6 @@ namespace   Indie
     private:
         Ogre::SceneManager  *mSceneManager;
         std::vector<std::vector<Indie::MapParser::TileType> >   _map;
-        //std::vector<std::shared_ptr<AEntity>>    _entityList;
-        std::unique_ptr<Indie::APlayer>  _player;
     };
 }
 

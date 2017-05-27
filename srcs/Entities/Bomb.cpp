@@ -23,10 +23,12 @@ Ogre::Vector3   Indie::Bomb::getBombPosition(const APlayer& player) {
     return (ret);
 }
 
-Indie::Bomb::Bomb(Ogre::SceneManager *sceneManager, const Indie::APlayer& delegate) : AEntity(sceneManager, getBombPosition(delegate), "bomb.mesh"), _delegate(delegate) {
+Indie::Bomb::Bomb(Ogre::SceneManager *sceneManager, const Indie::APlayer& delegate) : AEntity(sceneManager, getBombPosition(delegate), "bomb.mesh"), ExplosableEntity(), _delegate(delegate) {
     mSceneNode->setScale(Ogre::Vector3(5.0f, 5.0f, 5.0f));
     mTransformation = Ogre::Vector3(10.0f, 10.0f, 10.0f);
     _explodeTime = Config::getExplodeTime();
+    addParticlesColor("Particles/Blue");
+    addParticlesColor("Particles/Grey");
 }
 
 bool    Indie::Bomb::hittedByExplosion() const {
@@ -48,12 +50,15 @@ bool    Indie::Bomb::updateFromLoop(Ogre::SceneManager *sceneManager) {
     }
     if (mIsAlive) {
         if (!_explodeTime)
+        {
+            createAllParticles(sceneManager, getPosition());
             this->explode(sceneManager);
+        }
         else
             _explodeTime -= 1;
     }
     else
-        return _explosionList.size() > 0;
+        return (updateParticles(sceneManager) || _explosionList.size() > 0);
     return true;
 }
 

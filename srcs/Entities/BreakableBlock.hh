@@ -8,10 +8,11 @@
 # include <vector>
 # include "../Particle/Particle.hh"
 # include "AEntity.hh"
+# include "ExplosableEntity.hh"
 
 namespace Indie {
 
-    class BreakableBlock : public Indie::AEntity {
+    class BreakableBlock : public Indie::AEntity, public Indie::ExplosableEntity {
 
     public:
         BreakableBlock(Ogre::SceneManager *, Ogre::Vector3 const&, AEntity::BlockType const& blockType = BlockType::NORMAL);

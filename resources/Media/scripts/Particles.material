@@ -1,0 +1,85 @@
+material Particles/Grey
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture BleuNuit.png
+			}
+		}
+	}
+}
+
+material Particles/Blue
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture Bleu.png
+			}
+		}
+	}
+
+}
+
+material Particles/Red
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture Rouge.png
+			}
+		}
+	}
+
+}
+
+material Particles/Pink
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture Mauve.png
+			}
+		}
+	}
+}
+
+material Particles/Orange
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture Orange.png
+			}
+		}
+	}
+}
+
+material Particles/Vert
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture Vert.png
+			}
+		}
+	}
+}
