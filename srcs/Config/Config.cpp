@@ -5,7 +5,7 @@
 #include "Config.hh"
 
 Ogre::Real Indie::Config::getGravity() {
-    return Ogre::Real(4);
+    return Ogre::Real(2);
 }
 
 Ogre::Real Indie::Config::getMoveSpeed() {
