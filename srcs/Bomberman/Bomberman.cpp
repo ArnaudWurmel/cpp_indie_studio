@@ -3,6 +3,7 @@
 //
 
 #include <iostream>
+#include <chrono>
 #include "Bomberman.hh"
 
 Indie::Bomberman::Bomberman() {
@@ -49,10 +50,28 @@ void    Indie::Bomberman::createCamera() {
  * Run ogre3d app
  */
 void Indie::Bomberman::runApp() {
+    Ogre::Real  timeSinceLastFrame = 0.0;
+    float   timeStep = 1 / 60.0f;
+    float   timeStepAccumulator = 0.0f;
+
     while (true) {
         Ogre::WindowEventUtilities::messagePump();
-        if (mRenderWindow->isClosed() || !mSceneDisplayer->updateScene() || !mRoot->renderOneFrame())
+        timeStepAccumulator += timeSinceLastFrame;
+        while (timeStepAccumulator >= timeStep) {
+            if (!mSceneDisplayer->updateScene())
+                return ;
+            mSceneDisplayer->registerKeyboardEvent(mEventListener->getKeyboard());
+            timeStepAccumulator -= timeStep;
+        }
+        std::chrono::time_point<std::chrono::system_clock> started = std::chrono::system_clock::now();
+
+        if (mRenderWindow->isClosed() || !mRoot->renderOneFrame(timeSinceLastFrame))
             return ;
+        std::chrono::time_point<std::chrono::system_clock> ended = std::chrono::system_clock::now();
+        timeSinceLastFrame = (std::chrono::duration_cast<std::chrono::milliseconds>(ended - started).count());
+        timeSinceLastFrame = timeSinceLastFrame / 1000.0f;
+        if (timeSinceLastFrame > 1.0f)
+            timeSinceLastFrame = 1.0f;
     }
 }
 

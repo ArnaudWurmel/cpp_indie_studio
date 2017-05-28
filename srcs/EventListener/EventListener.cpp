@@ -78,9 +78,10 @@ bool Indie::EventListener::frameRenderingQueued(const Ogre::FrameEvent &evt) {
 }
 
 void Indie::EventListener::handleKeyboard() {
-    if (mEventRegister) {
-        mEventRegister->registerKeyboardEvent(mKeyboard);
-    }
+}
+
+OIS::Keyboard   *Indie::EventListener::getKeyboard() const {
+    return mKeyboard;
 }
 
 Indie::EventListener::~EventListener() {}
