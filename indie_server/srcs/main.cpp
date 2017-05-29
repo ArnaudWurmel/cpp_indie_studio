@@ -1,8 +1,11 @@
 #include <iostream>
 #include "Router.hh"
+#include "Server.h"
 
 int main() {
     Indie::Router   router;
+    Indie::Server   server(4242);
+    int             fd;
 
     if (!router.parseLine("/user/connect Arnaud 123"))
         std::cout << "500 Error" << std::endl;
