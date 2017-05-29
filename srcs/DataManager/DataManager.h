@@ -12,6 +12,8 @@ namespace   Indie {
     private:
         const std::string&  _ip;
         int                 _port;
+        int                 _sockfd;
+        struct sockaddr_in  _serv;
 
     private:
         DataManager(const std::string&, int);
@@ -20,6 +22,9 @@ namespace   Indie {
     public:
         static DataManager  *getSingloton(const std::string&, int, bool reset = false);
         bool                connect(const std::string&, const std::string&);
+        bool                joinRoom(const std::string& userName, unsigned int roomId);
+        bool                quitRoom(const std::string& userName);
+        bool                getMap(unsigned int roomId);
     };
 }
 
