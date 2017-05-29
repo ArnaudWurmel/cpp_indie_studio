@@ -7,7 +7,11 @@
 
 namespace   Indie {
     class   ISocket {
+    public:
         virtual ~ISocket() {};
+
+    public:
+        virtual int getFd() = 0;
     };
 }
 

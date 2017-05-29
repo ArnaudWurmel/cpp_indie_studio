@@ -5,13 +5,15 @@
 #ifndef CPP_INDIE_STUDIO_SERVER_H
 # define CPP_INDIE_STUDIO_SERVER_H
 
+#include <bits/unique_ptr.h>
+#include "ISocket.h"
+
 namespace   Indie {
     class   Server {
     private:
-        struct sockaddr_in s_in;
-        int fd;
-        int port;
-
+        std::unique_ptr<ISocket>    _soc;
+        struct sockaddr_in          _s_in;
+        int                         _port;
 
     public:
         Server();

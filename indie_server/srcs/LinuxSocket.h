@@ -10,11 +10,14 @@
 namespace   Indie {
     class   LinuxSocket : public ISocket {
     private:
-        int fd;
+        int _fd;
 
     public:
         LinuxSocket();
         ~LinuxSocket();
+
+    public:
+        int getFd();
     };
 }
 
