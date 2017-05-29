@@ -7,6 +7,7 @@
 #include <ctime>
 #include <exception>
 #include "Bomberman/Bomberman.hh"
+#include "DataManager/DataManager.h"
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
 #define WIN32_LEAN_AND_MEAN
@@ -19,9 +20,14 @@
 	int main()
 #endif
 {
-    Indie::Bomberman    bomberman;
+    Indie::DataManager  *dataManager = Indie::DataManager::getSingloton("127.0.0.1", 4242);
 
     std::srand(std::time(0));
+    if (!dataManager->joinRoom("Thibaud", 0)) {
+        std::cout << "Can't join room" << std::endl;
+        return (1);
+    }
+    Indie::Bomberman    bomberman;
     try {
         if (!bomberman.loadApp())
         {
@@ -33,6 +39,7 @@
 			return 1;
         }
         bomberman.runApp();
+        dataManager->quitRoom("Thibaud");
         return 0;
     } catch (std::exception& e) {
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
@@ -41,5 +48,6 @@
         std::cerr << e.what() << std::endl;
 #endif
     }
+    dataManager->quitRoom("Thibaud");
     return 0;
 }

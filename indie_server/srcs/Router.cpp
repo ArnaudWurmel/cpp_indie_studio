@@ -43,6 +43,7 @@ bool    Indie::Router::parseLine(std::string const& input, Server& server) {
         while (it != input.end() && *it == ' ')
             ++it;
     }
+    std::cout << tokenList[0] << std::endl;
     if (tokenList.size() > 0 && fnc.find(tokenList[0]) != fnc.end()) {
         cmdPtr ptr = (*fnc.find(tokenList[0])).second;
         return (this->*ptr)(tokenList, server);
@@ -87,6 +88,7 @@ bool    Indie::Router::userConnect(std::vector<std::string> const& input, Server
 }
 
 bool    Indie::Router::getRoomList(std::vector<std::string> const& input, Server& server) {
+    std::cout << input.size() << std::endl;
     if (input.size() != 1)
         return false;
     GameManager *gameManager = GameManager::getSingleton();

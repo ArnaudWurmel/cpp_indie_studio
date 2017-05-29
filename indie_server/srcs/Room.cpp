@@ -14,7 +14,7 @@ Indie::Room::Room() {
 }
 
 bool    Indie::Room::addPlayerToRoom(std::string const& pName) {
-    if (_playerList.size() < 4 && !_running) {
+    if (_playerList.size() < 4) {
         _playerList.push_back(pName);
         return true;
     }

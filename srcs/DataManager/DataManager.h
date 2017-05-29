@@ -6,6 +6,10 @@
 #define CPP_INDIE_STUDIO_DATAMANAGER_H
 
 #include <string>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <OgreVector3.h>
+
 
 namespace   Indie {
     class DataManager {
@@ -26,6 +30,7 @@ namespace   Indie {
         bool                joinRoom(const std::string& userName, unsigned int roomId);
         bool                quitRoom(const std::string& userName);
         bool                getMap(unsigned int roomId, std::vector<std::string>&);
+        Ogre::Vector3       getPlayerStart(unsigned int roomId, std::string pName);
     };
 }
 

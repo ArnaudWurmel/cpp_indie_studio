@@ -6,6 +6,7 @@
 #include <iostream>
 #include <Ogre.h>
 #include "MapParser.hh"
+#include "../DataManager/DataManager.h"
 
 Indie::MapParser&   Indie::MapParser::getMapParser(std::string const& mapPath) {
     static Indie::MapParser *mapParser = NULL;
@@ -31,32 +32,30 @@ std::vector<std::vector<Indie::MapParser::TileType>> const& Indie::MapParser::ge
 
 void    Indie::MapParser::loadMap(std::string const& mapPath)
 {
-    std::ifstream   file(mapPath);
-    std::string     line;
+    std::vector<std::string>    map;
+    DataManager *dataManager = DataManager::getSingloton("127.0.0.1", 4242);
 
-    if (file.is_open())
-    {
-        while (std::getline(file, line)) {
-            std::string::iterator it = line.begin();
-            std::vector<TileType>   lineVector;
+    std::cout << dataManager->getMap(0, map) << std::endl;
+    std::vector<std::string>::iterator  it;
 
-            while (it != line.end()) {
-                if (_convert.find(*it) != _convert.end()) {
-                    lineVector.push_back(_convert[*it]);
-                }
-                else {
-                    _map.clear();
-                    Ogre::LogManager::getSingletonPtr()->logMessage("/!\\ MAP PARSING FAILED /!\\");
-                    return ;
-                }
-                ++it;
+    it = map.begin();
+    while (it != map.end()) {
+        std::cout << (*it) << std::endl;
+        std::string::iterator   itString = (*it).begin();
+        std::vector<MapParser::TileType>    lineVec;
+
+        while (itString != (*it).end()) {
+            if (_convert.find(*itString) != _convert.end()) {
+                lineVec.push_back(_convert[*itString]);
             }
-            _map.push_back(lineVector);
+            else
+                lineVec.push_back(MapParser::TileType::EMPTY);
+            ++itString;
         }
-        Ogre::LogManager::getSingletonPtr()->logMessage("*** Map parsing ended ***");
+        _map.push_back(lineVec);
+        ++it;
     }
-    else
-        Ogre::LogManager::getSingletonPtr()->logMessage("/!\\ MAP PARSING FAILED /!\\");
+
 }
 
 Indie::MapParser::~MapParser() {}

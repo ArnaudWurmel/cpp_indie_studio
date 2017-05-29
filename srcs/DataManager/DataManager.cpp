@@ -3,8 +3,6 @@
 //
 
 #include <cstring>
-#include <netinet/in.h>
-#include <arpa/inet.h>
 #include <sstream>
 #include <vector>
 #include "DataManager.h"
@@ -96,8 +94,10 @@ bool Indie::DataManager::quitRoom(const std::string &userName) {
     return true;
 }
 
+#include <iostream>
+
 bool                            Indie::DataManager::getMap(unsigned int roomId, std::vector<std::string>& map) {
-    std::string                 tmp = "/game/quitRoom ";
+    std::string                 tmp = "/game/getMap ";
     char                        buf[4097];
     std::string                 mapTmp;
     std::stringstream           mapss;
@@ -115,6 +115,7 @@ bool                            Indie::DataManager::getMap(unsigned int roomId, 
     if ((ret = recvfrom(_sockfd, buf, sizeof(buf), 0, reinterpret_cast<struct sockaddr *>(&_client), &client_size)) == -1)
         return false;
     buf[ret] = 0;
+    std::cout << buf << std::endl;
     if (std::atoi(buf) != 200)
         return false;
     if (std::strlen(buf) > 4)
@@ -123,6 +124,10 @@ bool                            Indie::DataManager::getMap(unsigned int roomId, 
     while (std::getline(mapss, readTmp))
         map.push_back(readTmp);
     return true;
+}
+
+Ogre::Vector3 Indie::DataManager::getPlayerStart(unsigned int roomId, std::string pName) {
+
 }
 
 
