@@ -5,6 +5,10 @@
 #ifndef PARSER_H_
 # define PARSER_H_
 
+# include <vector>
+# include <string>
+# include <map>
+
 namespace   Indie {
     class   Router {
     public:
@@ -22,14 +26,14 @@ namespace   Indie {
         bool    parseLine(std::string const&);
 
     private:
-        using cmdPtr = void (Router::*)(std::string const&);
+        using cmdPtr = bool (Router::*)(std::vector<std::string> const&);
 
     private:
         static const std::map<std::string, cmdPtr> fnc;
         static const std::vector<User> userList;
 
     private:
-        void userConnect(std::string const&);
+        bool userConnect(std::vector<std::string> const&);
     };
 }
 

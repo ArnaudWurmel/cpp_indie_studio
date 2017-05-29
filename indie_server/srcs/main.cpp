@@ -1,6 +1,9 @@
 #include <iostream>
+#include "Router.hh"
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
+    Indie::Router   router;
+
+    std::cout << router.parseLine("/user/connect") << std::endl;
     return 0;
 }
