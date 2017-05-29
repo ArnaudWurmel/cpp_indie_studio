@@ -2,6 +2,7 @@
 // Created by wurmel_a on 29/05/17.
 //
 
+#include <iostream>
 #include "Game.hh"
 
 Indie::Game::Player::Player(std::string const& pName) {
@@ -19,6 +20,10 @@ Indie::Game::Game(std::vector<std::string> const& playerList) {
         _playerList.push_back(std::unique_ptr<Player>(new Player(*it)));
         ++it;
     }
+}
+
+std::vector<std::string> const& Indie::Game::getMap() const {
+    return _map;
 }
 
 Indie::Game::~Game() {}

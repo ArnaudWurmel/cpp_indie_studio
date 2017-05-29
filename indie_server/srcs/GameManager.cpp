@@ -2,6 +2,7 @@
 // Created by wurmel_a on 29/05/17.
 //
 
+#include <iostream>
 #include <string>
 #include "GameManager.hh"
 
@@ -77,6 +78,18 @@ bool    Indie::GameManager::runGame(unsigned int const& roomId) {
     while (it != _roomList.end()) {
         if ((*it)->getRoomId() == roomId) {
             return (*it)->runGame();
+        }
+        ++it;
+    }
+    return false;
+}
+
+bool    Indie::GameManager::getMap(unsigned int const& roomId, Server& server) const {
+    std::vector<std::unique_ptr<Indie::Room> >::const_iterator    it = _roomList.begin();
+
+    while (it != _roomList.end()) {
+        if ((*it)->getRoomId() == roomId) {
+            return (*it)->getMap(server);
         }
         ++it;
     }

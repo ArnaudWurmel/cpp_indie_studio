@@ -40,6 +40,7 @@ namespace   Indie {
         bool joinRoom(std::vector<std::string> const&, Server&);
         bool exitRoom(std::vector<std::string> const&, Server&);
         bool runGame(std::vector<std::string> const&, Server&);
+        bool getMap(std::vector<std::string> const&, Server&);
     };
 }
 

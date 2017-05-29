@@ -26,6 +26,7 @@ namespace   Indie
         std::vector<std::unique_ptr<Indie::Room> > const&   getRoomList();
         void    exitRoom(std::string const& pName);
         bool    runGame(unsigned int const&);
+        bool    getMap(unsigned int const&, Server&) const;
 
     public:
         void    lock();

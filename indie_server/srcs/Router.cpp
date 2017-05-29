@@ -15,7 +15,8 @@ const std::map<std::string, Indie::Router::cmdPtr> Indie::Router::fnc = {
         { "/game/joinRoom", &Indie::Router::joinRoom },
         { "/game/quitRoom", &Indie::Router::exitRoom },
         { "/game/getRoomList", &Indie::Router::getRoomList },
-        { "/game/runGame", &Indie::Router::runGame }
+        { "/game/runGame", &Indie::Router::runGame },
+        { "/game/getMap", &Indie::Router::getMap }
 };
 
 const std::vector<Indie::Router::User> Indie::Router::userList = {
@@ -143,6 +144,24 @@ bool    Indie::Router::runGame(std::vector<std::string> const& input, Server& se
             server.setResponse("200 OK");
     }
     gameManager->release();
+    return state;
+}
+
+bool    Indie::Router::getMap(std::vector<std::string> const& input, Server& server) {
+    if (input.size() != 2) {
+        return false;
+    }
+
+    GameManager *gameManager = GameManager::getSingleton();
+
+    int roomId = std::atoi(input[1].c_str());
+    bool state = false;
+    if (roomId >= 0) {
+        std::cout << roomId << std::endl;
+        state = gameManager->getMap(roomId, server);
+    }
+    gameManager->release();
+    return state;
 }
 
 Indie::Router::~Router() {}

@@ -8,6 +8,7 @@
 # include <vector>
 # include <string>
 # include "Game.hh"
+# include "Server.h"
 
 namespace Indie
 {
@@ -22,6 +23,7 @@ namespace Indie
         std::vector<std::string> const& getPlayerList();
         bool    removePlayerFromRoom(std::string const&);
         bool    runGame();
+        bool    getMap(Server&);
 
     public:
         static unsigned int roomId;

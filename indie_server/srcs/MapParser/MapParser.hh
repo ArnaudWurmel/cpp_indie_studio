@@ -7,34 +7,24 @@
 
 # include <vector>
 # include <map>
+# include <string>
 # include <utility>
 # include <string>
 
 namespace   Indie {
     class MapParser {
     public:
-        static MapParser&   getMapParser(std::string const&);
-    public:
-        enum TileType {
-            EMPTY = 0,
-            STATIC_BLOCK = 1,
-            DYNAMIC_BLOCK,
-            PLAYER,
-        };
-
-    public:
         MapParser(std::string const&);
         ~MapParser();
 
     public:
-        std::vector<std::vector<TileType> > const& getMap();
+        std::vector<std::string> const& getMap();
 
     private:
         void    loadMap(std::string const&);
 
     private:
-        std::vector<std::vector<TileType> > _map;
-        std::map<char, TileType>            _convert;
+        std::vector<std::string> _map;
     };
 }
 

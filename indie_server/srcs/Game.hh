@@ -32,11 +32,14 @@ namespace   Indie {
         Game(std::vector<std::string> const&);
         ~Game();
 
+    public:
+        std::vector<std::string> const& getMap() const;
+
     private:
         unsigned int    _bombId;
         std::vector<std::unique_ptr<Bomb> > _bombList;
         std::vector<std::unique_ptr<Player> >   _playerList;
-        std::vector<std::vector<Indie::MapParser::TileType> >   _map;
+        std::vector<std::string>   _map;
     };
 }
 
