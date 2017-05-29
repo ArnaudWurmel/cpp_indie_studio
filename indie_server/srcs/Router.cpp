@@ -111,8 +111,6 @@ bool    Indie::Router::joinRoom(std::vector<std::string> const& input) {
             std::cout << "200 OK" << std::endl;
     }
     gameManager->release();
-    if (!state)
-        std::cout << "500 Error" << std::endl;
     return state;
 }
 
@@ -139,8 +137,6 @@ bool    Indie::Router::runGame(std::vector<std::string> const& input) {
         if (state)
             std::cout << "200 OK" << std::endl;
     }
-    if (!state)
-        std::cout << "500 Error" << std::endl;
     gameManager->release();
 }
 

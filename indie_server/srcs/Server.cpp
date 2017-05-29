@@ -3,8 +3,11 @@
 //
 
 #include <netdb.h>
+#include <arpa/inet.h>
 #include <cstdlib>
-#include <exception>
+#include <cstring>
+#include <iostream>
+#include "Router.hh"
 #include "Server.h"
 #include "LinuxSocket.h"
 
@@ -15,18 +18,37 @@ Indie::Server::Server(int port) {
     _soc = std::unique_ptr<ISocket>(new Indie::LinuxSocket());
     if (bind(_soc->getFd(), reinterpret_cast<const struct sockaddr *>(&_s_in), sizeof(_s_in)) == -1)
         throw std::exception();
-    if (listen(_soc->getFd(), 5) == -1)
-        throw std::exception();
+}
+
+void    Indie::Server::serverLoop() {
+    Router  router;
+
+    try {
+        while (true) {
+            struct sockaddr    upaddrfrom;
+            socklen_t fromLen = sizeof(upaddrfrom);
+            char    buffer[4096];
+            int     readSize;
+
+            std::memset(_buffer, 0, 4096);
+            readSize = recvfrom(_soc->getFd(), buffer, sizeof(buffer), 0, &upaddrfrom, &fromLen);
+            if (readSize < 0) {
+                throw std::exception();
+            }
+            buffer[readSize] = '\0';
+            if (!router.parseLine(buffer)) {
+                setResponse("500 Error");
+            }
+            if (sendto(_soc->getFd(), _buffer, sizeof(_buffer), 0, &upaddrfrom, fromLen) == -1)
+                throw std::exception();
+        }
+    } catch (std::exception& e) {
+        std::cout << e.what() << std::endl;
+    }
+}
+
+void    Indie::Server::setResponse(std::string const& res) {
+    std::strncpy(_buffer, res.c_str(), 4096);
 }
 
 Indie::Server::~Server() {}
-
-int Indie::Server::accept_client() {
-    struct sockaddr_in    s_in_client;
-    socklen_t             s_in_client_size;
-    int                   client_fd;
-
-    if ((client_fd = accept(_soc->getFd(), reinterpret_cast<struct sockaddr *>(&s_in_client), &s_in_client_size)) == -1)
-        throw std::exception();
-    return client_fd;
-}

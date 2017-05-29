@@ -14,13 +14,17 @@ namespace   Indie {
     private:
         std::unique_ptr<ISocket>    _soc;
         struct sockaddr_in          _s_in;
+        char                        _buffer[4096];
 
     public:
         Server(int port);
         ~Server();
 
     public:
-        int accept_client();
+        void    serverLoop();
+
+    public:
+        void    setResponse(std::string const&);
     };
 }
 

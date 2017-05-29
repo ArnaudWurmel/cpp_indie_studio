@@ -8,7 +8,7 @@
 #include "LinuxSocket.h"
 
 Indie::LinuxSocket::LinuxSocket() {
-    if ((_fd = socket(AF_INET, SOCK_STREAM, 0)) == -1)
+    if ((_fd = socket(PF_INET, SOCK_DGRAM, 0)) == -1)
         throw std::exception();
 }
 
