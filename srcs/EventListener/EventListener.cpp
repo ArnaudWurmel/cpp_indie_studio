@@ -73,11 +73,7 @@ bool Indie::EventListener::frameRenderingQueued(const Ogre::FrameEvent &evt) {
     mMouse->capture();
     if(mKeyboard->isKeyDown(OIS::KC_ESCAPE))
         return false;
-    handleKeyboard();
     return true;
-}
-
-void Indie::EventListener::handleKeyboard() {
 }
 
 OIS::Keyboard   *Indie::EventListener::getKeyboard() const {

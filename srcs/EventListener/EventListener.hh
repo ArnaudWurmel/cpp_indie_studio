@@ -38,9 +38,6 @@ namespace Indie {
         OIS::Keyboard   *getKeyboard() const;
 
     private:
-        void    handleKeyboard();
-
-    private:
         void    initOIS();
 
     private:

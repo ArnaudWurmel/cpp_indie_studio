@@ -5,6 +5,7 @@
 #include <iostream>
 #include <chrono>
 #include "Bomberman.hh"
+#include "OgreMovableObject.h"
 
 Indie::Bomberman::Bomberman() {
 
