@@ -34,6 +34,11 @@ namespace   Indie {
 
     private:
         bool userConnect(std::vector<std::string> const&);
+        bool createRoom(std::vector<std::string> const&);
+        bool getRoomList(std::vector<std::string> const&);
+        bool joinRoom(std::vector<std::string> const&);
+        bool exitRoom(std::vector<std::string> const&);
+        bool runGame(std::vector<std::string> const& );
     };
 }
 

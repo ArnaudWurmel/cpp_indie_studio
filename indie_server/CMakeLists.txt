@@ -3,5 +3,5 @@ project(indie_server)
 
 set(CMAKE_CXX_STANDARD 14)
 
-set(SOURCE_FILES srcs/main.cpp srcs/LinuxSocket.cpp srcs/Router.cpp srcs/Server.cpp)
+set(SOURCE_FILES srcs/main.cpp srcs/LinuxSocket.cpp srcs/Router.cpp srcs/Server.cpp srcs/GameManager.cpp srcs/GameManager.hh srcs/Room.cpp srcs/Room.hh srcs/Game.cpp srcs/Game.hh srcs/MapParser/MapParser.cpp srcs/MapParser/MapParser.hh)
 add_executable(indie_server ${SOURCE_FILES})
