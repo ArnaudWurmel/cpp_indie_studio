@@ -5,22 +5,21 @@
 #ifndef CPP_INDIE_STUDIO_SERVER_H
 # define CPP_INDIE_STUDIO_SERVER_H
 
-class server
-{
-private:
-    struct protoent     *pe;
-    struct sockaddr_in  s_in;
-    int                 fd;
-    int                 port;
+namespace   Indie {
+    class   Server {
+    private:
+        struct sockaddr_in s_in;
+        int fd;
+        int port;
 
 
-public:
-    server();
-    ~server();
+    public:
+        Server();
+        ~Server();
 
-public:
-    int accept_client();
-
-};
+    public:
+        int accept_client();
+    };
+}
 
 #endif //CPP_INDIE_STUDIO_SERVER_H
