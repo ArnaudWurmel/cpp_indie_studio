@@ -13,6 +13,8 @@
 namespace   Indie {
     class MapParser {
     public:
+        static MapParser&   getMapParser(std::string const&);
+    public:
         enum TileType {
             EMPTY = 0,
             STATIC_BLOCK = 1,

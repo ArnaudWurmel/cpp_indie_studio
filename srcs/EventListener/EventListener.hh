@@ -34,8 +34,8 @@ namespace Indie {
          */
         virtual bool frameRenderingQueued(const Ogre::FrameEvent& evt);
 
-    private:
-        void    handleKeyboard();
+    public:
+        OIS::Keyboard   *getKeyboard() const;
 
     private:
         void    initOIS();

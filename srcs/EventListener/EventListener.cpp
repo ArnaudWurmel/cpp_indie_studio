@@ -3,6 +3,8 @@
 //
 
 #include <iostream>
+#include <thread>
+#include <chrono>
 #include "EventListener.hh"
 
 Indie::EventListener::EventListener(Ogre::SceneManager *sceneManager,
@@ -23,13 +25,14 @@ void    Indie::EventListener::initOIS() {
     windowHndStr << windowHnd;
     pl.insert(std::make_pair(std::string("WINDOW"), windowHndStr.str()));
     mInputManager = OIS::InputManager::createInputSystem(pl);
-    mKeyboard = static_cast<OIS::Keyboard*>(mInputManager->createInputObject( OIS::OISKeyboard, false ));
+    mKeyboard = static_cast<OIS::Keyboard*>(mInputManager->createInputObject( OIS::OISKeyboard, true));
     mMouse = static_cast<OIS::Mouse*>(mInputManager->createInputObject( OIS::OISMouse, false ));
 }
 
 void    Indie::EventListener::setUpEventRegister(AEventRegister *eventRegister) {
     Ogre::LogManager::getSingletonPtr()->logMessage("Event register setted.");
     mEventRegister = eventRegister;
+    mKeyboard->setEventCallback(mEventRegister);
 }
 
 /***************************************
@@ -63,20 +66,18 @@ void Indie::EventListener::windowClosed(Ogre::RenderWindow *renderWindow) {
 }
 
 bool Indie::EventListener::frameRenderingQueued(const Ogre::FrameEvent &evt) {
+
     if(mRenderWindow->isClosed())
         return false;
     mKeyboard->capture();
     mMouse->capture();
     if(mKeyboard->isKeyDown(OIS::KC_ESCAPE))
         return false;
-    handleKeyboard();
     return true;
 }
 
-void Indie::EventListener::handleKeyboard() {
-    if (mEventRegister) {
-        mEventRegister->registerKeyboardEvent(mKeyboard);
-    }
+OIS::Keyboard   *Indie::EventListener::getKeyboard() const {
+    return mKeyboard;
 }
 
 Indie::EventListener::~EventListener() {}

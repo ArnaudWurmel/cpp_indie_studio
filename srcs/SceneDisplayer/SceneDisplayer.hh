@@ -23,19 +23,19 @@ namespace   Indie
 
     public:
         void    initScene();
-        void    updateScene();
+        bool    updateScene();
 
     private:
         void    createGround();
         void    createMap();
 
     private:
-        bool    makeCollide(std::unique_ptr<AEntity>&, OIS::KeyCode const&);
+        bool    makeCollide(std::unique_ptr<APlayer>&, OIS::KeyCode const&);
 
-        bool    checkUp(std::unique_ptr<AEntity> const&, std::unique_ptr<AEntity> const&) const;
-        bool    checkDown(std::unique_ptr<AEntity> const&, std::unique_ptr<AEntity> const&) const;
-        bool    checkLeft(std::unique_ptr<AEntity> const&, std::unique_ptr<AEntity> const&) const;
-        bool    checkRight(std::unique_ptr<AEntity> const&, std::unique_ptr<AEntity> const&) const;
+        bool    checkUp(std::unique_ptr<APlayer>&, std::shared_ptr<AEntity> const&) const;
+        bool    checkDown(std::unique_ptr<APlayer>&, std::shared_ptr<AEntity> const&) const;
+        bool    checkLeft(std::unique_ptr<APlayer>&, std::shared_ptr<AEntity> const&) const;
+        bool    checkRight(std::unique_ptr<APlayer>&, std::shared_ptr<AEntity> const&) const;
         /*
          * Callback for 'AEventRegister'
         */
@@ -43,6 +43,8 @@ namespace   Indie
         void    initEventRegister();
         void    registerKeyboardEvent(OIS::Keyboard *keyboard);
         void    registerMouseEvent(OIS::Mouse *mouse);
+        bool    keyPressed(const OIS::KeyEvent& ke);
+        bool    keyReleased(const OIS::KeyEvent& ke);
 
     private:
         void    movePlayerUp(OIS::Keyboard *);
@@ -54,13 +56,11 @@ namespace   Indie
 
     private:
         std::map<OIS::KeyCode, void (Indie::SceneDisplayer::*)(OIS::Keyboard *)> _functionPtr;
-        std::map<OIS::KeyCode, bool (Indie::SceneDisplayer::*)(std::unique_ptr<AEntity> const&, std::unique_ptr<AEntity> const&) const>  _collideGetter;
+        std::map<OIS::KeyCode, bool (Indie::SceneDisplayer::*)(std::unique_ptr<APlayer>&, std::shared_ptr<AEntity> const&) const>  _collideGetter;
 
     private:
         Ogre::SceneManager  *mSceneManager;
         std::vector<std::vector<Indie::MapParser::TileType> >   _map;
-        std::vector<std::unique_ptr<AEntity>>    _entityList;
-        std::unique_ptr<AEntity>  _player;
     };
 }
 

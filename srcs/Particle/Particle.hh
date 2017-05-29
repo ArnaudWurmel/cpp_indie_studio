@@ -12,7 +12,7 @@ namespace Indie {
 
     class Particle {
     public:
-        Particle(Indie::AEntity *);
+        Particle(Indie::AEntity *, std::string const&);
         ~Particle();
 
     public:
@@ -23,7 +23,6 @@ namespace Indie {
 
     private:
         std::unique_ptr<Indie::AEntity> mEntity;
-        int _power;
         Ogre::Vector3   _dirVector;
         int t;
     };

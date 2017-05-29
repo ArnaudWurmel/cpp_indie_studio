@@ -37,6 +37,7 @@ namespace Indie
         virtual bool hittedByExplosion() const = 0;
 
     public:
+        void    setMaterialName(std::string const&);
         bool    isAlive() const;
         Ogre::Vector3 getSize() const;
         Ogre::Vector3 getPosition() const;
