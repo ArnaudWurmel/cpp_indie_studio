@@ -5,15 +5,21 @@
 #ifndef CPP_INDIE_STUDIO_DATAMANAGER_H
 #define CPP_INDIE_STUDIO_DATAMANAGER_H
 
+#include <string>
 
 namespace   Indie {
     class DataManager {
     private:
-        DataManager();
+        const std::string&  _ip;
+        int                 _port;
+
+    private:
+        DataManager(const std::string&, int);
         ~DataManager();
 
     public:
-        static DataManager  *getSingloton(bool reset = false);
+        static DataManager  *getSingloton(const std::string&, int, bool reset = false);
+        bool                connect(const std::string&, const std::string&);
     };
 }
 
