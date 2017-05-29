@@ -26,7 +26,7 @@ const std::vector<Indie::Router::User> Indie::Router::userList = {
 
 Indie::Router::Router() {}
 
-bool    Indie::Router::parseLine(std::string const& input) {
+bool    Indie::Router::parseLine(std::string const& input, Server& server) {
     std::vector<std::string>    tokenList;
     std::string::const_iterator   it;
 
@@ -44,12 +44,12 @@ bool    Indie::Router::parseLine(std::string const& input) {
     }
     if (tokenList.size() > 0 && fnc.find(tokenList[0]) != fnc.end()) {
         cmdPtr ptr = (*fnc.find(tokenList[0])).second;
-        return (this->*ptr)(tokenList);
+        return (this->*ptr)(tokenList, server);
     }
     return false;
 }
 
-bool Indie::Router::createRoom(std::vector<std::string> const& tokenList) {
+bool Indie::Router::createRoom(std::vector<std::string> const& tokenList, Server& server) {
     if (tokenList.size() != 2)
         return false;
 
@@ -58,12 +58,16 @@ bool Indie::Router::createRoom(std::vector<std::string> const& tokenList) {
     unsigned int    roomId = gameManager->createRoom();
     bool state = gameManager->joinRoom(roomId, tokenList[1]);
     gameManager->release();
-    if (state)
-        std::cout << "200 " << roomId << std::endl;
+    if (state) {
+        std::string res = "200 ";
+
+        res += std::to_string(roomId);
+        server.setResponse(res);
+    }
     return state;
 }
 
-bool    Indie::Router::userConnect(std::vector<std::string> const& input) {
+bool    Indie::Router::userConnect(std::vector<std::string> const& input, Server& server) {
 
     std::vector<Indie::Router::User>::const_iterator    it;
 
@@ -73,7 +77,7 @@ bool    Indie::Router::userConnect(std::vector<std::string> const& input) {
     it = userList.begin();
     while (it != userList.end()) {
         if (!(*it).username.compare(input[1]) && !(*it).password.compare(input[2])) {
-            std::cout << "200 Connected." << std::endl;
+            server.setResponse("200 Connected.");
             return true;
         }
         ++it;
@@ -81,24 +85,25 @@ bool    Indie::Router::userConnect(std::vector<std::string> const& input) {
     return false;
 }
 
-bool    Indie::Router::getRoomList(std::vector<std::string> const& input) {
+bool    Indie::Router::getRoomList(std::vector<std::string> const& input, Server& server) {
     if (input.size() != 1)
         return false;
     GameManager *gameManager = GameManager::getSingleton();
 
     std::vector<std::unique_ptr<Indie::Room> >::const_iterator it = gameManager->getRoomList().begin();
+    std::string res = "200";
 
-    std::cout << "200";
     while (it != gameManager->getRoomList().end()) {
-        std::cout << " " << (*it)->getRoomId();
+        res += " ";
+        res += std::to_string((*it)->getRoomId());
         ++it;
     }
-    std::cout << std::endl;
+    server.setResponse(res);
     gameManager->release();
     return true;
 }
 
-bool    Indie::Router::joinRoom(std::vector<std::string> const& input) {
+bool    Indie::Router::joinRoom(std::vector<std::string> const& input, Server& server) {
     if (input.size() != 3)
         return false;
     GameManager *gameManager = GameManager::getSingleton();
@@ -108,24 +113,24 @@ bool    Indie::Router::joinRoom(std::vector<std::string> const& input) {
     if (roomId >= 0) {
         state = gameManager->joinRoom(roomId, input[2]);
         if (state)
-            std::cout << "200 OK" << std::endl;
+            server.setResponse("200 OK");
     }
     gameManager->release();
     return state;
 }
 
-bool    Indie::Router::exitRoom(std::vector<std::string> const& input) {
+bool    Indie::Router::exitRoom(std::vector<std::string> const& input, Server& server) {
     if (input.size() != 2)
         return false;
     GameManager *gameManager = GameManager::getSingleton();
 
     gameManager->exitRoom(input[1]);
     gameManager->release();
-    std::cout << "200 OK" << std::endl;
+    server.setResponse("200 OK");
     return true;
 }
 
-bool    Indie::Router::runGame(std::vector<std::string> const& input) {
+bool    Indie::Router::runGame(std::vector<std::string> const& input, Server& server) {
     if (input.size() != 2)
         return false;
     GameManager *gameManager = GameManager::getSingleton();
@@ -135,7 +140,7 @@ bool    Indie::Router::runGame(std::vector<std::string> const& input) {
     if (roomId >= 0) {
         state = gameManager->runGame(roomId);
         if (state)
-            std::cout << "200 OK" << std::endl;
+            server.setResponse("200 OK");
     }
     gameManager->release();
 }

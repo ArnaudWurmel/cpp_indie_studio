@@ -36,7 +36,7 @@ void    Indie::Server::serverLoop() {
                 throw std::exception();
             }
             buffer[readSize] = '\0';
-            if (!router.parseLine(buffer)) {
+            if (!router.parseLine(buffer, *this)) {
                 setResponse("500 Error");
             }
             if (sendto(_soc->getFd(), _buffer, sizeof(_buffer), 0, &upaddrfrom, fromLen) == -1)

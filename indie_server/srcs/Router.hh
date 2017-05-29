@@ -8,6 +8,7 @@
 # include <vector>
 # include <string>
 # include <map>
+# include "Server.h"
 
 namespace   Indie {
     class   Router {
@@ -23,22 +24,22 @@ namespace   Indie {
         ~Router();
 
     public:
-        bool    parseLine(std::string const&);
+        bool    parseLine(std::string const&, Server&);
 
     private:
-        using cmdPtr = bool (Router::*)(std::vector<std::string> const&);
+        using cmdPtr = bool (Router::*)(std::vector<std::string> const&, Server&);
 
     private:
         static const std::map<std::string, cmdPtr> fnc;
         static const std::vector<User> userList;
 
     private:
-        bool userConnect(std::vector<std::string> const&);
-        bool createRoom(std::vector<std::string> const&);
-        bool getRoomList(std::vector<std::string> const&);
-        bool joinRoom(std::vector<std::string> const&);
-        bool exitRoom(std::vector<std::string> const&);
-        bool runGame(std::vector<std::string> const& );
+        bool userConnect(std::vector<std::string> const&, Server&);
+        bool createRoom(std::vector<std::string> const&, Server&);
+        bool getRoomList(std::vector<std::string> const&, Server&);
+        bool joinRoom(std::vector<std::string> const&, Server&);
+        bool exitRoom(std::vector<std::string> const&, Server&);
+        bool runGame(std::vector<std::string> const&, Server&);
     };
 }
 
