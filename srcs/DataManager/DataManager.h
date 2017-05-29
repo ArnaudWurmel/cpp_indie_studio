@@ -14,6 +14,7 @@ namespace   Indie {
         int                 _port;
         int                 _sockfd;
         struct sockaddr_in  _serv;
+        struct sockaddr_in  _client;
 
     private:
         DataManager(const std::string&, int);
@@ -24,7 +25,7 @@ namespace   Indie {
         bool                connect(const std::string&, const std::string&);
         bool                joinRoom(const std::string& userName, unsigned int roomId);
         bool                quitRoom(const std::string& userName);
-        bool                getMap(unsigned int roomId);
+        bool                getMap(unsigned int roomId, std::vector<std::string>&);
     };
 }
 
