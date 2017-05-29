@@ -6,6 +6,7 @@
 # define CPP_INDIE_STUDIO_SERVER_H
 
 #include <bits/unique_ptr.h>
+#include <netdb.h>
 #include "ISocket.h"
 
 namespace   Indie {
@@ -13,10 +14,9 @@ namespace   Indie {
     private:
         std::unique_ptr<ISocket>    _soc;
         struct sockaddr_in          _s_in;
-        int                         _port;
 
     public:
-        Server();
+        Server(int port);
         ~Server();
 
     public:
