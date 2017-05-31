@@ -16,7 +16,8 @@ const std::map<std::string, Indie::Router::cmdPtr> Indie::Router::fnc = {
         { "/game/quitRoom", &Indie::Router::exitRoom },
         { "/game/getRoomList", &Indie::Router::getRoomList },
         { "/game/runGame", &Indie::Router::runGame },
-        { "/game/getMap", &Indie::Router::getMap }
+        { "/game/getMap", &Indie::Router::getMap },
+        { "/game/getPlayerPos", &Indie::Router::getPlayerPosition }
 };
 
 const std::vector<Indie::Router::User> Indie::Router::userList = {
@@ -51,7 +52,7 @@ bool    Indie::Router::parseLine(std::string const& input, Server& server) {
     return false;
 }
 
-bool Indie::Router::createRoom(std::vector<std::string> const& tokenList, Server& server) {
+bool Indie::Router::createRoom(std::vector<std::string> const& tokenList, Server& server) const {
     if (tokenList.size() != 2)
         return false;
 
@@ -69,7 +70,7 @@ bool Indie::Router::createRoom(std::vector<std::string> const& tokenList, Server
     return state;
 }
 
-bool    Indie::Router::userConnect(std::vector<std::string> const& input, Server& server) {
+bool    Indie::Router::userConnect(std::vector<std::string> const& input, Server& server) const {
 
     std::vector<Indie::Router::User>::const_iterator    it;
 
@@ -87,8 +88,7 @@ bool    Indie::Router::userConnect(std::vector<std::string> const& input, Server
     return false;
 }
 
-bool    Indie::Router::getRoomList(std::vector<std::string> const& input, Server& server) {
-    std::cout << input.size() << std::endl;
+bool    Indie::Router::getRoomList(std::vector<std::string> const& input, Server& server) const {
     if (input.size() != 1)
         return false;
     GameManager *gameManager = GameManager::getSingleton();
@@ -106,7 +106,7 @@ bool    Indie::Router::getRoomList(std::vector<std::string> const& input, Server
     return true;
 }
 
-bool    Indie::Router::joinRoom(std::vector<std::string> const& input, Server& server) {
+bool    Indie::Router::joinRoom(std::vector<std::string> const& input, Server& server) const {
     if (input.size() != 3)
         return false;
     GameManager *gameManager = GameManager::getSingleton();
@@ -122,7 +122,7 @@ bool    Indie::Router::joinRoom(std::vector<std::string> const& input, Server& s
     return state;
 }
 
-bool    Indie::Router::exitRoom(std::vector<std::string> const& input, Server& server) {
+bool    Indie::Router::exitRoom(std::vector<std::string> const& input, Server& server) const {
     if (input.size() != 2)
         return false;
     GameManager *gameManager = GameManager::getSingleton();
@@ -133,7 +133,7 @@ bool    Indie::Router::exitRoom(std::vector<std::string> const& input, Server& s
     return true;
 }
 
-bool    Indie::Router::runGame(std::vector<std::string> const& input, Server& server) {
+bool    Indie::Router::runGame(std::vector<std::string> const& input, Server& server) const {
     if (input.size() != 2)
         return false;
     GameManager *gameManager = GameManager::getSingleton();
@@ -149,7 +149,7 @@ bool    Indie::Router::runGame(std::vector<std::string> const& input, Server& se
     return state;
 }
 
-bool    Indie::Router::getMap(std::vector<std::string> const& input, Server& server) {
+bool    Indie::Router::getMap(std::vector<std::string> const& input, Server& server) const {
     if (input.size() != 2) {
         return false;
     }
@@ -162,6 +162,16 @@ bool    Indie::Router::getMap(std::vector<std::string> const& input, Server& ser
         std::cout << roomId << std::endl;
         state = gameManager->getMap(roomId, server);
     }
+    gameManager->release();
+    return state;
+}
+
+bool Indie::Router::getPlayerPosition(std::vector<std::string> const& input, Indie::Server& server) const {
+    if (input.size() != 2)
+        return false;
+    GameManager *gameManager = GameManager::getSingleton();
+
+    bool    state  = gameManager->getPlayerPosition(input[1], server);
     gameManager->release();
     return state;
 }

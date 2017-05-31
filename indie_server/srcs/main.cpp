@@ -1,12 +1,11 @@
 #include <iostream>
-#include "Router.hh"
 #include "Server.h"
+#include "GameManager.hh"
 
 int main() {
-    Indie::Router   router;
     Indie::Server   server(4242);
-    int             fd;
 
     server.serverLoop();
+    Indie::GameManager::getSingleton(true);
     return 0;
 }

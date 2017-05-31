@@ -14,6 +14,9 @@ Indie::Room::Room() {
 }
 
 bool    Indie::Room::addPlayerToRoom(std::string const& pName) {
+    if (_running && !_game->addPlayerToGame(pName)) {
+        return false;
+    }
     if (_playerList.size() < 4) {
         _playerList.push_back(pName);
         return true;
@@ -24,11 +27,11 @@ bool    Indie::Room::addPlayerToRoom(std::string const& pName) {
 bool    Indie::Room::removePlayerFromRoom(std::string const& pName) {
     std::vector<std::string>::iterator  it = _playerList.begin();
 
-    if (_running)
-        return false;
     while (it != _playerList.end()) {
         if (!(*it).compare(pName)) {
             _playerList.erase(it);
+            if (_running)
+                _game->exitPlayer(pName);
             return true;
         }
         ++it;
@@ -69,6 +72,12 @@ bool    Indie::Room::runGame() {
 
 unsigned int const& Indie::Room::getRoomId() const {
     return _roomId;
+}
+
+bool    Indie::Room::getPlayerPos(std::string const& pName, Server& server) {
+    if (!_running)
+        return false;
+    return _game->getPlayerPos(pName, server);
 }
 
 std::vector<std::string> const& Indie::Room::getPlayerList() {

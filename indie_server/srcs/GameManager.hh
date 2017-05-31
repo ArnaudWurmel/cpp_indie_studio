@@ -27,6 +27,7 @@ namespace   Indie
         void    exitRoom(std::string const& pName);
         bool    runGame(unsigned int const&);
         bool    getMap(unsigned int const&, Server&) const;
+        bool    getPlayerPosition(std::string const&, Server&);
 
     public:
         void    lock();

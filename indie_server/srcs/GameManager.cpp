@@ -96,6 +96,18 @@ bool    Indie::GameManager::getMap(unsigned int const& roomId, Server& server) c
     return false;
 }
 
+bool    Indie::GameManager::getPlayerPosition(std::string const& pName, Server& server) {
+    std::vector<std::unique_ptr<Room> >::iterator it;
+
+    it = _roomList.begin();
+    while (it != _roomList.end()) {
+        if ((*it)->getPlayerPos(pName, server))
+            return true;
+        ++it;
+    }
+    return false;
+}
+
 void Indie::GameManager::lock() {
     _mutexLock->lock();
 }

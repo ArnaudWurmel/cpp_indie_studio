@@ -7,8 +7,8 @@
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
-#include "Router.hh"
 #include "Server.h"
+#include "Router.hh"
 #include "LinuxSocket.h"
 
 Indie::Server::Server(int port) {
@@ -28,7 +28,7 @@ void    Indie::Server::serverLoop() {
             struct sockaddr    upaddrfrom;
             socklen_t fromLen = sizeof(upaddrfrom);
             char    buffer[4096];
-            int     readSize;
+            ssize_t     readSize;
 
             std::memset(_buffer, 0, 4096);
             readSize = recvfrom(_soc->getFd(), buffer, sizeof(buffer), 0, &upaddrfrom, &fromLen);

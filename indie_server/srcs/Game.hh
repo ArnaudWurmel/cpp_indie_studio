@@ -9,6 +9,7 @@
 # include <vector>
 # include <memory>
 # include "MapParser/MapParser.hh"
+# include "Server.h"
 
 namespace   Indie {
 
@@ -19,8 +20,8 @@ namespace   Indie {
             Player(std::string const&);
 
             std::string     name;
-            unsigned int    x;
-            unsigned int    y;
+            int             x;
+            int             y;
         };
         struct  Bomb
         {
@@ -34,6 +35,10 @@ namespace   Indie {
 
     public:
         std::vector<std::string> const& getMap() const;
+        bool    getPlayerPos(std::string const&, Server&) const;
+        bool    findPosForPlayer(std::unique_ptr<Player>&);
+        bool    addPlayerToGame(std::string const&);
+        void    exitPlayer(std::string const&);
 
     private:
         unsigned int    _bombId;
