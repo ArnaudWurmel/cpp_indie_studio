@@ -17,7 +17,9 @@ const std::map<std::string, Indie::Router::cmdPtr> Indie::Router::fnc = {
         { "/game/getRoomList", &Indie::Router::getRoomList },
         { "/game/runGame", &Indie::Router::runGame },
         { "/game/getMap", &Indie::Router::getMap },
-        { "/game/getPlayerPos", &Indie::Router::getPlayerPosition }
+        { "/game/getPlayerPos", &Indie::Router::getPlayerPosition },
+        { "/game/updatePlayer", &Indie::Router::updatePlayerPosition },
+        { "/game/getPlayersPos", &Indie::Router::getPlayerList }
 };
 
 const std::vector<Indie::Router::User> Indie::Router::userList = {
@@ -172,6 +174,28 @@ bool Indie::Router::getPlayerPosition(std::vector<std::string> const& input, Ind
     GameManager *gameManager = GameManager::getSingleton();
 
     bool    state  = gameManager->getPlayerPosition(input[1], server);
+    gameManager->release();
+    return state;
+}
+
+bool    Indie::Router::updatePlayerPosition(std::vector<std::string> const& input, Server& server) const {
+    if (input.size() != 5)
+        return false;
+    GameManager *gameManager = GameManager::getSingleton();
+
+    bool    state = gameManager->updatePlayerPosition(input);
+    if (state)
+        server.setResponse("200 Success");
+    gameManager->release();
+    return state;
+}
+
+bool    Indie::Router::getPlayerList(std::vector<std::string> const& input, Server& server) const {
+    if (input.size() != 2)
+        return false;
+    GameManager *gameManager = GameManager::getSingleton();
+
+    bool state = gameManager->getPlayersPosition(std::atoi(input[1].c_str()), server);
     gameManager->release();
     return state;
 }

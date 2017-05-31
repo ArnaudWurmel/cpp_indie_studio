@@ -40,6 +40,12 @@ namespace Indie
         void            godMode();
         bool            isGodMode() const;
 
+        std::string const&  getPlayerId() const;
+        Ogre::Real        getRotation() const;
+
+        void    setUpdate(bool const&);
+        bool const&    isUpdate() const;
+
     private:
         std::vector<std::unique_ptr<Indie::Bomb> >  _bombList;
 
@@ -51,6 +57,12 @@ namespace Indie
 
     private:
         PlayerType  _pType;
+        unsigned int    _frameUpdate;
+        unsigned int    _countFrame;
+        bool            _updated;
+
+    protected:
+        std::string _pId;
     };
 }
 

@@ -7,6 +7,7 @@
 #include "../Entities/EntityManager.hh"
 #include "../Config/Config.hh"
 #include "../Player/HumanPlayer.hh"
+#include "../DataManager/DataManager.h"
 
 Indie::SceneDisplayer::SceneDisplayer(Ogre::SceneManager *sceneManager) {
     mSceneManager = sceneManager;
@@ -20,7 +21,13 @@ void Indie::SceneDisplayer::initScene() {
     if (_map.size() > 0) {
         this->createMap();
     }
-    EntityManager::createEntity(EntityManager::EntityType::HUMAN, mSceneManager, Ogre::Vector3(50, 25, -50));
+    bool    success = false;
+
+    DataManager *dataManager = Indie::DataManager::getSingloton();
+    Ogre::Vector3   posPlayer = dataManager->getPlayerStart("Erwan", success);
+    if (!success)
+        throw std::exception();
+    EntityManager::createHuman(mSceneManager, Ogre::Vector3(posPlayer.x, 25, posPlayer.z), "Erwan");
     initEventRegister();
 }
 
@@ -73,6 +80,9 @@ bool    Indie::SceneDisplayer::updateScene() {
 
     if (!EntityManager::getMainPlayer()->updateFromLoop(mSceneManager))
         return false;
+    Indie::DataManager  *dataManager = Indie::DataManager::getSingloton();
+
+    dataManager->updateAllPlayers(0, mSceneManager);
     it = EntityManager::getEntityList().begin();
     while (it != EntityManager::getEntityList().end()) {
         if (!(*it)->updateFromLoop(mSceneManager)) {
@@ -80,6 +90,15 @@ bool    Indie::SceneDisplayer::updateScene() {
         }
         else
             ++it;
+    }
+    std::vector<std::unique_ptr<APlayer> >::iterator    itP;
+
+    itP = EntityManager::getPlayerList().begin();
+    while (itP != EntityManager::getPlayerList().end()) {
+        if (!(*itP)->updateFromLoop(mSceneManager))
+            EntityManager::getPlayerList().erase(itP);
+        else
+            ++itP;
     }
     return true;
 }

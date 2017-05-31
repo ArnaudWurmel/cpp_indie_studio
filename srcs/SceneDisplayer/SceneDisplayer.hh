@@ -24,6 +24,7 @@ namespace   Indie
     public:
         void    initScene();
         bool    updateScene();
+        void    updatePlayersPosition() const;
 
     private:
         void    createGround();

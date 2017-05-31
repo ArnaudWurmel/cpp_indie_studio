@@ -27,3 +27,7 @@ unsigned int    Indie::Config::getBombRange() {
 unsigned int    Indie::Config::getExplosionTime() {
     return 30;
 }
+
+unsigned int    Indie::Config::getNbTicks() {
+    return 30;
+}

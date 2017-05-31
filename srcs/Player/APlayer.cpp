@@ -5,6 +5,7 @@
 #include <iostream>
 #include "APlayer.hh"
 #include "../Config/Config.hh"
+#include "../DataManager/DataManager.h"
 
 Indie::APlayer::APlayer(const Indie::APlayer::PlayerType &pType,
                         Ogre::Vector3 const& entityPos,
@@ -16,6 +17,10 @@ Indie::APlayer::APlayer(const Indie::APlayer::PlayerType &pType,
     _nbBombs = Indie::Config::getInitialNbBomb();
     _bombRange = Indie::Config::getBombRange();
     _godMode = false;
+    _frameUpdate = Config::getNbTicks();
+    _countFrame = 0;
+    _updated = false;
+    _pId = "";
 }
 
 
@@ -33,6 +38,15 @@ bool    Indie::APlayer::updateFromLoop(Ogre::SceneManager *sceneManager) {
         else
             ++it;
     }
+    if (isAlive()) {
+        if (60 / _frameUpdate == _countFrame) {
+            DataManager *dataManager = DataManager::getSingloton();
+
+            dataManager->updatePlayerPos("Erwan", getPosition());
+            _countFrame = 0;
+        }
+        ++_countFrame;
+    }
     return isAlive() || updateParticles(sceneManager);
 }
 
@@ -41,6 +55,22 @@ void    Indie::APlayer::explode(Ogre::SceneManager *sceneManager) {
         createAllParticles(sceneManager, getPosition(), getSize().y * 200);
         Indie::AEntity::explode(sceneManager);
     }
+}
+
+std::string const&  Indie::APlayer::getPlayerId() const {
+    return _pId;
+}
+
+Ogre::Real    Indie::APlayer::getRotation() const {
+    return mRotation;
+}
+
+void    Indie::APlayer::setUpdate(bool const& value) {
+    _updated = value;
+}
+
+bool const&    Indie::APlayer::isUpdate() const {
+    return _updated;
 }
 
 /****************************

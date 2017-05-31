@@ -27,11 +27,11 @@ bool Indie::Bomberman::loadApp() {
     mSceneManager->setAmbientLight(Ogre::ColourValue(1.0f, 1.0f, 1.0f));
     this->createCamera();
     mSceneDisplayer = std::shared_ptr<Indie::SceneDisplayer>(new Indie::SceneDisplayer(mSceneManager));
-    mSceneDisplayer->initScene();
     mEventListener = std::unique_ptr<Indie::EventListener>(new Indie::EventListener(mSceneManager, mRenderWindow));
     Ogre::WindowEventUtilities::addWindowEventListener(mRenderWindow, mEventListener.get());
     mRoot->addFrameListener(mEventListener.get());
     mEventListener->setUpEventRegister(mSceneDisplayer.get());
+    mSceneDisplayer->initScene();
     return true;
 }
 

@@ -42,6 +42,8 @@ namespace   Indie {
         bool runGame(std::vector<std::string> const&, Server&) const;
         bool getMap(std::vector<std::string> const&, Server&) const;
         bool getPlayerPosition(std::vector<std::string> const&, Server&) const;
+        bool updatePlayerPosition(std::vector<std::string> const&, Server&) const;
+        bool getPlayerList(std::vector<std::string> const&, Server&) const;
     };
 }
 

@@ -45,6 +45,7 @@ namespace Indie
         void    move(Ogre::Vector3 const&);
         bool    checkCollide(AEntity const&);
         virtual void    rotate(Direction const& dir);
+        virtual void    rotate(unsigned int rotation);
         virtual void    explode(Ogre::SceneManager *);
         virtual bool    updateFromLoop(Ogre::SceneManager *);
 
@@ -53,6 +54,7 @@ namespace Indie
         Ogre::Entity    *mEntity;
         Ogre::Vector3   mTransformation;
         bool            mIsAlive;
+        unsigned int    mRotation;
     };
 }
 

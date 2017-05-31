@@ -24,6 +24,7 @@ namespace Indie
         static unsigned int getExplodeTime();
         static unsigned int getBombRange();
         static unsigned int getExplosionTime();
+        static unsigned int getNbTicks();
     };
 }
 

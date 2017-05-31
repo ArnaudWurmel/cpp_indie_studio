@@ -47,12 +47,17 @@ void Indie::AEntity::move(Ogre::Vector3 const& transform)
 }
 
 void Indie::AEntity::rotate(const Indie::AEntity::Direction &dir) {
-    int orientation[8] = {90, 270, 180, 0, 135, 45, 225, 315};
+    unsigned int orientation[8] = {90, 270, 180, 0, 135, 45, 225, 315};
 
-    if (!mIsAlive)
-        return ;
     if (dir < 8) {
-        mSceneNode->setOrientation(Ogre::Quaternion(Ogre::Degree(orientation[dir]), Ogre::Vector3(0, 1, 0)));
+        rotate(orientation[dir]);
+    }
+}
+
+void Indie::AEntity::rotate(unsigned int rotation) {
+    if (mIsAlive) {
+        mRotation = rotation;
+        mSceneNode->setOrientation(Ogre::Quaternion(Ogre::Degree(rotation), Ogre::Vector3(0, 1, 0)));
     }
 }
 

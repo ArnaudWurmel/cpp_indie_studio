@@ -84,4 +84,18 @@ std::vector<std::string> const& Indie::Room::getPlayerList() {
     return _playerList;
 }
 
+bool    Indie::Room::updatePlayerPosition(std::vector<std::string> const& input) {
+    if (_running)
+        return _game->updatePlayerPosition(input);
+    return false;
+}
+
+bool    Indie::Room::getPlayersPos(Server& server) {
+    if (_running) {
+        _game->getPlayersPos(server);
+        return true;
+    }
+    return false;
+}
+
 Indie::Room::~Room() {}

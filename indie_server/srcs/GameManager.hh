@@ -28,6 +28,8 @@ namespace   Indie
         bool    runGame(unsigned int const&);
         bool    getMap(unsigned int const&, Server&) const;
         bool    getPlayerPosition(std::string const&, Server&);
+        bool    updatePlayerPosition(std::vector<std::string> const&);
+        bool    getPlayersPosition(int roomId, Server&);
 
     public:
         void    lock();

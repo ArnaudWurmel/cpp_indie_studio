@@ -22,6 +22,7 @@ namespace   Indie {
             std::string     name;
             int             x;
             int             y;
+            int    rotate;
         };
         struct  Bomb
         {
@@ -38,7 +39,9 @@ namespace   Indie {
         bool    getPlayerPos(std::string const&, Server&) const;
         bool    findPosForPlayer(std::unique_ptr<Player>&);
         bool    addPlayerToGame(std::string const&);
+        bool    updatePlayerPosition(std::vector<std::string> const&);
         void    exitPlayer(std::string const&);
+        void    getPlayersPos(Server&);
 
     private:
         unsigned int    _bombId;

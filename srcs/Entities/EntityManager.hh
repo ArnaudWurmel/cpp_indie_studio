@@ -18,6 +18,7 @@ namespace Indie {
             BLOCK = 0,
             DYNAMIC_BLOCK,
             HUMAN,
+            ENEMY,
             PARTICLE,
             EMPTY
         };
@@ -32,6 +33,9 @@ namespace Indie {
         static void setMainPlayer(Indie::APlayer *);
         static std::unique_ptr<Indie::APlayer>& getMainPlayer();
 
+        static void addPlayer(Indie::APlayer *);
+        static std::vector<std::unique_ptr<Indie::APlayer> >&   getPlayerList();
+
 
     public:
         static AEntity  *createEntity(EntityType const&, Ogre::SceneManager *, Ogre::Vector3 const&);
@@ -40,11 +44,12 @@ namespace Indie {
         static AEntity    *createBlock(Ogre::SceneManager *, Ogre::Vector3 const&);
         static AEntity    *createDynamicBlock(Ogre::SceneManager *, Ogre::Vector3 const&);
         static AEntity    *createDynamicParticle(Ogre::SceneManager *, Ogre::Vector3 const&);
-        static AEntity    *createHuman(Ogre::SceneManager *, Ogre::Vector3 const&);
+        static AEntity    *createHuman(Ogre::SceneManager *, Ogre::Vector3 const&, std::string const&);
+        static APlayer    *createEnemy(Ogre::SceneManager *, Ogre::Vector3 const&, std::string const&);
 
     private:
         std::vector<std::shared_ptr<Indie::AEntity> >   _entityList;
-        std::vector<std::unique_ptr<Indie::APlayer> >   _playerList;
+        std::vector<std::unique_ptr<Indie::APlayer> >   _enemyList;
         std::unique_ptr<Indie::APlayer> _mainPlayer;
     };
 }

@@ -13,7 +13,7 @@ namespace Indie
 {
     class HumanPlayer : public APlayer{
     public:
-        HumanPlayer(Ogre::Vector3 const& entityPos, Ogre::SceneManager *sceneManager);
+        HumanPlayer(Ogre::Vector3 const& entityPos, Ogre::SceneManager *sceneManager, std::string const& pId);
         ~HumanPlayer();
     };
 }

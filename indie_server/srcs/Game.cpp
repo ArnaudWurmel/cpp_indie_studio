@@ -3,7 +3,7 @@
 //
 
 #include <iostream>
-#include <string>
+#include <sstream>
 #include "Game.hh"
 
 Indie::Game::Player::Player(std::string const& pName) {
@@ -91,6 +91,33 @@ bool    Indie::Game::addPlayerToGame(std::string const& pName) {
         return false;
     }
     return true;
+}
+
+bool    Indie::Game::updatePlayerPosition(std::vector<std::string> const& input) {
+    std::vector<std::unique_ptr<Player> >::iterator it = _playerList.begin();
+
+    while (it != _playerList.end()) {
+        if (!(*it)->name.compare(input[1])) {
+            (*it)->x = std::atoi(input[2].c_str());
+            (*it)->y = std::atoi(input[3].c_str());
+            (*it)->rotate = std::atoi(input[4].c_str());
+            return true;
+        }
+        ++it;
+    }
+    return false;
+}
+
+void    Indie::Game::getPlayersPos(Server& server) {
+    std::stringstream   ss;
+    std::vector<std::unique_ptr<Player> >::const_iterator it = _playerList.begin();
+
+    ss << "200 Success" << std::endl;
+    while (it != _playerList.end()) {
+        ss << (*it)->name << " " << (*it)->x << " " << (*it)->y << " " << (*it)->rotate << std::endl;
+        ++it;
+    }
+    server.setResponse(ss.str());
 }
 
 Indie::Game::~Game() {}

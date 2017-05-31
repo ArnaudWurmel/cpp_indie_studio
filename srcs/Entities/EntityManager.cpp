@@ -51,6 +51,24 @@ std::unique_ptr<Indie::APlayer>&    Indie::EntityManager::getMainPlayer() {
     throw std::exception();
 }
 
+void    Indie::EntityManager::addPlayer(Indie::APlayer *player) {
+    Indie::EntityManager    *entityManager = getEntityManager();
+
+    if (entityManager) {
+        entityManager->_enemyList.push_back(std::unique_ptr<Indie::APlayer>(player));
+        return ;
+    }
+    throw std::exception();
+}
+
+std::vector<std::unique_ptr<Indie::APlayer> >&  Indie::EntityManager::getPlayerList() {
+    Indie::EntityManager    *entityManager = getEntityManager();
+
+    if (entityManager)
+        return entityManager->_enemyList;
+    throw std::exception();
+}
+
 Indie::EntityManager::EntityManager() {}
 
 Indie::EntityManager::~EntityManager() {
@@ -62,7 +80,6 @@ Indie::AEntity *Indie::EntityManager::createEntity(Indie::EntityManager::EntityT
 
     functionPtr.insert(std::make_pair(EntityType::BLOCK, &Indie::EntityManager::createBlock));
     functionPtr.insert(std::make_pair(EntityType::DYNAMIC_BLOCK, &Indie::EntityManager::createDynamicBlock));
-    functionPtr.insert(std::make_pair(EntityType::HUMAN, &Indie::EntityManager::createHuman));
     functionPtr.insert(std::make_pair(EntityManager::PARTICLE, &Indie::EntityManager::createDynamicParticle));
     if (functionPtr.find(tileType) != functionPtr.end()) {
         return (*functionPtr[tileType])(sceneManager, entityPos);
@@ -84,8 +101,8 @@ Indie::AEntity  *Indie::EntityManager::createDynamicBlock(Ogre::SceneManager *sc
     return (entity);
 }
 
-Indie::AEntity  *Indie::EntityManager::createHuman(Ogre::SceneManager *sceneManager, Ogre::Vector3 const& entityPos) {
-    Indie::HumanPlayer  *player = new Indie::HumanPlayer(entityPos, sceneManager);
+Indie::AEntity  *Indie::EntityManager::createHuman(Ogre::SceneManager *sceneManager, Ogre::Vector3 const& entityPos, std::string const& pName) {
+    Indie::HumanPlayer  *player = new Indie::HumanPlayer(entityPos, sceneManager, pName);
 
     setMainPlayer(player);
     return player;
@@ -93,4 +110,11 @@ Indie::AEntity  *Indie::EntityManager::createHuman(Ogre::SceneManager *sceneMana
 
 Indie::AEntity  *Indie::EntityManager::createDynamicParticle(Ogre::SceneManager *sceneManager, Ogre::Vector3 const& entityPos) {
     return new Indie::Block(sceneManager, entityPos);
+}
+
+Indie::APlayer  *Indie::EntityManager::createEnemy(Ogre::SceneManager *sceneManager, Ogre::Vector3 const& entityPos, std::string const& pId) {
+    Indie::HumanPlayer  *player = new Indie::HumanPlayer(entityPos, sceneManager, pId);
+
+    addPlayer(player);
+    return player;
 }
