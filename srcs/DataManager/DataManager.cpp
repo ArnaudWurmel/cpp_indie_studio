@@ -14,6 +14,13 @@ Indie::DataManager::DataManager(const std::string& ip, int port) : _ip(ip), _por
     _serv.sin_family = AF_INET;
     _serv.sin_port = htons(_port);
     _serv.sin_addr.s_addr = inet_addr(_ip.c_str());
+    _frameCount = 0;
+    struct timeval tv;
+    tv.tv_sec = 0;
+    tv.tv_usec = 100000;
+    if (setsockopt(_sockfd, SOL_SOCKET, SO_RCVTIMEO,&tv,sizeof(tv)) < 0) {
+        throw std::exception();
+    }
 }
 
 Indie::DataManager::~DataManager() {}
@@ -116,7 +123,6 @@ bool                            Indie::DataManager::getMap(unsigned int roomId, 
     if ((ret = recvfrom(_sockfd, buf, sizeof(buf), 0, reinterpret_cast<struct sockaddr *>(&_client), &client_size)) == -1)
         return false;
     buf[ret] = 0;
-    std::cout << buf << std::endl;
     if (std::atoi(buf) != 200)
         return false;
     if (std::strlen(buf) > 4)
@@ -169,6 +175,7 @@ Ogre::Vector3 Indie::DataManager::getPlayerStart(std::string pName, bool& succes
     else
         ++idx;
     pos.x = std::atoi(&buf[idx]);
+    std::cout << pos.x << " " << std::endl;
     return pos;
 }
 
@@ -199,6 +206,11 @@ void Indie::DataManager::updateAllPlayers(unsigned int roomId, Ogre::SceneManage
     socklen_t           client_size;
     socklen_t           server_size;
 
+    if (60 / Config::getNbTicks() != _frameCount) {
+        ++_frameCount;
+        return ;
+    }
+    _frameCount = 0;
     route = route + std::to_string(roomId);
     std::strncpy(buf, route.c_str(), 4096);
     client_size = sizeof(_client);
@@ -208,6 +220,7 @@ void Indie::DataManager::updateAllPlayers(unsigned int roomId, Ogre::SceneManage
     if ((ret = recvfrom(_sockfd, buf, sizeof(buf), 0, reinterpret_cast<struct sockaddr *>(&_client), &client_size)) == -1)
         return ;
     buf[ret] = 0;
+    std::cout << "Received : " << buf << std::endl;
 
     std::stringstream   ss(buf);
     std::string         line;
@@ -221,10 +234,11 @@ void Indie::DataManager::updateAllPlayers(unsigned int roomId, Ogre::SceneManage
         (*it)->setUpdate(false);
         ++it;
     }
+    bool    updated = false;
     while (std::getline(ss, line)) {
         std::vector<std::string>    tokenList = getTokenList(line);
         bool    found = false;
-
+        updated = true;
         if (tokenList.size() != 4)
             throw std::exception();
         it = EntityManager::getPlayerList().begin();
@@ -243,6 +257,8 @@ void Indie::DataManager::updateAllPlayers(unsigned int roomId, Ogre::SceneManage
             player->setUpdate(true);
         }
     }
+    if (!updated)
+        return ;
     it = EntityManager::getPlayerList().begin();
     while (it != EntityManager::getPlayerList().end()) {
         if (!(*it)->isUpdate()) {

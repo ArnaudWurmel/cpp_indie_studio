@@ -102,7 +102,7 @@ Indie::AEntity  *Indie::EntityManager::createDynamicBlock(Ogre::SceneManager *sc
 }
 
 Indie::AEntity  *Indie::EntityManager::createHuman(Ogre::SceneManager *sceneManager, Ogre::Vector3 const& entityPos, std::string const& pName) {
-    Indie::HumanPlayer  *player = new Indie::HumanPlayer(entityPos, sceneManager, pName);
+    Indie::HumanPlayer  *player = new Indie::HumanPlayer(entityPos, sceneManager, pName, true);
 
     setMainPlayer(player);
     return player;

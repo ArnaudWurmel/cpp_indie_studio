@@ -29,5 +29,5 @@ unsigned int    Indie::Config::getExplosionTime() {
 }
 
 unsigned int    Indie::Config::getNbTicks() {
-    return 30;
+    return 1;
 }

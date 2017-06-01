@@ -24,10 +24,10 @@ void Indie::SceneDisplayer::initScene() {
     bool    success = false;
 
     DataManager *dataManager = Indie::DataManager::getSingloton();
-    Ogre::Vector3   posPlayer = dataManager->getPlayerStart("Erwan", success);
+    Ogre::Vector3   posPlayer = dataManager->getPlayerStart("Thibaud", success);
     if (!success)
         throw std::exception();
-    EntityManager::createHuman(mSceneManager, Ogre::Vector3(posPlayer.x, 25, posPlayer.z), "Erwan");
+    EntityManager::createHuman(mSceneManager, Ogre::Vector3(posPlayer.x, 25, posPlayer.z), "Thibaud");
     initEventRegister();
 }
 

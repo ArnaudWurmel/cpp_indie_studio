@@ -20,7 +20,7 @@ namespace Indie
             IA
         };
     public:
-        APlayer(PlayerType const& pType, Ogre::Vector3 const&, Ogre::SceneManager *, const char *);
+        APlayer(PlayerType const& pType, Ogre::Vector3 const&, Ogre::SceneManager *, const char *, bool mainP = false);
         ~APlayer();
 
     public:
@@ -60,6 +60,7 @@ namespace Indie
         unsigned int    _frameUpdate;
         unsigned int    _countFrame;
         bool            _updated;
+        bool    _mainP;
 
     protected:
         std::string _pId;

@@ -37,6 +37,7 @@ namespace   Indie {
 
     private:
         std::vector<std::string>    getTokenList(std::string const& line);
+        unsigned int    _frameCount;
     };
 }
 

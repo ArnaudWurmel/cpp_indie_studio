@@ -20,11 +20,11 @@
 	int main()
 #endif
 {
-    Indie::DataManager  *dataManager = Indie::DataManager::getSingloton("127.0.0.1", 4242);
+    Indie::DataManager  *dataManager = Indie::DataManager::getSingloton("137.74.196.119", 4242);
 
     std::srand(std::time(0));
-    std::cout << dataManager->quitRoom("Erwan") << std::endl;
-    if (!dataManager->joinRoom("Erwan", 0)) {
+    std::cout << dataManager->quitRoom("Thibaud") << std::endl;
+    if (!dataManager->joinRoom("Thibaud", 0)) {
         std::cout << "Can't join room" << std::endl;
         return (1);
     }
@@ -40,7 +40,7 @@
 			return 1;
         }
         bomberman.runApp();
-        dataManager->quitRoom("Erwan");
+        dataManager->quitRoom("Thibaud");
         return 0;
     } catch (std::exception& e) {
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
@@ -49,6 +49,6 @@
         std::cerr << e.what() << std::endl;
 #endif
     }
-    dataManager->quitRoom("Erwan");
+    dataManager->quitRoom("Thibaud");
     return 0;
 }

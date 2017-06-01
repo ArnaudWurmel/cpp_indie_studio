@@ -10,7 +10,7 @@
 Indie::APlayer::APlayer(const Indie::APlayer::PlayerType &pType,
                         Ogre::Vector3 const& entityPos,
                         Ogre::SceneManager *sceneManager,
-                        const char *entityMesh) : AEntity(sceneManager, entityPos, entityMesh)
+                        const char *entityMesh, bool mainP) : AEntity(sceneManager, entityPos, entityMesh)
 {
     mSceneNode->showBoundingBox(true);
     _moveSpeed = Indie::Config::getMoveSpeed();
@@ -21,6 +21,7 @@ Indie::APlayer::APlayer(const Indie::APlayer::PlayerType &pType,
     _countFrame = 0;
     _updated = false;
     _pId = "";
+    _mainP = mainP;
 }
 
 
@@ -38,11 +39,11 @@ bool    Indie::APlayer::updateFromLoop(Ogre::SceneManager *sceneManager) {
         else
             ++it;
     }
-    if (isAlive()) {
+    if (isAlive() && _mainP) {
         if (60 / _frameUpdate == _countFrame) {
             DataManager *dataManager = DataManager::getSingloton();
 
-            dataManager->updatePlayerPos("Erwan", getPosition());
+            dataManager->updatePlayerPos("Thibaud", getPosition());
             _countFrame = 0;
         }
         ++_countFrame;
