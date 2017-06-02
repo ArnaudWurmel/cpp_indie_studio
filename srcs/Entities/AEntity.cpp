@@ -5,19 +5,47 @@
 #include <iostream>
 #include "AEntity.hh"
 
-Indie::AEntity::AEntity(Ogre::SceneManager *sceneManager, Ogre::Vector3 const &entityPos, const char *entityName) {
-    mEntity = sceneManager->createEntity(entityName);
-    mSceneNode = sceneManager->getRootSceneNode()->createChildSceneNode(entityPos);
-    mSceneNode->attachObject(mEntity);
+Indie::AEntity::AEntity(Ogre::SceneManager *sceneManager, Ogre::Vector3 const &entityPos, const char *entityName, bool waiting) {
+
+    mWaiting = waiting;
     mTransformation = Ogre::Vector3(1, 1, 1);
+    if (!waiting) {
+        mEntity = sceneManager->createEntity(entityName);
+        mSceneNode = sceneManager->getRootSceneNode()->createChildSceneNode(entityPos);
+        mSceneNode->attachObject(mEntity);
+        mIsAlive = true;
+    }
+    else {
+        mSceneNode = NULL;
+        mEntity = NULL;
+        mIsAlive = false;
+        mEntityName = entityName;
+        mEntityPos = entityPos;
+    }
+}
+
+bool    Indie::AEntity::isWaiting() const {
+    return mWaiting;
+}
+
+void    Indie::AEntity::createEntity(Ogre::SceneManager *sceneManager) {
+    mEntity = sceneManager->createEntity(mEntityName);
+    mSceneNode = sceneManager->getRootSceneNode()->createChildSceneNode(mEntityPos);
+    mSceneNode->attachObject(mEntity);
+    setScale(mTransformation);
+    mWaiting = false;
     mIsAlive = true;
 }
 
 Ogre::Vector3    Indie::AEntity::getPosition() const {
-    return mSceneNode->getPosition();
+    if (mSceneNode)
+        return mSceneNode->getPosition();
+    return Ogre::Vector3();
 }
 
 Ogre::Vector3    Indie::AEntity::getSize() const {
+    if (!mSceneNode)
+        return Ogre::Vector3();
     Ogre::AxisAlignedBox    aab = mEntity->getBoundingBox();
 
     return Ogre::Vector3(aab.getSize().x, aab.getSize().y, aab.getSize().z);
@@ -62,7 +90,8 @@ void Indie::AEntity::rotate(unsigned int rotation) {
 }
 
 void    Indie::AEntity::setScale(Ogre::Vector3 const& scale) {
-    mSceneNode->setScale(scale);
+    if (mSceneNode)
+        mSceneNode->setScale(scale);
 }
 
 void    Indie::AEntity::explode(Ogre::SceneManager *sceneManager) {

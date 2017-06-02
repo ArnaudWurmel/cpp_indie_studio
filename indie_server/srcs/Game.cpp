@@ -20,7 +20,6 @@ Indie::Game::Game(std::vector<std::string> const& playerList) {
     _map = mapParser.getMap();
     it = playerList.begin();
     while (it != playerList.end()) {
-        std::cout << *it << std::endl;
         _playerList.push_back(std::unique_ptr<Player>(new Player(*it)));
         findPosForPlayer(_playerList.back());
         ++it;

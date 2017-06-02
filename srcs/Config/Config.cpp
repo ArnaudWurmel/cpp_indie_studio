@@ -17,7 +17,7 @@ unsigned int Indie::Config::getInitialNbBomb() {
 }
 
 unsigned int Indie::Config::getExplodeTime() {
-    return 180;
+    return 60;
 }
 
 unsigned int    Indie::Config::getBombRange() {
@@ -29,5 +29,5 @@ unsigned int    Indie::Config::getExplosionTime() {
 }
 
 unsigned int    Indie::Config::getNbTicks() {
-    return 1;
+    return 20;
 }

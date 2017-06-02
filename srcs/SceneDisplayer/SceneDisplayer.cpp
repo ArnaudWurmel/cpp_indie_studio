@@ -5,7 +5,6 @@
 #include <iostream>
 #include "SceneDisplayer.hh"
 #include "../Entities/EntityManager.hh"
-#include "../Config/Config.hh"
 #include "../Player/HumanPlayer.hh"
 #include "../DataManager/DataManager.h"
 
@@ -24,11 +23,13 @@ void Indie::SceneDisplayer::initScene() {
     bool    success = false;
 
     DataManager *dataManager = Indie::DataManager::getSingloton();
-    Ogre::Vector3   posPlayer = dataManager->getPlayerStart("Thibaud", success);
+    Ogre::Vector3   posPlayer = dataManager->getPlayerStart("Erwan", success);
     if (!success)
         throw std::exception();
-    EntityManager::createHuman(mSceneManager, Ogre::Vector3(posPlayer.x, 25, posPlayer.z), "Thibaud");
+    EntityManager::createHuman(mSceneManager, Ogre::Vector3(posPlayer.x, 25, posPlayer.z), "Erwan");
     initEventRegister();
+    _thread = std::unique_ptr<std::thread>(new std::thread(&Indie::SceneDisplayer::updaterThread, this));
+    _thread->detach();
 }
 
 void Indie::SceneDisplayer::createGround() {
@@ -75,14 +76,22 @@ void Indie::SceneDisplayer::createMap() {
     }
 }
 
+void    Indie::SceneDisplayer::updaterThread() {
+    Indie::DataManager  *dataManager = Indie::DataManager::getSingloton();
+
+    while (true) {
+        dataManager->updateAllPlayers(0, mSceneManager);
+        if (EntityManager::getMainPlayer()->isAlive())
+            dataManager->updatePlayerPos("Erwan", EntityManager::getMainPlayer()->getPosition());
+        std::this_thread::sleep_for(std::chrono::milliseconds(16));
+    }
+}
+
 bool    Indie::SceneDisplayer::updateScene() {
     std::vector<std::shared_ptr<AEntity> >::iterator    it;
 
     if (!EntityManager::getMainPlayer()->updateFromLoop(mSceneManager))
         return false;
-    Indie::DataManager  *dataManager = Indie::DataManager::getSingloton();
-
-    dataManager->updateAllPlayers(0, mSceneManager);
     it = EntityManager::getEntityList().begin();
     while (it != EntityManager::getEntityList().end()) {
         if (!(*it)->updateFromLoop(mSceneManager)) {
@@ -166,7 +175,9 @@ bool    Indie::SceneDisplayer::checkRight(std::unique_ptr<APlayer>& entity, std:
     return state;
 }
 
-Indie::SceneDisplayer::~SceneDisplayer() {}
+Indie::SceneDisplayer::~SceneDisplayer() {
+    _thread.reset();
+}
 
 /**********************************
 ** Callback register

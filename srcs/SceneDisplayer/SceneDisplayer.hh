@@ -9,6 +9,7 @@
 # include <map>
 # include <Ogre.h>
 # include <OIS/OIS.h>
+#include <thread>
 # include "../MapParser/MapParser.hh"
 # include "../Entities/AEntity.hh"
 # include "../Player/APlayer.hh"
@@ -29,6 +30,7 @@ namespace   Indie
     private:
         void    createGround();
         void    createMap();
+        void    updaterThread();
 
     private:
         bool    makeCollide(std::unique_ptr<APlayer>&, OIS::KeyCode const&);
@@ -62,6 +64,7 @@ namespace   Indie
     private:
         Ogre::SceneManager  *mSceneManager;
         std::vector<std::vector<Indie::MapParser::TileType> >   _map;
+        std::unique_ptr<std::thread>    _thread;
     };
 }
 

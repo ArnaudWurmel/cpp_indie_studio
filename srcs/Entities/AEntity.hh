@@ -30,7 +30,7 @@ namespace Indie
             DOWN_RIGHT
         };
     public:
-        AEntity(Ogre::SceneManager *, Ogre::Vector3 const&, const char *);
+        AEntity(Ogre::SceneManager *, Ogre::Vector3 const&, const char *, bool waiting = false);
         virtual ~AEntity();
 
     public:
@@ -49,12 +49,24 @@ namespace Indie
         virtual void    explode(Ogre::SceneManager *);
         virtual bool    updateFromLoop(Ogre::SceneManager *);
 
+        bool    isWaiting() const;
+        void    createEntity(Ogre::SceneManager *);
+
     protected:
         Ogre::SceneNode *mSceneNode;
         Ogre::Entity    *mEntity;
         Ogre::Vector3   mTransformation;
         bool            mIsAlive;
         unsigned int    mRotation;
+
+        /*
+         * Waiting Queue
+         */
+    private:
+        bool            mWaiting;
+        std::string     mMaterialName;
+        std::string     mEntityName;
+        Ogre::Vector3   mEntityPos;
     };
 }
 

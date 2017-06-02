@@ -82,7 +82,8 @@ Indie::AEntity *Indie::EntityManager::createEntity(Indie::EntityManager::EntityT
     functionPtr.insert(std::make_pair(EntityType::DYNAMIC_BLOCK, &Indie::EntityManager::createDynamicBlock));
     functionPtr.insert(std::make_pair(EntityManager::PARTICLE, &Indie::EntityManager::createDynamicParticle));
     if (functionPtr.find(tileType) != functionPtr.end()) {
-        return (*functionPtr[tileType])(sceneManager, entityPos);
+        AEntity *entity = (*functionPtr[tileType])(sceneManager, entityPos);
+        return entity;
     }
     return nullptr;
 }
@@ -102,6 +103,7 @@ Indie::AEntity  *Indie::EntityManager::createDynamicBlock(Ogre::SceneManager *sc
 }
 
 Indie::AEntity  *Indie::EntityManager::createHuman(Ogre::SceneManager *sceneManager, Ogre::Vector3 const& entityPos, std::string const& pName) {
+
     Indie::HumanPlayer  *player = new Indie::HumanPlayer(entityPos, sceneManager, pName, true);
 
     setMainPlayer(player);

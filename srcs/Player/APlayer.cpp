@@ -10,9 +10,10 @@
 Indie::APlayer::APlayer(const Indie::APlayer::PlayerType &pType,
                         Ogre::Vector3 const& entityPos,
                         Ogre::SceneManager *sceneManager,
-                        const char *entityMesh, bool mainP) : AEntity(sceneManager, entityPos, entityMesh)
+                        const char *entityMesh, bool mainP) : AEntity(sceneManager, entityPos, entityMesh, !mainP)
 {
-    mSceneNode->showBoundingBox(true);
+    if (mainP)
+        mSceneNode->showBoundingBox(true);
     _moveSpeed = Indie::Config::getMoveSpeed();
     _nbBombs = Indie::Config::getInitialNbBomb();
     _bombRange = Indie::Config::getBombRange();
@@ -32,6 +33,10 @@ bool Indie::APlayer::hittedByExplosion() const {
 bool    Indie::APlayer::updateFromLoop(Ogre::SceneManager *sceneManager) {
     std::vector<std::unique_ptr<Bomb> >::iterator   it;
 
+    if (isWaiting()) {
+        createEntity(sceneManager);
+        std::cout << "Create entity" << std::endl;
+    }
     it = _bombList.begin();
     while (it != _bombList.end()) {
         if (!(*it)->updateFromLoop(sceneManager))
@@ -41,9 +46,6 @@ bool    Indie::APlayer::updateFromLoop(Ogre::SceneManager *sceneManager) {
     }
     if (isAlive() && _mainP) {
         if (60 / _frameUpdate == _countFrame) {
-            DataManager *dataManager = DataManager::getSingloton();
-
-            dataManager->updatePlayerPos("Thibaud", getPosition());
             _countFrame = 0;
         }
         ++_countFrame;

@@ -2,6 +2,7 @@
 // Created by ballet on 29/05/17.
 //
 
+#include <iostream>
 #include <cstring>
 #include <sstream>
 #include <vector>
@@ -102,8 +103,6 @@ bool Indie::DataManager::quitRoom(const std::string &userName) {
     return true;
 }
 
-#include <iostream>
-
 bool                            Indie::DataManager::getMap(unsigned int roomId, std::vector<std::string>& map) {
     std::string                 tmp = "/game/getMap ";
     char                        buf[4097];
@@ -175,7 +174,6 @@ Ogre::Vector3 Indie::DataManager::getPlayerStart(std::string pName, bool& succes
     else
         ++idx;
     pos.x = std::atoi(&buf[idx]);
-    std::cout << pos.x << " " << std::endl;
     return pos;
 }
 
@@ -264,8 +262,7 @@ void Indie::DataManager::updateAllPlayers(unsigned int roomId, Ogre::SceneManage
         if (!(*it)->isUpdate()) {
             (*it)->explode(sceneManager);
         }
-        else
-            ++it;
+        ++it;
     }
 }
 
