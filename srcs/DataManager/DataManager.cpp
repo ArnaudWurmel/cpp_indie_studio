@@ -19,9 +19,9 @@ Indie::DataManager::DataManager(const std::string& ip, int port) : _ip(ip), _por
     struct timeval tv;
     tv.tv_sec = 0;
     tv.tv_usec = 100000;
-    if (setsockopt(_sockfd, SOL_SOCKET, SO_RCVTIMEO,&tv,sizeof(tv)) < 0) {
+    /*if (setsockopt(_sockfd, SOL_SOCKET, SO_RCVTIMEO,&tv,sizeof(tv)) < 0) {
         throw std::exception();
-    }
+    }*/
 }
 
 Indie::DataManager::~DataManager() {}
@@ -193,8 +193,8 @@ void    Indie::DataManager::updatePlayerPos(std::string const &pName, Ogre::Vect
     if ((ret = recvfrom(_sockfd, buf, sizeof(buf), 0, reinterpret_cast<struct sockaddr *>(&_client), &client_size)) == -1)
         return ;
     buf[ret] = 0;
-    if (std::atoi(buf) != 200)
-        std::cerr << "Update player failed" << std::endl;
+    /*if (std::atoi(buf) != 200)
+        std::cerr << "Update player failed" << std::endl;*/
 }
 
 void Indie::DataManager::updateAllPlayers(unsigned int roomId, Ogre::SceneManager *sceneManager) {
@@ -204,63 +204,59 @@ void Indie::DataManager::updateAllPlayers(unsigned int roomId, Ogre::SceneManage
     socklen_t           client_size;
     socklen_t           server_size;
 
-    if (60 / Config::getNbTicks() != _frameCount) {
-        ++_frameCount;
-        return ;
-    }
     _frameCount = 0;
     route = route + std::to_string(roomId);
     std::strncpy(buf, route.c_str(), 4096);
     client_size = sizeof(_client);
     server_size = sizeof(_serv);
     if (sendto(_sockfd, buf, sizeof(buf), 0, reinterpret_cast<struct sockaddr *>(&_serv), server_size) == -1)
-        return ;
+        throw std::exception();
     if ((ret = recvfrom(_sockfd, buf, sizeof(buf), 0, reinterpret_cast<struct sockaddr *>(&_client), &client_size)) == -1)
-        return ;
+        throw std::exception();
     buf[ret] = 0;
-    std::cout << "Received : " << buf << std::endl;
+    //std::cout << "Received : " << buf << std::endl;
 
-    std::stringstream   ss(buf);
-    std::string         line;
-
-    std::getline(ss, line);
-    if (std::atoi(line.c_str()) != 200)
+    if (std::atoi(buf) != 200)
         return ;
     std::vector<std::unique_ptr<APlayer> >::iterator    it = EntityManager::getPlayerList().begin();
-
     while (it != EntityManager::getPlayerList().end()) {
         (*it)->setUpdate(false);
         ++it;
     }
-    bool    updated = false;
-    while (std::getline(ss, line)) {
-        std::vector<std::string>    tokenList = getTokenList(line);
+    std::vector<std::string>    tokenList = getTokenList(buf);
+
+    //std::cout << tokenList.size() << std::endl;
+    if ((tokenList.size() - 1) % 4 != 0 || tokenList.size() - 1 <= 0)
+        return ;
+    unsigned int i = 1;
+    while (i < tokenList.size()) {
         bool    found = false;
-        updated = true;
-        if (tokenList.size() != 4)
-            throw std::exception();
+
         it = EntityManager::getPlayerList().begin();
-        while (it != EntityManager::getPlayerList().end() && !found) {
-            if (!(*it)->getPlayerId().compare(tokenList[0])) {
+
+        while (it != EntityManager::getPlayerList().end()) {
+            if (!(*it)->getPlayerId().compare(tokenList[i])) {
                 found = true;
-                (*it)->move(Ogre::Vector3(std::atoi(tokenList[2].c_str()) - (*it)->getPosition().x, 0, std::atoi(tokenList[1].c_str()) - (*it)->getPosition().z));
-                (*it)->rotate(std::atoi(tokenList[3].c_str()));
+                Ogre::Vector3   newPos;
+                newPos.x = std::atoi(tokenList[i + 2].c_str()) - (*it)->getPosition().x;
+                newPos.y = 0;
+                newPos.z = std::atoi(tokenList[i + 1].c_str()) - (*it)->getPosition().z;
+                (*it)->rotate(std::atoi(tokenList[i + 3].c_str()));
                 (*it)->setUpdate(true);
             }
             ++it;
         }
-        if (!found && EntityManager::getMainPlayer()->getPlayerId().compare(tokenList[0])) {
-            APlayer *player = EntityManager::createEnemy(sceneManager, Ogre::Vector3(std::atoi(tokenList[2].c_str()), 30, std::atoi(tokenList[1].c_str())), tokenList[0]);
-            player->rotate(std::atoi(tokenList[3].c_str()));
+        if (!found && EntityManager::getMainPlayer()->getPlayerId().compare(tokenList[i])) {
+            APlayer *player = EntityManager::createEnemy(sceneManager, Ogre::Vector3(std::atoi(tokenList[i + 2].c_str()), 30, std::atoi(tokenList[i + 1].c_str())), tokenList[i]);
+            player->rotate(std::atoi(tokenList[i + 3].c_str()));
             player->setUpdate(true);
         }
+        i += 4;
     }
-    if (!updated)
-        return ;
     it = EntityManager::getPlayerList().begin();
     while (it != EntityManager::getPlayerList().end()) {
         if (!(*it)->isUpdate()) {
-            (*it)->explode(sceneManager);
+            //(*it)->explode(sceneManager);
         }
         ++it;
     }

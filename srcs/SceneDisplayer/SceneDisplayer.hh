@@ -10,6 +10,7 @@
 # include <Ogre.h>
 # include <OIS/OIS.h>
 #include <thread>
+#include <mutex>
 # include "../MapParser/MapParser.hh"
 # include "../Entities/AEntity.hh"
 # include "../Player/APlayer.hh"
@@ -65,6 +66,7 @@ namespace   Indie
         Ogre::SceneManager  *mSceneManager;
         std::vector<std::vector<Indie::MapParser::TileType> >   _map;
         std::unique_ptr<std::thread>    _thread;
+        std::mutex  _locker;
     };
 }
 

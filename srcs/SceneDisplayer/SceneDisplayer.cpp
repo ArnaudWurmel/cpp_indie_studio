@@ -23,13 +23,13 @@ void Indie::SceneDisplayer::initScene() {
     bool    success = false;
 
     DataManager *dataManager = Indie::DataManager::getSingloton();
-    Ogre::Vector3   posPlayer = dataManager->getPlayerStart("Erwan", success);
+    Ogre::Vector3   posPlayer = dataManager->getPlayerStart("Thibaud", success);
     if (!success)
         throw std::exception();
-    EntityManager::createHuman(mSceneManager, Ogre::Vector3(posPlayer.x, 25, posPlayer.z), "Erwan");
+    EntityManager::createHuman(mSceneManager, Ogre::Vector3(posPlayer.x, 25, posPlayer.z), "Thibaud");
     initEventRegister();
     _thread = std::unique_ptr<std::thread>(new std::thread(&Indie::SceneDisplayer::updaterThread, this));
-    _thread->detach();
+ //   _thread->detach();
 }
 
 void Indie::SceneDisplayer::createGround() {
@@ -80,10 +80,16 @@ void    Indie::SceneDisplayer::updaterThread() {
     Indie::DataManager  *dataManager = Indie::DataManager::getSingloton();
 
     while (true) {
-        dataManager->updateAllPlayers(0, mSceneManager);
-        if (EntityManager::getMainPlayer()->isAlive())
-            dataManager->updatePlayerPos("Erwan", EntityManager::getMainPlayer()->getPosition());
-        std::this_thread::sleep_for(std::chrono::milliseconds(16));
+        if (_locker.try_lock()) {
+            dataManager->updateAllPlayers(0, mSceneManager);
+            if (EntityManager::getMainPlayer()->isAlive())
+                dataManager->updatePlayerPos("Thibaud", EntityManager::getMainPlayer()->getPosition());
+            _locker.unlock();
+            std::this_thread::sleep_for(std::chrono::milliseconds(5));
+        }
+        else {
+            return ;
+        }
     }
 }
 
@@ -176,7 +182,11 @@ bool    Indie::SceneDisplayer::checkRight(std::unique_ptr<APlayer>& entity, std:
 }
 
 Indie::SceneDisplayer::~SceneDisplayer() {
-    _thread.reset();
+    std::cout << "Deleting..." << std::endl;
+    std::cout << _thread->joinable() << std::endl;
+    _locker.lock();
+    std::cout << "Mutex locked" << std::endl;
+    _thread->join();
 }
 
 /**********************************

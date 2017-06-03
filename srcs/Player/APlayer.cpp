@@ -35,7 +35,6 @@ bool    Indie::APlayer::updateFromLoop(Ogre::SceneManager *sceneManager) {
 
     if (isWaiting()) {
         createEntity(sceneManager);
-        std::cout << "Create entity" << std::endl;
     }
     it = _bombList.begin();
     while (it != _bombList.end()) {

@@ -26,7 +26,7 @@ bool Indie::Bomberman::loadApp() {
     mSceneManager = mRoot->createSceneManager("DefaultSceneManager", "Game Scene Manager");
     mSceneManager->setAmbientLight(Ogre::ColourValue(1.0f, 1.0f, 1.0f));
     this->createCamera();
-    mSceneDisplayer = std::shared_ptr<Indie::SceneDisplayer>(new Indie::SceneDisplayer(mSceneManager));
+    mSceneDisplayer = std::unique_ptr<Indie::SceneDisplayer>(new Indie::SceneDisplayer(mSceneManager));
     mEventListener = std::unique_ptr<Indie::EventListener>(new Indie::EventListener(mSceneManager, mRenderWindow));
     Ogre::WindowEventUtilities::addWindowEventListener(mRenderWindow, mEventListener.get());
     mRoot->addFrameListener(mEventListener.get());
@@ -105,6 +105,7 @@ void    Indie::Bomberman::loadResources() {
  * Dtor
  */
 Indie::Bomberman::~Bomberman() {
+    mSceneDisplayer.reset();
     Ogre::WindowEventUtilities::removeWindowEventListener(mRenderWindow, mEventListener.get());
     mEventListener->windowClosed(mRenderWindow);
     mRoot.reset();

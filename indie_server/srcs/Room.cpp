@@ -2,6 +2,7 @@
 // Created by wurmel_a on 29/05/17.
 //
 
+#include <iostream>
 #include "Room.hh"
 #include "Server.h"
 

@@ -111,11 +111,12 @@ void    Indie::Game::getPlayersPos(Server& server) {
     std::stringstream   ss;
     std::vector<std::unique_ptr<Player> >::const_iterator it = _playerList.begin();
 
-    ss << "200 Success" << std::endl;
+    ss << "200";
     while (it != _playerList.end()) {
-        ss << (*it)->name << " " << (*it)->x << " " << (*it)->y << " " << (*it)->rotate << std::endl;
+        ss << " " << (*it)->name << " " << (*it)->x << " " << (*it)->y << " " << (*it)->rotate;
         ++it;
     }
+    ss << std::endl;
     server.setResponse(ss.str());
 }
 
