@@ -26,7 +26,8 @@ namespace Indie
         bool    getMap(Server&);
         bool    getPlayerPos(std::string const&, Server&);
         bool    updatePlayerPosition(std::vector<std::string> const&);
-        bool    getPlayersPos(Server&);
+        bool    getPlayersPos(Server&) const;
+        bool    addBomb(int, int);
 
     public:
         static unsigned int roomId;

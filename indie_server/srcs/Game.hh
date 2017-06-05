@@ -26,9 +26,13 @@ namespace   Indie {
         };
         struct  Bomb
         {
+            static unsigned int bombId;
+
+        public:
+            Bomb(int, int);
             unsigned int    id;
-            unsigned int    x;
-            unsigned int    y;
+            int    x;
+            int    y;
         };
     public:
         Game(std::vector<std::string> const&);
@@ -41,10 +45,10 @@ namespace   Indie {
         bool    addPlayerToGame(std::string const&);
         bool    updatePlayerPosition(std::vector<std::string> const&);
         void    exitPlayer(std::string const&);
-        void    getPlayersPos(Server&);
+        void    getPlayersPos(Server&) const;
+        void    addBomb(int, int);
 
     private:
-        unsigned int    _bombId;
         std::vector<std::unique_ptr<Bomb> > _bombList;
         std::vector<std::unique_ptr<Player> >   _playerList;
         std::vector<std::string>   _map;

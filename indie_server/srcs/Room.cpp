@@ -91,9 +91,17 @@ bool    Indie::Room::updatePlayerPosition(std::vector<std::string> const& input)
     return false;
 }
 
-bool    Indie::Room::getPlayersPos(Server& server) {
+bool    Indie::Room::getPlayersPos(Server& server) const {
     if (_running) {
         _game->getPlayersPos(server);
+        return true;
+    }
+    return false;
+}
+
+bool    Indie::Room::addBomb(int x, int y) {
+    if (_running) {
+        _game->addBomb(x, y);
         return true;
     }
     return false;

@@ -6,14 +6,22 @@
 #include <sstream>
 #include "Game.hh"
 
+unsigned int    Indie::Game::Bomb::bombId = 0;
+
 Indie::Game::Player::Player(std::string const& pName) {
     name = pName;
     x = -1;
     y = -1;
 }
 
+Indie::Game::Bomb::Bomb(int x_pos, int y_pos) {
+    x = x_pos;
+    y = y_pos;
+    id = Indie::Game::Bomb::bombId + 1;
+    Indie::Game::Bomb::bombId =+ 1;
+}
+
 Indie::Game::Game(std::vector<std::string> const& playerList) {
-    _bombId = 0;
     std::vector<std::string>::const_iterator  it;
 
     MapParser   mapParser("maps/level0");
@@ -107,7 +115,7 @@ bool    Indie::Game::updatePlayerPosition(std::vector<std::string> const& input)
     return false;
 }
 
-void    Indie::Game::getPlayersPos(Server& server) {
+void    Indie::Game::getPlayersPos(Server& server) const {
     std::stringstream   ss;
     std::vector<std::unique_ptr<Player> >::const_iterator it = _playerList.begin();
 
@@ -118,6 +126,10 @@ void    Indie::Game::getPlayersPos(Server& server) {
     }
     ss << std::endl;
     server.setResponse(ss.str());
+}
+
+void    Indie::Game::addBomb(int x, int y) {
+    _bombList.push_back(std::unique_ptr<Bomb>(new Bomb(x, y)));
 }
 
 Indie::Game::~Game() {}

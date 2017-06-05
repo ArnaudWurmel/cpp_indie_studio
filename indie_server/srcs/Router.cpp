@@ -19,7 +19,8 @@ const std::map<std::string, Indie::Router::cmdPtr> Indie::Router::fnc = {
         { "/game/getMap", &Indie::Router::getMap },
         { "/game/getPlayerPos", &Indie::Router::getPlayerPosition },
         { "/game/updatePlayer", &Indie::Router::updatePlayerPosition },
-        { "/game/getPlayersPos", &Indie::Router::getPlayerList }
+        { "/game/getPlayersPos", &Indie::Router::getPlayerList },
+        { "/game/addBomb", &Indie::Router::addBomb }
 };
 
 const std::vector<Indie::Router::User> Indie::Router::userList = {
@@ -198,6 +199,27 @@ bool    Indie::Router::getPlayerList(std::vector<std::string> const& input, Serv
     bool state = gameManager->getPlayersPosition(std::atoi(input[1].c_str()), server);
     gameManager->release();
     return state;
+}
+
+bool    Indie::Router::addBomb(std::vector<std::string> const& input, Server& server) const {
+    if (input.size() != 4) {
+        return false;
+    }
+    GameManager *gameManager = GameManager::getSingleton();
+
+    bool    state = false;
+    int     roomId = std::atoi(input[1].c_str());
+    if (roomId >= 0) {
+        state = gameManager->addBomb(roomId, std::atoi(input[2].c_str()), std::atoi(input[3].c_str()));
+    }
+    if (state)
+        server.setResponse("200 Bomb added");
+    gameManager->release();
+    return state;
+}
+
+bool    Indie::Router::listBomb(std::vector<std::string> const& input, Server& server) const {
+
 }
 
 Indie::Router::~Router() {}

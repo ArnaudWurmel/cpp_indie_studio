@@ -44,6 +44,8 @@ namespace   Indie {
         bool getPlayerPosition(std::vector<std::string> const&, Server&) const;
         bool updatePlayerPosition(std::vector<std::string> const&, Server&) const;
         bool getPlayerList(std::vector<std::string> const&, Server&) const;
+        bool addBomb(std::vector<std::string> const&, Server&) const;
+        bool listBomb(std::vector<std::string> const&, Server&) const;
     };
 }
 

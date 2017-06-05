@@ -96,8 +96,8 @@ bool    Indie::GameManager::getMap(unsigned int const& roomId, Server& server) c
     return false;
 }
 
-bool    Indie::GameManager::getPlayerPosition(std::string const& pName, Server& server) {
-    std::vector<std::unique_ptr<Room> >::iterator it;
+bool    Indie::GameManager::getPlayerPosition(std::string const& pName, Server& server) const {
+    std::vector<std::unique_ptr<Room> >::const_iterator it;
 
     it = _roomList.begin();
     while (it != _roomList.end()) {
@@ -120,14 +120,26 @@ bool Indie::GameManager::updatePlayerPosition(std::vector<std::string> const& in
     return false;
 }
 
-bool    Indie::GameManager::getPlayersPosition(int roomId, Server& server) {
-    std::vector<std::unique_ptr<Room> >::iterator   it;
+bool    Indie::GameManager::getPlayersPosition(int roomId, Server& server) const {
+    std::vector<std::unique_ptr<Room> >::const_iterator   it;
 
     it = _roomList.begin();
     while (it != _roomList.end()) {
         if ((*it)->getRoomId() == roomId) {
             return (*it)->getPlayersPos(server);
         }
+        ++it;
+    }
+    return false;
+}
+
+bool    Indie::GameManager::addBomb(int roomId, int x, int y) {
+    std::vector<std::unique_ptr<Room> >::iterator   it;
+
+    it = _roomList.begin();
+    while (it != _roomList.end()) {
+        if ((*it)->getRoomId() == roomId)
+            return (*it)->addBomb(x, y);
         ++it;
     }
     return false;
