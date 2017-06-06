@@ -52,8 +52,10 @@ bool    Indie::Bomb::hittedByExplosion() const {
 bool    Indie::Bomb::updateFromLoop(Ogre::SceneManager *sceneManager) {
     std::vector<std::unique_ptr<Indie::AEntity> >::iterator it;
 
-    if (isWaiting())
+    if (isWaiting()) {
+        std::cout << "Entity created" << std::endl;
         Indie::AEntity::createEntity(sceneManager);
+    }
     it = _explosionList.begin();
     while (it != _explosionList.end()) {
         if (!(*it)->updateFromLoop(sceneManager)) {

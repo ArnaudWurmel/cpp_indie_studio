@@ -217,6 +217,7 @@ void Indie::DataManager::updateAllPlayers(unsigned int roomId, Ogre::SceneManage
 
     if ((tokenList.size() - 1) % 4 != 0 || tokenList.size() - 1 <= 0)
         return ;
+    //std::cout << buf << std::endl;
     unsigned int i = 1;
     while (i < tokenList.size()) {
         bool    found = false;
@@ -225,11 +226,14 @@ void Indie::DataManager::updateAllPlayers(unsigned int roomId, Ogre::SceneManage
 
         while (it != EntityManager::getPlayerList().end()) {
             if (!(*it)->getPlayerId().compare(tokenList[i])) {
+                //std::cout << tokenList[i] << std::endl;
+                //std::cout << tokenList[i + 2] << " " << tokenList[i + 1] << std::endl;
                 found = true;
                 Ogre::Vector3   newPos;
                 newPos.x = std::atoi(tokenList[i + 2].c_str()) - (*it)->getPosition().x;
                 newPos.y = 0;
                 newPos.z = std::atoi(tokenList[i + 1].c_str()) - (*it)->getPosition().z;
+                (*it)->move(newPos);
                 (*it)->rotate(std::atoi(tokenList[i + 3].c_str()));
                 (*it)->setUpdate(true);
             }
@@ -269,18 +273,17 @@ void    Indie::DataManager::addBomb(unsigned int roomId, std::string const& pId,
     buf[ret] = 0;
     if (std::atoi(buf) != 200)
         std::cerr << "add failed" << std::endl;
-    std::cout << buf << std::endl;
-
+   // std::cout << buf << std::endl;
 }
 
 void    Indie::DataManager::listBomb(unsigned int roomId, std::string const& pId) {
-    std::string route = "/game/getPlayersPos ";
+    std::string route = "/game/bombList ";
     char                buf[4097];
     int                 ret;
     socklen_t           client_size;
     socklen_t           server_size;
 
-    route = route + std::to_string(roomId);
+    route = route + std::to_string(roomId) + " " + pId;
     std::strncpy(buf, route.c_str(), 4096);
     client_size = sizeof(_client);
     server_size = sizeof(_serv);
@@ -289,6 +292,8 @@ void    Indie::DataManager::listBomb(unsigned int roomId, std::string const& pId
     if ((ret = recvfrom(_sockfd, buf, sizeof(buf), 0, reinterpret_cast<struct sockaddr *>(&_client), &client_size)) == -1)
         throw std::exception();
     buf[ret] = 0;
+    std::cout << buf << std::endl;
+
     if (std::atoi(buf) != 200)
         return ;
     std::vector<std::string>    tokenList = getTokenList(buf);
@@ -302,6 +307,8 @@ void    Indie::DataManager::listBomb(unsigned int roomId, std::string const& pId
         std::vector<std::unique_ptr<Bomb> >::const_iterator it = EntityManager::getBombList().begin();
 
         while (!found && it != EntityManager::getBombList().end()) {
+            std::cout << tokenList[i] << std::endl;
+           // std::cout << tokenList[i] << std::endl;
             if ((*it)->getID() == std::atoi(tokenList[i].c_str())) {
                 found = true;
             }

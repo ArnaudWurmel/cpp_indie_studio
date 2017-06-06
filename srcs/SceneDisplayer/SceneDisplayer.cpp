@@ -23,10 +23,10 @@ void Indie::SceneDisplayer::initScene() {
     bool    success = false;
 
     DataManager *dataManager = Indie::DataManager::getSingloton();
-    Ogre::Vector3   posPlayer = dataManager->getPlayerStart("Thibaud", success);
+    Ogre::Vector3   posPlayer = dataManager->getPlayerStart("Erwan", success);
     if (!success)
         throw std::exception();
-    EntityManager::createHuman(mSceneManager, Ogre::Vector3(posPlayer.x, 25, posPlayer.z), "Thibaud");
+    EntityManager::createHuman(mSceneManager, Ogre::Vector3(posPlayer.x, 25, posPlayer.z), "Erwan");
     initEventRegister();
     _thread = std::unique_ptr<std::thread>(new std::thread(&Indie::SceneDisplayer::updaterThread, this));
 }
@@ -82,8 +82,8 @@ void    Indie::SceneDisplayer::updaterThread() {
         if (_locker.try_lock()) {
             dataManager->updateAllPlayers(0, mSceneManager);
             if (EntityManager::getMainPlayer()->isAlive())
-                dataManager->updatePlayerPos("Thibaud", EntityManager::getMainPlayer()->getPosition());
-            dataManager->listBomb(0, "Thibaud");
+                dataManager->updatePlayerPos("Erwan", EntityManager::getMainPlayer()->getPosition());
+            dataManager->listBomb(0, "Erwan");
             _locker.unlock();
             std::this_thread::sleep_for(std::chrono::milliseconds(5));
         }
