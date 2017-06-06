@@ -19,8 +19,12 @@ Indie::Game::Bomb::Bomb(std::string const& pId, int x_pos, int y_pos, int power)
     x = x_pos;
     y = y_pos;
     this->power = power;
-    id = Indie::Game::Bomb::bombId + 1;
+    id = Indie::Game::Bomb::bombId;
+    std::cerr << id << std::endl;
+    std::cerr << Indie::Game::Bomb::bombId << std::endl;
     Indie::Game::Bomb::bombId = Indie::Game::Bomb::bombId + 1;
+    std::cerr << id << std::endl;
+    std::cerr << Indie::Game::Bomb::bombId << std::endl;
 }
 
 Indie::Game::Game(std::vector<std::string> const& playerList) {
@@ -131,7 +135,10 @@ void    Indie::Game::getPlayersPos(Server& server) const {
 }
 
 void    Indie::Game::addBomb(std::string const& pId, int x, int y, int power) {
+    if (_bombList.size() > 0)
+        std::cerr << (*_bombList.begin())->id << std::endl;
     _bombList.push_back(std::unique_ptr<Bomb>(new Bomb(pId, x, y, power)));
+    std::cerr << (*_bombList.begin())->id << std::endl;
 }
 
 void    Indie::Game::listBomb(std::string const& pId, Server& server) const {
@@ -141,7 +148,7 @@ void    Indie::Game::listBomb(std::string const& pId, Server& server) const {
     ss << "200";
     while (it != _bombList.end()) {
         if ((*it)->pId.compare(pId)) {
-            ss << " " << (*it)->bombId << " " << (*it)->x << " " << (*it)->y << " " << (*it)->power;
+            ss << " " << (*it)->id << " " << (*it)->x << " " << (*it)->y << " " << (*it)->power;
         }
         ++it;
     }

@@ -9,6 +9,7 @@ Indie::AEntity::AEntity(Ogre::SceneManager *sceneManager, Ogre::Vector3 const &e
 
     mWaiting = waiting;
     mTransformation = Ogre::Vector3(1, 1, 1);
+    mBackgroundKill = false;
     if (!waiting) {
         mEntity = sceneManager->createEntity(entityName);
         mSceneNode = sceneManager->getRootSceneNode()->createChildSceneNode(entityPos);

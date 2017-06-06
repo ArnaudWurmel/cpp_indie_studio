@@ -57,6 +57,7 @@ namespace Indie
         Ogre::Entity    *mEntity;
         Ogre::Vector3   mTransformation;
         bool            mIsAlive;
+        bool            mBackgroundKill;
         unsigned int    mRotation;
 
         /*

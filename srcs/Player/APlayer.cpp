@@ -36,6 +36,8 @@ bool    Indie::APlayer::updateFromLoop(Ogre::SceneManager *sceneManager) {
     if (isWaiting()) {
         createEntity(sceneManager);
     }
+    if (mBackgroundKill)
+        explode(sceneManager);
     it = _bombList.begin();
     while (it != _bombList.end()) {
         if (!(*it)->updateFromLoop(sceneManager))
@@ -53,10 +55,12 @@ bool    Indie::APlayer::updateFromLoop(Ogre::SceneManager *sceneManager) {
 }
 
 void    Indie::APlayer::explode(Ogre::SceneManager *sceneManager) {
-    if (mSceneNode != NULL && mEntity != NULL) {
+    if (sceneManager && mSceneNode != NULL && mEntity != NULL) {
         createAllParticles(sceneManager, getPosition(), getSize().y * 200);
         Indie::AEntity::explode(sceneManager);
     }
+    else
+        mBackgroundKill = true;
 }
 
 std::string const&  Indie::APlayer::getPlayerId() const {

@@ -118,7 +118,7 @@ bool    Indie::SceneDisplayer::updateScene() {
 
     std::vector<std::unique_ptr<Bomb> >::iterator   itB = EntityManager::getBombList().begin();
     while (itB != EntityManager::getBombList().end()) {
-        (*itB)->updateFromLoop(mSceneManager);
+        std::cout << (*itB)->updateFromLoop(mSceneManager) << std::endl;
         ++itB;
     }
     return true;
