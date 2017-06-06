@@ -30,7 +30,8 @@ namespace   Indie
         bool    getPlayerPosition(std::string const&, Server&) const;
         bool    updatePlayerPosition(std::vector<std::string> const&);
         bool    getPlayersPosition(int roomId, Server&) const;
-        bool    addBomb(int roomId, int x, int y);
+        bool    addBomb(int roomId, std::string const&, int x, int y, int);
+        bool    listBomb(int roomId, std::string const&, Server&) const;
 
     public:
         void    lock();

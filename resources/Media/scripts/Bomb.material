@@ -1,85 +1,85 @@
-// Bomb/Base genrated by blender2ogre 0.6.0
+// Bomb genrated by blender2ogre 0.6.0
 
-material Bomb/Base 
+material Bomb 
 {
     receive_shadows on 
 
     technique
     {
-        pass Bomb/Base
-        {
-            ambient 0.1523246169090271 0.1523246169090271 0.1523246169090271 1.0
-            diffuse 0.12185969534307262 0.12185969534307262 0.12185969534307262 1.0
-            specular 0.5 0.5 0.5 1.0 12.5
-            emissive 0.0 0.0 0.0 1.0
-
-            alpha_to_coverage off
-            colour_write on
-            cull_hardware clockwise
-            depth_check on
-            depth_func less_equal
-            depth_write on
-            illumination_stage 
-            light_clip_planes off
-            light_scissor off
-            lighting on
-            normalise_normals off
-            polygon_mode solid
-            scene_blend one zero
-            scene_blend_op add
-            shading gouraud
-            transparent_sorting on
-
-        }
-    }
-}
-// Bomb/meche genrated by blender2ogre 0.6.0
-
-material Bomb/meche 
-{
-    receive_shadows on 
-
-    technique
-    {
-        pass Bomb/meche
-        {
-            ambient 1.0 1.0 1.0 1.0
-            diffuse 0.800000011920929 0.800000011920929 0.800000011920929 1.0
-            specular 0.5 0.5 0.5 1.0 12.5
-            emissive 0.0 0.0 0.0 1.0
-
-            alpha_to_coverage off
-            colour_write on
-            cull_hardware clockwise
-            depth_check on
-            depth_func less_equal
-            depth_write on
-            illumination_stage 
-            light_clip_planes off
-            light_scissor off
-            lighting on
-            normalise_normals off
-            polygon_mode solid
-            scene_blend one zero
-            scene_blend_op add
-            shading gouraud
-            transparent_sorting on
-
-        }
-    }
-}
-// Bomb/Top genrated by blender2ogre 0.6.0
-
-material Bomb/Top 
-{
-    receive_shadows on 
-
-    technique
-    {
-        pass Bomb/Top
+        pass Bomb
         {
             ambient 0.0 0.662955105304718 1.0 1.0
             diffuse 0.0 0.5303640921468151 0.800000011920929 1.0
+            specular 0.5 0.5 0.5 1.0 12.5
+            emissive 0.0 0.0 0.0 1.0
+
+            alpha_to_coverage off
+            colour_write on
+            cull_hardware clockwise
+            depth_check on
+            depth_func less_equal
+            depth_write on
+            illumination_stage 
+            light_clip_planes off
+            light_scissor off
+            lighting on
+            normalise_normals off
+            polygon_mode solid
+            scene_blend one zero
+            scene_blend_op add
+            shading gouraud
+            transparent_sorting on
+
+        }
+    }
+}
+// Cylingder genrated by blender2ogre 0.6.0
+
+material Cylingder 
+{
+    receive_shadows on 
+
+    technique
+    {
+        pass Cylingder
+        {
+            ambient 0.0 0.9247211217880249 1.0 1.0
+            diffuse 0.0 0.7397769084539547 0.800000011920929 1.0
+            specular 0.5 0.5 0.5 1.0 12.5
+            emissive 0.0 0.0 0.0 1.0
+
+            alpha_to_coverage off
+            colour_write on
+            cull_hardware clockwise
+            depth_check on
+            depth_func less_equal
+            depth_write on
+            illumination_stage 
+            light_clip_planes off
+            light_scissor off
+            lighting on
+            normalise_normals off
+            polygon_mode solid
+            scene_blend one zero
+            scene_blend_op add
+            shading gouraud
+            transparent_sorting on
+
+        }
+    }
+}
+// Meche genrated by blender2ogre 0.6.0
+
+material Meche 
+{
+    receive_shadows on 
+
+    technique
+    {
+        pass Meche
+        {
+            ambient 1.0 1.0 1.0 1.0
+            diffuse 0.800000011920929 0.800000011920929 0.800000011920929 1.0
             specular 0.5 0.5 0.5 1.0 12.5
             emissive 0.0 0.0 0.0 1.0
 

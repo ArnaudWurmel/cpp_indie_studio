@@ -69,6 +69,25 @@ std::vector<std::unique_ptr<Indie::APlayer> >&  Indie::EntityManager::getPlayerL
     throw std::exception();
 }
 
+void    Indie::EntityManager::addBomb(Indie::Bomb *bomb) {
+    Indie::EntityManager    *entityManager = getEntityManager();
+
+    if (entityManager) {
+        entityManager->_bombList.push_back(std::unique_ptr<Indie::Bomb>(bomb));
+        return ;
+    }
+    throw std::exception();
+}
+
+std::vector<std::unique_ptr<Indie::Bomb> >& Indie::EntityManager::getBombList() {
+    Indie::EntityManager    *entityManager = getEntityManager();
+
+    if (entityManager) {
+        return entityManager->_bombList;
+    }
+    throw std::exception();
+}
+
 Indie::EntityManager::EntityManager() {}
 
 Indie::EntityManager::~EntityManager() {

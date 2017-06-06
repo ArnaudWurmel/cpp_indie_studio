@@ -98,6 +98,9 @@ void    Indie::APlayer::addABomb() {
 
 void    Indie::APlayer::plantABomb(Ogre::SceneManager *sceneManager) {
     if (_bombList.size() < _nbBombs) {
+        DataManager *dataManager = DataManager::getSingloton();
+
+        dataManager->addBomb(0, _pId, Bomb::getBombPosition(*this).z, Bomb::getBombPosition(*this).x, _bombRange);
         _bombList.push_back(std::unique_ptr<Indie::Bomb>(new Indie::Bomb(sceneManager, *this)));
     }
 }

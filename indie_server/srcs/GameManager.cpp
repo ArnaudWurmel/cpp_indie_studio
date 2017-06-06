@@ -133,16 +133,27 @@ bool    Indie::GameManager::getPlayersPosition(int roomId, Server& server) const
     return false;
 }
 
-bool    Indie::GameManager::addBomb(int roomId, int x, int y) {
+bool    Indie::GameManager::addBomb(int roomId, std::string const& pId, int x, int y, int power) {
     std::vector<std::unique_ptr<Room> >::iterator   it;
 
     it = _roomList.begin();
     while (it != _roomList.end()) {
         if ((*it)->getRoomId() == roomId)
-            return (*it)->addBomb(x, y);
+            return (*it)->addBomb(pId, x, y, power);
         ++it;
     }
     return false;
+}
+
+bool    Indie::GameManager::listBomb(int roomId, std::string const& pId, Server& server) const {
+    std::vector<std::unique_ptr<Room> >::const_iterator   it;
+
+    it = _roomList.begin();
+    while (it != _roomList.end()) {
+        if ((*it)->getRoomId() == roomId) {
+            return (*it)->listBomb(pId, server);
+        }
+    }
 }
 
 void Indie::GameManager::lock() {

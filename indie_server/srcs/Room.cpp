@@ -99,9 +99,17 @@ bool    Indie::Room::getPlayersPos(Server& server) const {
     return false;
 }
 
-bool    Indie::Room::addBomb(int x, int y) {
+bool    Indie::Room::addBomb(std::string const& pId, int x, int y, int power) {
     if (_running) {
-        _game->addBomb(x, y);
+        _game->addBomb(pId, x, y, power);
+        return true;
+    }
+    return false;
+}
+
+bool    Indie::Room::listBomb(std::string const& pId, Server& server) const {
+    if (_running) {
+        _game->listBomb(pId, server);
         return true;
     }
     return false;

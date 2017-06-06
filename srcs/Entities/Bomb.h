@@ -17,6 +17,7 @@ namespace Indie {
     class Bomb : public AEntity, public ExplosableEntity {
     public:
         Bomb(Ogre::SceneManager *, APlayer const&);
+        Bomb(int, int, int, int);
         ~Bomb();
 
     public:
@@ -27,12 +28,17 @@ namespace Indie {
         bool    updateFromLoop(Ogre::SceneManager *);
         void    explode(Ogre::SceneManager *);
 
-    private:
-        bool    haveEntityWithPos(Ogre::Vector3 const&, bool&) const;
+    public:
+        int const&   getID() const;
 
     private:
+        bool    haveEntityWithPos(Ogre::Vector3 const&, bool&) const;
+        void    createEntity(Ogre::SceneManager *);
+
+    private:
+        int             _id;
         unsigned int    _explodeTime;
-        APlayer const&  _delegate;
+        int    _explodeSize;
         std::vector<std::unique_ptr<Indie::AEntity> >    _explosionList;
     };
 }

@@ -36,6 +36,9 @@ namespace Indie {
         static void addPlayer(Indie::APlayer *);
         static std::vector<std::unique_ptr<Indie::APlayer> >&   getPlayerList();
 
+        static void addBomb(Indie::Bomb *);
+        static std::vector<std::unique_ptr<Indie::Bomb> >&  getBombList();
+
 
     public:
         static AEntity  *createEntity(EntityType const&, Ogre::SceneManager *, Ogre::Vector3 const&);
@@ -50,6 +53,7 @@ namespace Indie {
     private:
         std::vector<std::shared_ptr<Indie::AEntity> >   _entityList;
         std::vector<std::unique_ptr<Indie::APlayer> >   _enemyList;
+        std::vector<std::unique_ptr<Indie::Bomb> >  _bombList;
         std::unique_ptr<Indie::APlayer> _mainPlayer;
     };
 }

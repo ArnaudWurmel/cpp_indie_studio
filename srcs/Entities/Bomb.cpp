@@ -23,12 +23,26 @@ Ogre::Vector3   Indie::Bomb::getBombPosition(const APlayer& player) {
     return (ret);
 }
 
-Indie::Bomb::Bomb(Ogre::SceneManager *sceneManager, const Indie::APlayer& delegate) : AEntity(sceneManager, getBombPosition(delegate), "bomb.mesh"), ExplosableEntity(), _delegate(delegate) {
+Indie::Bomb::Bomb(Ogre::SceneManager *sceneManager, const Indie::APlayer& delegate) : AEntity(sceneManager, getBombPosition(delegate), "bomb.mesh"), ExplosableEntity() {
     mSceneNode->setScale(Ogre::Vector3(5.0f, 5.0f, 5.0f));
-    mTransformation = Ogre::Vector3(10.0f, 10.0f, 10.0f);
+    mTransformation = Ogre::Vector3(5.0f, 5.0f, 5.0f);
     _explodeTime = Config::getExplodeTime();
     addParticlesColor("Particles/Blue");
     addParticlesColor("Particles/Grey");
+    _id = -1;
+    _explodeSize = delegate.getBombRange();
+}
+
+Indie::Bomb::Bomb(int id, int x, int y, int power) : AEntity(NULL, Ogre::Vector3(x, 35, y), "bomb.mesh", true), ExplosableEntity() {
+    addParticlesColor("Particles/Blue");
+    addParticlesColor("Particles/Grey");
+    _explodeTime = Config::getExplodeTime();
+    _explodeSize = power;
+    _id = id;
+}
+
+int const&     Indie::Bomb::getID() const {
+    return _id;
 }
 
 bool    Indie::Bomb::hittedByExplosion() const {
@@ -36,9 +50,10 @@ bool    Indie::Bomb::hittedByExplosion() const {
 }
 
 bool    Indie::Bomb::updateFromLoop(Ogre::SceneManager *sceneManager) {
-    static_cast<void>(sceneManager);
     std::vector<std::unique_ptr<Indie::AEntity> >::iterator it;
 
+    if (isWaiting())
+        Indie::AEntity::createEntity(sceneManager);
     it = _explosionList.begin();
     while (it != _explosionList.end()) {
         if (!(*it)->updateFromLoop(sceneManager)) {
@@ -87,7 +102,7 @@ void    Indie::Bomb::explode(Ogre::SceneManager *sceneManager) {
 
     i = 0;
     _explosionList.push_back(std::unique_ptr<Indie::AEntity>(new Indie::Explosion(sceneManager, Ogre::Vector3(getPosition().x, getPosition().y - 35, getPosition().z))));
-    while (i < _delegate.getBombRange()) {
+    while (i < _explodeSize) {
 
         if (downContinue && !haveEntityWithPos(Ogre::Vector3(getPosition().x - (100 * (i + 1)), getPosition().y - 35, getPosition().z), downContinue))
             _explosionList.push_back(std::unique_ptr<Indie::AEntity>(new Indie::Explosion(sceneManager, Ogre::Vector3(getPosition().x - (100 * (i + 1)), getPosition().y - 35, getPosition().z))));

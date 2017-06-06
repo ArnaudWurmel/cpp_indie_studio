@@ -34,10 +34,11 @@ namespace   Indie {
         Ogre::Vector3       getPlayerStart(std::string pName, bool&);
         void                updatePlayerPos(std::string const& pName, Ogre::Vector3 const&);
         void                updateAllPlayers(unsigned int roomId, Ogre::SceneManager *);
+        void                addBomb(unsigned int, std::string const&, int, int, int);
+        void                listBomb(unsigned int, std::string const&);
 
     private:
         std::vector<std::string>    getTokenList(std::string const& line);
-        unsigned int    _frameCount;
     };
 }
 

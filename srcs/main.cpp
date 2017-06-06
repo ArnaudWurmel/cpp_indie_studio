@@ -20,7 +20,7 @@
 	int main()
 #endif
 {
-    Indie::DataManager  *dataManager = Indie::DataManager::getSingloton("137.74.196.119", 4242);
+    Indie::DataManager  *dataManager = Indie::DataManager::getSingloton("10.14.59.126", 4242);
 
     std::srand(std::time(0));
     std::cout << dataManager->quitRoom("Thibaud") << std::endl;

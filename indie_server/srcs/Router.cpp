@@ -20,7 +20,8 @@ const std::map<std::string, Indie::Router::cmdPtr> Indie::Router::fnc = {
         { "/game/getPlayerPos", &Indie::Router::getPlayerPosition },
         { "/game/updatePlayer", &Indie::Router::updatePlayerPosition },
         { "/game/getPlayersPos", &Indie::Router::getPlayerList },
-        { "/game/addBomb", &Indie::Router::addBomb }
+        { "/game/addBomb", &Indie::Router::addBomb },
+        { "/game/bombList", &Indie::Router::listBomb }
 };
 
 const std::vector<Indie::Router::User> Indie::Router::userList = {
@@ -202,7 +203,7 @@ bool    Indie::Router::getPlayerList(std::vector<std::string> const& input, Serv
 }
 
 bool    Indie::Router::addBomb(std::vector<std::string> const& input, Server& server) const {
-    if (input.size() != 4) {
+    if (input.size() != 6) {
         return false;
     }
     GameManager *gameManager = GameManager::getSingleton();
@@ -210,7 +211,7 @@ bool    Indie::Router::addBomb(std::vector<std::string> const& input, Server& se
     bool    state = false;
     int     roomId = std::atoi(input[1].c_str());
     if (roomId >= 0) {
-        state = gameManager->addBomb(roomId, std::atoi(input[2].c_str()), std::atoi(input[3].c_str()));
+        state = gameManager->addBomb(roomId, input[2], std::atoi(input[3].c_str()), std::atoi(input[4].c_str()), std::atoi(input[5].c_str()));
     }
     if (state)
         server.setResponse("200 Bomb added");
@@ -219,7 +220,18 @@ bool    Indie::Router::addBomb(std::vector<std::string> const& input, Server& se
 }
 
 bool    Indie::Router::listBomb(std::vector<std::string> const& input, Server& server) const {
+    if (input.size() != 3) {
+        return false;
+    }
+    GameManager *gameManager = GameManager::getSingleton();
 
+    bool    state = false;
+    int roomId = std::atoi(input[1].c_str());
+    if (roomId >= 0) {
+        state = gameManager->listBomb(roomId, input[2], server);
+    }
+    gameManager->release();
+    return state;
 }
 
 Indie::Router::~Router() {}

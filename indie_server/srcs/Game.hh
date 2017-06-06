@@ -29,10 +29,12 @@ namespace   Indie {
             static unsigned int bombId;
 
         public:
-            Bomb(int, int);
+            Bomb(std::string const&, int, int, int);
             unsigned int    id;
             int    x;
             int    y;
+            std::string pId;
+            int     power;
         };
     public:
         Game(std::vector<std::string> const&);
@@ -46,7 +48,8 @@ namespace   Indie {
         bool    updatePlayerPosition(std::vector<std::string> const&);
         void    exitPlayer(std::string const&);
         void    getPlayersPos(Server&) const;
-        void    addBomb(int, int);
+        void    addBomb(std::string const&, int, int, int);
+        void    listBomb(std::string const&, Server&) const;
 
     private:
         std::vector<std::unique_ptr<Bomb> > _bombList;

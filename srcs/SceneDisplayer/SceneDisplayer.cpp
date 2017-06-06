@@ -29,7 +29,6 @@ void Indie::SceneDisplayer::initScene() {
     EntityManager::createHuman(mSceneManager, Ogre::Vector3(posPlayer.x, 25, posPlayer.z), "Thibaud");
     initEventRegister();
     _thread = std::unique_ptr<std::thread>(new std::thread(&Indie::SceneDisplayer::updaterThread, this));
- //   _thread->detach();
 }
 
 void Indie::SceneDisplayer::createGround() {
@@ -84,6 +83,7 @@ void    Indie::SceneDisplayer::updaterThread() {
             dataManager->updateAllPlayers(0, mSceneManager);
             if (EntityManager::getMainPlayer()->isAlive())
                 dataManager->updatePlayerPos("Thibaud", EntityManager::getMainPlayer()->getPosition());
+            dataManager->listBomb(0, "Thibaud");
             _locker.unlock();
             std::this_thread::sleep_for(std::chrono::milliseconds(5));
         }
@@ -114,6 +114,12 @@ bool    Indie::SceneDisplayer::updateScene() {
             EntityManager::getPlayerList().erase(itP);
         else
             ++itP;
+    }
+
+    std::vector<std::unique_ptr<Bomb> >::iterator   itB = EntityManager::getBombList().begin();
+    while (itB != EntityManager::getBombList().end()) {
+        (*itB)->updateFromLoop(mSceneManager);
+        ++itB;
     }
     return true;
 }
@@ -192,7 +198,6 @@ Indie::SceneDisplayer::~SceneDisplayer() {
 /**********************************
 ** Callback register
 *//////////////////////////////////
-
 void Indie::SceneDisplayer::initEventRegister() {
     _functionPtr.insert(std::make_pair(OIS::KC_Z, &Indie::SceneDisplayer::movePlayerUp));
     _functionPtr.insert(std::make_pair(OIS::KC_S, &Indie::SceneDisplayer::movePlayerDown));
@@ -236,8 +241,9 @@ void    Indie::SceneDisplayer::registerKeyboardEvent(OIS::Keyboard *keyboard) {
 }
 
 bool    Indie::SceneDisplayer::keyPressed(const OIS::KeyEvent &ke) {
-    if (ke.key == OIS::KC_SPACE)
+    if (ke.key == OIS::KC_SPACE) {
         EntityManager::getMainPlayer()->plantABomb(mSceneManager);
+    }
     else if (ke.key == OIS::KC_G)
         EntityManager::getMainPlayer()->godMode();
     return true;
