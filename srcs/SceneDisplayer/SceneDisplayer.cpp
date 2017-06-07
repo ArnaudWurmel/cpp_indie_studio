@@ -17,6 +17,7 @@ Indie::SceneDisplayer::SceneDisplayer(Ogre::SceneManager *sceneManager) {
         std::cout << "Can't join room" << std::endl;
         throw std::exception();
     }
+    User::getUser()->joinRoomId(0);
 }
 
 void Indie::SceneDisplayer::initScene() {
