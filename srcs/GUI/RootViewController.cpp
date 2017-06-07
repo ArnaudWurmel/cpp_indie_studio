@@ -43,7 +43,7 @@ void Indie::RootViewController::runApp() {
     while (true) {
         Ogre::WindowEventUtilities::messagePump();
         timeStepAccumulator += timeSinceLastFrame;
-        while (timeStepAccumulator >= timeStep) {
+        while (!mRenderWindow->isClosed() && timeStepAccumulator >= timeStep) {
             if (mControllerList.back()->updateView() != AViewController::ExitStatus::GO_ON)
                 return ;
             timeStepAccumulator -= timeStep;
