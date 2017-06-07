@@ -9,7 +9,7 @@
 
 namespace Indie
 {
-    class AEventRegister : public OIS::KeyListener {
+    class AEventRegister : public OIS::KeyListener, public OIS::MouseListener {
     public:
         virtual ~AEventRegister() {}
 
@@ -17,6 +17,10 @@ namespace Indie
         virtual void registerMouseEvent(OIS::Mouse *) = 0;
         virtual bool keyPressed(const OIS::KeyEvent& ke) = 0;
         virtual bool keyReleased(const OIS::KeyEvent& ke) = 0;
+        virtual bool    mouseMoved(const OIS::MouseEvent&) = 0;
+        virtual bool    mousePressed(const OIS::MouseEvent&, OIS::MouseButtonID) = 0;
+        virtual bool    mouseReleased(const OIS::MouseEvent&, OIS::MouseButtonID) = 0;
+
     };
 }
 

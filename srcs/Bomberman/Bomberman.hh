@@ -5,33 +5,37 @@
 #ifndef CPP_INDIE_STUDIO_BOMBERMAN_HH
 #define CPP_INDIE_STUDIO_BOMBERMAN_HH
 
+# include <MYGUI/MyGUI.h>
 # include <memory>
 # include <Ogre.h>
 # include "../EventListener/EventListener.hh"
 # include "../SceneDisplayer/SceneDisplayer.hh"
+# include "../GUI/RootViewController.hh"
 
 namespace Indie
 {
-    class Bomberman {
+    class Bomberman : public AViewController {
     public:
-        Bomberman();
+        Bomberman(RootViewController&);
         ~Bomberman();
 
     public:
-        bool loadApp();
-        void runApp();
+        void initView();
+        ExitStatus updateView();
+
+    public:
+        virtual bool    keyPressed(const OIS::KeyEvent&);
+        virtual bool    mousePressed(const OIS::MouseEvent&, OIS::MouseButtonID);
 
     private:
-        void loadResources();
-        void createCamera();
+        void    toggleMenu();
 
     private:
-        std::unique_ptr<Ogre::Root> mRoot;
         std::unique_ptr<Indie::SceneDisplayer> mSceneDisplayer;
-        std::unique_ptr<Indie::EventListener>   mEventListener;
-        Ogre::RenderWindow          *mRenderWindow;
-        Ogre::SceneManager          *mSceneManager;
-        Ogre::Camera                *mCamera;
+
+    private:
+        bool    mToggleMenu;
+        MyGUI::MenuControl  *_menuControl;
     };
 
 }

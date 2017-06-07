@@ -6,6 +6,7 @@
 #define CPP_INDIE_STUDIO_EVENTLISTENER_HH
 
 # include <map>
+# include <MYGUI/MyGUI.h>
 # include "AEventRegister.hh"
 # include <OgreWindowEventUtilities.h>
 # include <Ogre.h>
@@ -14,7 +15,7 @@
 namespace Indie {
     class EventListener : public Ogre::WindowEventListener, public Ogre::FrameListener {
     public:
-        EventListener(Ogre::SceneManager *, Ogre::RenderWindow *);
+        EventListener(Ogre::SceneManager *, Ogre::RenderWindow *, MyGUI::Gui *);
         ~EventListener();
 
     public:
@@ -46,6 +47,7 @@ namespace Indie {
     private:
         Ogre::SceneManager  *mSceneManager;
         Ogre::RenderWindow  *mRenderWindow;
+        MyGUI::Gui  *mGUI;
 
     private:
         OIS::InputManager   *mInputManager;

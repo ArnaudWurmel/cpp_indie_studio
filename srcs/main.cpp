@@ -3,11 +3,10 @@
 //
 
 #include <iostream>
-#include <cstdlib>
 #include <ctime>
-#include <exception>
-#include "Bomberman/Bomberman.hh"
+#include "GUI/RootViewController.hh"
 #include "DataManager/DataManager.h"
+#include "UserManager/User.hh"
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
 #define WIN32_LEAN_AND_MEAN
@@ -20,17 +19,13 @@
 	int main()
 #endif
 {
-    Indie::DataManager  *dataManager = Indie::DataManager::getSingloton("10.14.59.126", 4242);
+    Indie::DataManager  *dataManager = Indie::DataManager::getSingloton("127.0.0.1", 4242);
 
     std::srand(std::time(0));
-    std::cout << dataManager->quitRoom("Erwan") << std::endl;
-    if (!dataManager->joinRoom("Erwan", 0)) {
-        std::cout << "Can't join room" << std::endl;
-        return (1);
-    }
-    Indie::Bomberman    bomberman;
+   // std::cout << dataManager->quitRoom(Indie::User::getUser().getLogName()) << std::endl;
+    Indie::RootViewController    rootViewController;
     try {
-        if (!bomberman.loadApp())
+        if (!rootViewController.loadApp())
         {
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
 			MessageBox(NULL, "Error", "An exception has occurred!", MB_OK | MB_ICONERROR | MB_TASKMODAL);
@@ -39,8 +34,8 @@
 #endif
 			return 1;
         }
-        bomberman.runApp();
-        dataManager->quitRoom("Erwan");
+        rootViewController.runApp();
+        dataManager->quitRoom(Indie::User::getUser()->getLogName());
         return 0;
     } catch (std::exception& e) {
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
@@ -49,6 +44,6 @@
         std::cerr << e.what() << std::endl;
 #endif
     }
-    dataManager->quitRoom("Erwan");
+    dataManager->quitRoom(Indie::User::getUser()->getLogName());
     return 0;
 }

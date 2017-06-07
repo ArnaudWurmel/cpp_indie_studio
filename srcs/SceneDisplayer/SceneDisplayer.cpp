@@ -7,9 +7,16 @@
 #include "../Entities/EntityManager.hh"
 #include "../Player/HumanPlayer.hh"
 #include "../DataManager/DataManager.h"
+#include "../UserManager/User.hh"
 
 Indie::SceneDisplayer::SceneDisplayer(Ogre::SceneManager *sceneManager) {
     mSceneManager = sceneManager;
+    DataManager *dataManager = Indie::DataManager::getSingloton();
+
+    if (!dataManager->joinRoom(User::getUser()->getLogName(), 0)) {
+        std::cout << "Can't join room" << std::endl;
+        throw std::exception();
+    }
 }
 
 void Indie::SceneDisplayer::initScene() {
@@ -21,12 +28,12 @@ void Indie::SceneDisplayer::initScene() {
         this->createMap();
     }
     bool    success = false;
-
     DataManager *dataManager = Indie::DataManager::getSingloton();
-    Ogre::Vector3   posPlayer = dataManager->getPlayerStart("Erwan", success);
+    std::cout << "Name " << User::getUser()->getLogName() << std::endl;
+    Ogre::Vector3   posPlayer = dataManager->getPlayerStart(User::getUser()->getLogName(), success);
     if (!success)
         throw std::exception();
-    EntityManager::createHuman(mSceneManager, Ogre::Vector3(posPlayer.x, 25, posPlayer.z), "Erwan");
+    EntityManager::createHuman(mSceneManager, Ogre::Vector3(posPlayer.x, 25, posPlayer.z), User::getUser()->getLogName());
     initEventRegister();
     _thread = std::unique_ptr<std::thread>(new std::thread(&Indie::SceneDisplayer::updaterThread, this));
 }
@@ -82,8 +89,8 @@ void    Indie::SceneDisplayer::updaterThread() {
         if (_locker.try_lock()) {
             dataManager->updateAllPlayers(0, mSceneManager);
             if (EntityManager::getMainPlayer()->isAlive())
-                dataManager->updatePlayerPos("Erwan", EntityManager::getMainPlayer()->getPosition());
-            dataManager->listBomb(0, "Erwan");
+                dataManager->updatePlayerPos(User::getUser()->getLogName(), EntityManager::getMainPlayer()->getPosition());
+            dataManager->listBomb(User::getUser()->getRoomId(), User::getUser()->getLogName());
             _locker.unlock();
             std::this_thread::sleep_for(std::chrono::milliseconds(5));
         }
@@ -188,10 +195,7 @@ bool    Indie::SceneDisplayer::checkRight(std::unique_ptr<APlayer>& entity, std:
 }
 
 Indie::SceneDisplayer::~SceneDisplayer() {
-    std::cout << "Deleting..." << std::endl;
-    std::cout << _thread->joinable() << std::endl;
     _locker.lock();
-    std::cout << "Mutex locked" << std::endl;
     _thread->join();
 }
 
@@ -313,4 +317,24 @@ void    Indie::SceneDisplayer::moveCameraDown(OIS::Keyboard *keyboard) {
         camera->setPosition(Ogre::Vector3(EntityManager::getMainPlayer()->getPosition().x - 200, camera->getPositionForViewUpdate().y - 10, EntityManager::getMainPlayer()->getPosition().z));
         camera->lookAt(EntityManager::getMainPlayer()->getPosition());
     }
+}
+
+bool Indie::SceneDisplayer::mouseMoved( const OIS::MouseEvent &arg )
+{
+    static_cast<void>(arg);
+    return true;
+}
+
+bool Indie::SceneDisplayer::mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id )
+{
+    static_cast<void>(arg);
+    static_cast<void>(id);
+    return true;
+}
+
+bool Indie::SceneDisplayer::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id )
+{
+    static_cast<void>(arg);
+    static_cast<void>(id);
+    return true;
 }

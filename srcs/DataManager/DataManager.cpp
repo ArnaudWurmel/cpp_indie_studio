@@ -8,6 +8,7 @@
 #include <vector>
 #include "DataManager.h"
 #include "../Entities/EntityManager.hh"
+#include "../UserManager/User.hh"
 
 Indie::DataManager::DataManager(const std::string& ip, int port) : _ip(ip), _port(port)  {
     if ((_sockfd = socket(AF_INET, SOCK_DGRAM, 0)) == -1)
@@ -51,6 +52,7 @@ bool                    Indie::DataManager::connect(const std::string& login, co
     buf[ret] = 0;
     if (std::atoi(buf) != 200)
         return false;
+    User::getUser(login, pass);
     return true;
 }
 
