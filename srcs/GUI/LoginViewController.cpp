@@ -6,7 +6,7 @@
 #include <OgreRectangle2D.h>
 #include "LoginViewController.hh"
 #include "../DataManager/DataManager.h"
-#include "../Bomberman/Bomberman.hh"
+#include "RoomListViewController.hh"
 
 Indie::LoginViewController::LoginViewController(Indie::RootViewController& delegate) : AViewController(delegate) {}
 
@@ -17,6 +17,7 @@ void    Indie::LoginViewController::initView() {
     int          left;
     int          top;
 
+    _delegate.getGUI()->showPointer();
     _delegate.getRenderWindow()->getMetrics(width, height, depth, left, top);
     mQuitButton = _delegate.getGUI()->createWidget<MyGUI::Button>("Button", (width - 200) / 2, height - 100, 200, 26, MyGUI::Align::Default, "Main");
     mQuitButton->setCaption("Quit");
@@ -55,7 +56,6 @@ void    Indie::LoginViewController::viewShouldDisapear() {
     mLoginEditBox->setVisible(false);
     mPasswdEditBox->setVisible(false);
     mConnectButton->setVisible(false);
-    _delegate.getGUI()->hidePointer();
 }
 
 void    Indie::LoginViewController::viewShouldReapear() {
@@ -81,7 +81,7 @@ void    Indie::LoginViewController::logMyUser(MyGUI::WidgetPtr _sender) {
     DataManager *dataManager = DataManager::getSingloton();
 
     if (dataManager->connect(mLoginEditBox->getOnlyText(), mPasswdEditBox->getOnlyText())) {
-        _delegate.addViewController(new Indie::Bomberman(_delegate));
+        _delegate.addViewController(new Indie::RoomListViewController(_delegate));
     }
 }
 

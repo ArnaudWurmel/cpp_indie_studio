@@ -12,6 +12,23 @@ namespace   Indie {
     public:
         RoomListViewController(RootViewController&);
         ~RoomListViewController();
+
+    public:
+        virtual void    initView();
+        virtual ExitStatus   updateView();
+        void    viewShouldDisapear();
+        void    viewShouldReapear();
+
+
+    private:
+        void    disconnectUser(MyGUI::WidgetPtr);
+        void    refreshButton(MyGUI::WidgetPtr);
+        void    selectedRoom(MyGUI::ListBox *, size_t);
+
+    private:
+        MyGUI::ButtonPtr    mRefreshButton;
+        MyGUI::ButtonPtr    mDisconnectButton;
+        MyGUI::ListBox      *mListBox;
     };
 }
 

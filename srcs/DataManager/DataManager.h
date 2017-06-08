@@ -10,6 +10,7 @@
 #include <arpa/inet.h>
 #include <OgreVector3.h>
 #include <OgreSceneManager.h>
+#include "../Models/Room.hh"
 
 
 namespace   Indie {
@@ -36,6 +37,7 @@ namespace   Indie {
         void                updateAllPlayers(unsigned int roomId, Ogre::SceneManager *);
         void                addBomb(unsigned int, std::string const&, int, int, int);
         void                listBomb(unsigned int, std::string const&);
+        std::vector<Room>   listRoom();
 
     private:
         std::vector<std::string>    getTokenList(std::string const& line);

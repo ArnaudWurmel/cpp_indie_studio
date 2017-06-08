@@ -316,6 +316,40 @@ void    Indie::DataManager::listBomb(unsigned int roomId, std::string const& pId
     }
 }
 
+std::vector<Indie::Room>    Indie::DataManager::listRoom() {
+    std::string route = "/game/getRoomList ";
+    std::vector<Room>   retValue;
+    char                buf[4097];
+    int                 ret;
+    socklen_t           client_size;
+    socklen_t           server_size;
+
+    std::strncpy(buf, route.c_str(), 4096);
+    client_size = sizeof(_client);
+    server_size = sizeof(_serv);
+    if (sendto(_sockfd, buf, sizeof(buf), 0, reinterpret_cast<struct sockaddr *>(&_serv), server_size) == -1)
+        throw std::exception();
+    if ((ret = recvfrom(_sockfd, buf, sizeof(buf), 0, reinterpret_cast<struct sockaddr *>(&_client), &client_size)) == -1)
+        throw std::exception();
+    buf[ret] = 0;
+    std::cout << buf << std::endl;
+    if (std::atoi(buf) != 200)
+        return retValue;
+    std::vector<std::string>    tokenList = getTokenList(buf);
+
+    if ((tokenList.size() - 1) % 2 != 0 || tokenList.size() - 1 <= 0)
+        return retValue;
+    unsigned int    i = 1;
+    while (i < tokenList.size()) {
+        int roomId = std::atoi(tokenList[i].c_str());
+        int nbPlayers = std::atoi(tokenList[i + 1].c_str());
+        if (roomId >= 0 && nbPlayers >= 0)
+            retValue.push_back(Room(roomId, nbPlayers));
+        i += 2;
+    }
+    return retValue;
+}
+
 std::vector<std::string>    Indie::DataManager::getTokenList(std::string const& line) {
     std::vector<std::string>    tokenList;
 

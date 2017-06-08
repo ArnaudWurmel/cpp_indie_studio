@@ -103,6 +103,8 @@ bool    Indie::Router::getRoomList(std::vector<std::string> const& input, Server
     while (it != gameManager->getRoomList().end()) {
         res += " ";
         res += std::to_string((*it)->getRoomId());
+        res += " ";
+        res += std::to_string((*it)->getPlayerList().size());
         ++it;
     }
     server.setResponse(res);
@@ -233,5 +235,6 @@ bool    Indie::Router::listBomb(std::vector<std::string> const& input, Server& s
     gameManager->release();
     return state;
 }
+
 
 Indie::Router::~Router() {}

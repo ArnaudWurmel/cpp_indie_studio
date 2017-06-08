@@ -14,6 +14,7 @@ Indie::Bomberman::Bomberman(RootViewController& delegate) : AViewController(dele
  *  Load the engine
  */
 void Indie::Bomberman::initView() {
+    _delegate.getGUI()->hidePointer();
     mSceneDisplayer = std::unique_ptr<Indie::SceneDisplayer>(new Indie::SceneDisplayer(_delegate.getSceneManager()));
     mSceneDisplayer->initScene();
     _menuControl = _delegate.getGUI()->createWidget<MyGUI::MenuControl>("MenuControl", 0, 0, 200, 200, MyGUI::Align::Center, "Main");
