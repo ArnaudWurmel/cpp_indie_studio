@@ -88,6 +88,30 @@ std::vector<std::unique_ptr<Indie::Bomb> >& Indie::EntityManager::getBombList() 
     throw std::exception();
 }
 
+void    Indie::EntityManager::removeAllEntities(Ogre::SceneManager *sceneManager) {
+    Indie::EntityManager    *entityManager = getEntityManager();
+
+    std::vector<std::shared_ptr<AEntity> >::iterator    it = entityManager->_entityList.begin();
+
+    while (it != entityManager->_entityList.end()) {
+        (*it)->destroyEntity(sceneManager);
+        entityManager->_entityList.erase(it);
+    }
+    std::vector<std::unique_ptr<APlayer> >::iterator    itP = entityManager->_enemyList.begin();
+    while (itP != entityManager->_enemyList.end()) {
+        (*itP)->destroyEntity(sceneManager);
+        entityManager->_enemyList.erase(itP);
+    }
+    std::vector<std::unique_ptr<Bomb> >::iterator   itB = entityManager->_bombList.begin();
+
+    while (itB != entityManager->_bombList.end()) {
+        (*itB)->destroyEntity(sceneManager);
+        entityManager->_bombList.erase(itB);
+    }
+    entityManager->_mainPlayer->destroyEntity(sceneManager);
+    entityManager->_mainPlayer.reset();
+}
+
 Indie::EntityManager::EntityManager() {}
 
 Indie::EntityManager::~EntityManager() {

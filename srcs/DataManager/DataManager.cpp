@@ -294,7 +294,6 @@ void    Indie::DataManager::listBomb(unsigned int roomId, std::string const& pId
         return ;
     std::vector<std::string>    tokenList = getTokenList(buf);
 
-    std::cout << buf << std::endl;
     if ((tokenList.size() - 1) % 4 != 0 || tokenList.size() - 1 <= 0)
         return ;
     unsigned int i = 1;

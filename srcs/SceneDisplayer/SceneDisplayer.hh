@@ -70,6 +70,7 @@ namespace   Indie
         std::vector<std::vector<Indie::MapParser::TileType> >   _map;
         std::unique_ptr<std::thread>    _thread;
         std::mutex  _locker;
+        Ogre::Entity    *mGroundEntity;
     };
 }
 

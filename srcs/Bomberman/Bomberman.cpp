@@ -21,7 +21,7 @@ void Indie::Bomberman::initView() {
 
 Indie::AViewController::ExitStatus   Indie::Bomberman::updateView() {
     if (!mSceneDisplayer->updateScene())
-        return Indie::AViewController::ExitStatus::EXIT;
+        return Indie::AViewController::ExitStatus::GO_BACK;
     mSceneDisplayer->registerKeyboardEvent(_delegate.getEventListener()->getKeyboard());
     return _state;
 }

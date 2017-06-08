@@ -35,6 +35,9 @@ namespace   Indie {
         MyGUI::TextBox  *mTextBox;
         MyGUI::ButtonPtr mQuitButton;
         MyGUI::ButtonPtr mConnectButton;
+
+    private:
+        std::unique_ptr<Ogre::Rectangle2D>  mBackgroundRect;
     };
 }
 

@@ -50,10 +50,10 @@ void Indie::SceneDisplayer::createGround() {
             1, 5, 5,
             Ogre::Vector3::UNIT_Z
     );
-    Ogre::Entity    *groundEntity = mSceneManager->createEntity("ground");
-    mSceneManager->getRootSceneNode()->createChildSceneNode()->attachObject(groundEntity);
-    groundEntity->setCastShadows(false);
-    groundEntity->setMaterialName("Bomberman/Ground");
+    mGroundEntity = mSceneManager->createEntity("ground");
+    mSceneManager->getRootSceneNode()->createChildSceneNode()->attachObject(mGroundEntity);
+    mGroundEntity->setCastShadows(false);
+    mGroundEntity->setMaterialName("Bomberman/Ground");
 }
 
 void Indie::SceneDisplayer::createMap() {
@@ -126,7 +126,7 @@ bool    Indie::SceneDisplayer::updateScene() {
 
     std::vector<std::unique_ptr<Bomb> >::iterator   itB = EntityManager::getBombList().begin();
     while (itB != EntityManager::getBombList().end()) {
-        std::cout << (*itB)->updateFromLoop(mSceneManager) << std::endl;
+        (*itB)->updateFromLoop(mSceneManager);
         ++itB;
     }
     return true;
@@ -198,6 +198,10 @@ bool    Indie::SceneDisplayer::checkRight(std::unique_ptr<APlayer>& entity, std:
 Indie::SceneDisplayer::~SceneDisplayer() {
     _locker.lock();
     _thread->join();
+    DataManager::getSingloton()->quitRoom(User::getUser()->getLogName());
+    mSceneManager->destroyEntity(mGroundEntity);
+    EntityManager::removeAllEntities(mSceneManager);
+    Ogre::MeshManager::getSingleton().remove("ground");
 }
 
 /**********************************

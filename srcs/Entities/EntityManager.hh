@@ -39,6 +39,8 @@ namespace Indie {
         static void addBomb(Indie::Bomb *);
         static std::vector<std::unique_ptr<Indie::Bomb> >&  getBombList();
 
+        static void removeAllEntities(Ogre::SceneManager *);
+
 
     public:
         static AEntity  *createEntity(EntityType const&, Ogre::SceneManager *, Ogre::Vector3 const&);

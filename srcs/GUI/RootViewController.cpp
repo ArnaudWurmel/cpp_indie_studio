@@ -39,13 +39,23 @@ void Indie::RootViewController::runApp() {
     Ogre::Real  timeSinceLastFrame = 0.0;
     float   timeStep = 1 / 60.0f;
     float   timeStepAccumulator = 0.0f;
+    AViewController::ExitStatus status;
 
     while (true) {
         Ogre::WindowEventUtilities::messagePump();
         timeStepAccumulator += timeSinceLastFrame;
         while (!mRenderWindow->isClosed() && timeStepAccumulator >= timeStep) {
-            if (mControllerList.back()->updateView() != AViewController::ExitStatus::GO_ON)
-                return ;
+            if ((status = mControllerList.back()->updateView()) != AViewController::ExitStatus::GO_ON) {
+                if (status == AViewController::ExitStatus::GO_BACK) {
+                    mControllerList.back()->viewShouldDisapear();
+                    mControllerList.pop_back();
+                    mEventListener->setUpEventRegister(mControllerList.back().get());
+                    mControllerList.back()->viewShouldReapear();
+                }
+                else {
+                    return ;
+                }
+            }
             timeStepAccumulator -= timeStep;
         }
         std::chrono::time_point<std::chrono::system_clock> started = std::chrono::system_clock::now();
