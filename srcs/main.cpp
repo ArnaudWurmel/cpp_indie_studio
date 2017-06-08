@@ -19,10 +19,9 @@
 	int main()
 #endif
 {
-    Indie::DataManager  *dataManager = Indie::DataManager::getSingloton("127.0.0.1", 4242);
+    Indie::DataManager  *dataManager = Indie::DataManager::getSingloton("192.168.1.1", 4242);
 
     std::srand(std::time(0));
-   // std::cout << dataManager->quitRoom(Indie::User::getUser().getLogName()) << std::endl;
     Indie::RootViewController    rootViewController;
     try {
         if (!rootViewController.loadApp())
