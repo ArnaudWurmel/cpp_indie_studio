@@ -27,7 +27,7 @@ namespace   Indie {
         ~DataManager();
 
     public:
-        static DataManager  *getSingloton(const std::string& ip = "127.0.0.1", int port = 4242, bool reset = false);
+        static DataManager  *getSingloton(const std::string& ip = "192.168.1.1", int port = 4242, bool reset = false);
         bool                connect(const std::string&, const std::string&);
         bool                joinRoom(const std::string& userName, unsigned int roomId);
         bool                quitRoom(const std::string& userName);
@@ -38,6 +38,9 @@ namespace   Indie {
         void                addBomb(unsigned int, std::string const&, int, int, int);
         void                listBomb(unsigned int, std::string const&);
         std::vector<Room>   listRoom();
+
+    private:
+        std::vector<std::string>    sendCommand(std::string const&);
 
     private:
         std::vector<std::string>    getTokenList(std::string const& line);

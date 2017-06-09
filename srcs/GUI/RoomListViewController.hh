@@ -6,6 +6,7 @@
 #define CPP_INDIE_STUDIO_ROOMLISTVIEWCONTROLLER_HH
 
 # include "RootViewController.hh"
+# include "../Models/Room.hh"
 
 namespace   Indie {
     class RoomListViewController : public AViewController {
@@ -29,6 +30,10 @@ namespace   Indie {
         MyGUI::ButtonPtr    mRefreshButton;
         MyGUI::ButtonPtr    mDisconnectButton;
         MyGUI::ListBox      *mListBox;
+        MyGUI::TextBox      *mTextBox;
+
+    private:
+        std::vector<Room>   _roomList;
     };
 }
 

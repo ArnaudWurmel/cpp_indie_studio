@@ -36,21 +36,10 @@ Indie::DataManager *Indie::DataManager::getSingloton(const std::string& ip, int 
 bool                    Indie::DataManager::connect(const std::string& login, const std::string& pass)
 {
     std::string         tmp = "/user/connect ";
-    char                buf[4097];
-    int                 ret;
-    socklen_t           client_size;
-    socklen_t           server_size;
 
     tmp = tmp + login + " " + pass;
-    std::strncpy(buf, tmp.c_str(), 4096);
-    client_size = sizeof(_client);
-    server_size = sizeof(_serv);
-    if (sendto(_sockfd, buf, sizeof(buf), 0, reinterpret_cast<struct sockaddr *>(&_serv), server_size) == -1)
-        return false;
-    if ((ret = recvfrom(_sockfd, buf, sizeof(buf), 0, reinterpret_cast<struct sockaddr *>(&_client), &client_size)) == -1)
-        return false;
-    buf[ret] = 0;
-    if (std::atoi(buf) != 200)
+    std::vector<std::string>    tokenList = sendCommand(tmp);
+    if (tokenList.size() == 0 || std::atoi(tokenList[0].c_str()) != 200)
         return false;
     User::getUser(login, pass);
     return true;
@@ -58,42 +47,20 @@ bool                    Indie::DataManager::connect(const std::string& login, co
 
 bool Indie::DataManager::joinRoom(const std::string &userName, unsigned int roomId) {
     std::string         tmp = "/game/joinRoom ";
-    char                buf[4097];
-    int                 ret;
-    socklen_t           client_size;
-    socklen_t           server_size;
 
     tmp = tmp + std::to_string(roomId) + " " + userName;
-    std::strncpy(buf, tmp.c_str(), 4096);
-    client_size = sizeof(_client);
-    server_size = sizeof(_serv);
-    if (sendto(_sockfd, buf, sizeof(buf), 0, reinterpret_cast<struct sockaddr *>(&_serv), server_size) == -1)
-        return false;
-    if ((ret = recvfrom(_sockfd, buf, sizeof(buf), 0, reinterpret_cast<struct sockaddr *>(&_client), &client_size)) == -1)
-        return false;
-    buf[ret] = 0;
-    if (std::atoi(buf) != 200)
+    std::vector<std::string>    tokenList = sendCommand(tmp);
+    if (tokenList.size() == 0 || std::atoi(tokenList[0].c_str()) != 200)
         return false;
     return true;
 }
 
 bool Indie::DataManager::quitRoom(const std::string &userName) {
     std::string         tmp = "/game/quitRoom ";
-    char                buf[4097];
-    int                 ret;
-    socklen_t           client_size;
-    socklen_t           server_size;
 
     tmp = tmp + userName;
-    std::strncpy(buf, tmp.c_str(), 4096);
-    client_size = sizeof(_client);
-    server_size = sizeof(_serv);
-    if (sendto(_sockfd, buf, sizeof(buf), 0, reinterpret_cast<struct sockaddr *>(&_serv), server_size) == -1)
-        return false;
-    if ((ret = recvfrom(_sockfd, buf, sizeof(buf), 0, reinterpret_cast<struct sockaddr *>(&_client), &client_size)) == -1)
-        return false;
-    buf[ret] = 0;
-    if (std::atoi(buf) != 200)
+    std::vector<std::string>    tokenList = sendCommand(tmp);
+    if (tokenList.size() == 0 || std::atoi(tokenList[0].c_str()) != 200)
         return false;
     return true;
 }
@@ -174,49 +141,25 @@ Ogre::Vector3 Indie::DataManager::getPlayerStart(std::string pName, bool& succes
 
 void    Indie::DataManager::updatePlayerPos(std::string const &pName, Ogre::Vector3 const& entityPos) {
     std::string route = "/game/updatePlayer ";
-    char                buf[4097];
-    int                 ret;
-    socklen_t           client_size;
-    socklen_t           server_size;
 
     route = route + pName + " " + std::to_string(entityPos.z) + " " + std::to_string(entityPos.x) + " " + std::to_string(EntityManager::getMainPlayer()->getRotation());
-    std::strncpy(buf, route.c_str(), 4096);
-    client_size = sizeof(_client);
-    server_size = sizeof(_serv);
-    if (sendto(_sockfd, buf, sizeof(buf), 0, reinterpret_cast<struct sockaddr *>(&_serv), server_size) == -1)
-        return ;
-    if ((ret = recvfrom(_sockfd, buf, sizeof(buf), 0, reinterpret_cast<struct sockaddr *>(&_client), &client_size)) == -1)
-        return ;
-    buf[ret] = 0;
-    if (std::atoi(buf) != 200)
+    std::vector<std::string>    tokenList = sendCommand(route);
+    if (tokenList.size() == 0 || std::atoi(tokenList[0].c_str()) != 200)
         std::cerr << "Update player failed" << std::endl;
 }
 
 void Indie::DataManager::updateAllPlayers(unsigned int roomId, Ogre::SceneManager *sceneManager) {
     std::string route = "/game/getPlayersPos ";
-    char                buf[4097];
-    int                 ret;
-    socklen_t           client_size;
-    socklen_t           server_size;
 
     route = route + std::to_string(roomId);
-    std::strncpy(buf, route.c_str(), 4096);
-    client_size = sizeof(_client);
-    server_size = sizeof(_serv);
-    if (sendto(_sockfd, buf, sizeof(buf), 0, reinterpret_cast<struct sockaddr *>(&_serv), server_size) == -1)
-        throw std::exception();
-    if ((ret = recvfrom(_sockfd, buf, sizeof(buf), 0, reinterpret_cast<struct sockaddr *>(&_client), &client_size)) == -1)
-        throw std::exception();
-    buf[ret] = 0;
-    if (std::atoi(buf) != 200)
+    std::vector<std::string>    tokenList = sendCommand(route);
+    if (tokenList.size() == 0 || std::atoi(tokenList[0].c_str()) != 200)
         return ;
     std::vector<std::unique_ptr<APlayer> >::iterator    it = EntityManager::getPlayerList().begin();
     while (it != EntityManager::getPlayerList().end()) {
         (*it)->setUpdate(false);
         ++it;
     }
-    std::vector<std::string>    tokenList = getTokenList(buf);
-
     if ((tokenList.size() - 1) % 4 != 0 || tokenList.size() - 1 <= 0)
         return ;
     unsigned int i = 1;
@@ -256,44 +199,20 @@ void Indie::DataManager::updateAllPlayers(unsigned int roomId, Ogre::SceneManage
 
 void    Indie::DataManager::addBomb(unsigned int roomId, std::string const& pId, int x, int y, int power) {
     std::string route = "/game/addBomb ";
-    char                buf[4097];
-    int                 ret;
-    socklen_t           client_size;
-    socklen_t           server_size;
 
     route = route + std::to_string(roomId) + " " + pId + " " + std::to_string(x) + " " + std::to_string(y) + " " + std::to_string(power);
-    std::strncpy(buf, route.c_str(), 4096);
-    client_size = sizeof(_client);
-    server_size = sizeof(_serv);
-    if (sendto(_sockfd, buf, sizeof(buf), 0, reinterpret_cast<struct sockaddr *>(&_serv), server_size) == -1)
-        return ;
-    if ((ret = recvfrom(_sockfd, buf, sizeof(buf), 0, reinterpret_cast<struct sockaddr *>(&_client), &client_size)) == -1)
-        return ;
-    buf[ret] = 0;
-    if (std::atoi(buf) != 200)
+    std::vector<std::string>    tokenList = sendCommand(route);
+    if (tokenList.size() == 0 || std::atoi(tokenList[0].c_str()) != 200)
         std::cerr << "add failed" << std::endl;
 }
 
 void    Indie::DataManager::listBomb(unsigned int roomId, std::string const& pId) {
     std::string route = "/game/bombList ";
-    char                buf[4097];
-    int                 ret;
-    socklen_t           client_size;
-    socklen_t           server_size;
 
     route = route + std::to_string(roomId) + " " + pId;
-    std::strncpy(buf, route.c_str(), 4096);
-    client_size = sizeof(_client);
-    server_size = sizeof(_serv);
-    if (sendto(_sockfd, buf, sizeof(buf), 0, reinterpret_cast<struct sockaddr *>(&_serv), server_size) == -1)
-        throw std::exception();
-    if ((ret = recvfrom(_sockfd, buf, sizeof(buf), 0, reinterpret_cast<struct sockaddr *>(&_client), &client_size)) == -1)
-        throw std::exception();
-    buf[ret] = 0;
-    if (std::atoi(buf) != 200)
+    std::vector<std::string>    tokenList = sendCommand(route);
+    if (tokenList.size() == 0 || std::atoi(tokenList[0].c_str()) != 200)
         return ;
-    std::vector<std::string>    tokenList = getTokenList(buf);
-
     if ((tokenList.size() - 1) % 4 != 0 || tokenList.size() - 1 <= 0)
         return ;
     unsigned int i = 1;
@@ -317,8 +236,27 @@ void    Indie::DataManager::listBomb(unsigned int roomId, std::string const& pId
 }
 
 std::vector<Indie::Room>    Indie::DataManager::listRoom() {
-    std::string route = "/game/getRoomList ";
+    std::string route = "/game/getRoomList";
     std::vector<Room>   retValue;
+
+    std::vector<std::string>    tokenList = sendCommand(route);
+    if (tokenList.size() == 0 || std::atoi(tokenList[0].c_str()) != 200)
+        return retValue;
+
+    if ((tokenList.size() - 1) % 2 != 0 || tokenList.size() - 1 <= 0)
+        return retValue;
+    unsigned int    i = 1;
+    while (i < tokenList.size()) {
+        int roomId = std::atoi(tokenList[i].c_str());
+        int nbPlayers = std::atoi(tokenList[i + 1].c_str());
+        if (roomId >= 0 && nbPlayers >= 0)
+            retValue.push_back(Room(roomId, nbPlayers));
+        i += 2;
+    }
+    return retValue;
+}
+
+std::vector<std::string>    Indie::DataManager::sendCommand(std::string const& route) {
     char                buf[4097];
     int                 ret;
     socklen_t           client_size;
@@ -332,22 +270,7 @@ std::vector<Indie::Room>    Indie::DataManager::listRoom() {
     if ((ret = recvfrom(_sockfd, buf, sizeof(buf), 0, reinterpret_cast<struct sockaddr *>(&_client), &client_size)) == -1)
         throw std::exception();
     buf[ret] = 0;
-    std::cout << buf << std::endl;
-    if (std::atoi(buf) != 200)
-        return retValue;
-    std::vector<std::string>    tokenList = getTokenList(buf);
-
-    if ((tokenList.size() - 1) % 2 != 0 || tokenList.size() - 1 <= 0)
-        return retValue;
-    unsigned int    i = 1;
-    while (i < tokenList.size()) {
-        int roomId = std::atoi(tokenList[i].c_str());
-        int nbPlayers = std::atoi(tokenList[i + 1].c_str());
-        if (roomId >= 0 && nbPlayers >= 0)
-            retValue.push_back(Room(roomId, nbPlayers));
-        i += 2;
-    }
-    return retValue;
+    return getTokenList(buf);
 }
 
 std::vector<std::string>    Indie::DataManager::getTokenList(std::string const& line) {
