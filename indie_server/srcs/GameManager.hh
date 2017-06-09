@@ -32,6 +32,8 @@ namespace   Indie
         bool    getPlayersPosition(int roomId, Server&) const;
         bool    addBomb(int roomId, std::string const&, int x, int y, int);
         bool    listBomb(int roomId, std::string const&, Server&) const;
+        bool    getWaitingPlayerList(int roomId, Server&) const;
+        bool    getRoomState(int roomId, Server&) const;
 
     public:
         void    lock();

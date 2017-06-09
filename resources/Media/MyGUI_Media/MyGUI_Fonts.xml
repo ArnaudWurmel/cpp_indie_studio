@@ -17,7 +17,7 @@
 	</Resource>
 	<Resource type="ResourceTrueTypeFont" name="TitleFont">
 		<Property key="Source" value="TitleFont.ttf"/>
-		<Property key="Size" value="30"/>
+		<Property key="Size" value="20"/>
 		<Property key="Hinting" value="use_native"/>
 		<Property key="Resolution" value="96"/>
 		<Property key="Antialias" value="false"/>

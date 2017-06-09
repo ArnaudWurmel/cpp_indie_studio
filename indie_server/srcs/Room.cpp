@@ -3,6 +3,7 @@
 //
 
 #include <iostream>
+#include <sstream>
 #include "Room.hh"
 #include "Server.h"
 
@@ -113,6 +114,22 @@ bool    Indie::Room::listBomb(std::string const& pId, Server& server) const {
         return true;
     }
     return false;
+}
+
+void    Indie::Room::getPlayerList(Server& server) const {
+    std::vector<std::string>::const_iterator    it = _playerList.begin();
+    std::stringstream   ss;
+
+    ss << "200";
+    while (it != _playerList.end()) {
+        ss << " " << *it;
+        ++it;
+    }
+    server.setResponse(ss.str());
+}
+
+bool    Indie::Room::isRunning() const {
+    return _running;
 }
 
 Indie::Room::~Room() {}

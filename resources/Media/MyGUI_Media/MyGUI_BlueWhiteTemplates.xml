@@ -389,11 +389,36 @@
 			<UserString key="LE_TargetWidgetType" value="Button"/>
 		</Widget>
 	</Resource>
+	<Resource type="ResourceLayout" name="ListBoxItemMenu" version="3.2.0">
+		<Widget type="Widget" skin="ListBoxItemSkin" position="20 20 43 13" name="Root">
+			<Property key="FontName" value="TitleFont"/>
+			<Property key="TextAlign" value="Left VCenter"/>
+			<UserString key="LE_TargetWidgetType" value="Button"/>
+		</Widget>
+	</Resource>
 	<Resource type="ResourceLayout" name="ListBox" version="3.2.0">
 		<Widget type="Widget" skin="PanelSkin" position="5 5 55 55" name="Root">
 			<UserString key="LE_TargetWidgetType" value="ListBox"/>
 			<UserString key="HeightLine" value="21"/>
 			<UserString key="SkinLine" value="ListBoxItem"/>
+			<Widget type="Widget" skin="PanelEmpty" position="3 3 32 47" align="Stretch" name="Client"/>
+			<Widget type="ScrollBar" skin="ScrollBarV" position="35 3 15 47" align="Right VStretch" name="VScroll"/>
+		</Widget>
+	</Resource>
+	<Resource type="ResourceLayout" name="ListBoxMenu" version="3.2.0">
+		<Widget type="Widget" skin="" position="5 5 55 55" name="Root">
+			<UserString key="LE_TargetWidgetType" value="ListBox"/>
+			<UserString key="HeightLine" value="50"/>
+			<UserString key="SkinLine" value="ListBoxItemMenu"/>
+			<Widget type="Widget" skin="PanelEmpty" position="3 3 32 47" align="Stretch" name="Client"/>
+			<Widget type="ScrollBar" skin="ScrollBarV" position="35 3 15 47" align="Right VStretch" name="VScroll"/>
+		</Widget>
+	</Resource>
+	<Resource type="ResourceLayout" name="ListBoxPlayerList" version="3.2.0">
+		<Widget type="Widget" skin="" position="5 5 55 55" name="Root">
+			<UserString key="LE_TargetWidgetType" value="ListBox"/>
+			<UserString key="HeightLine" value="40"/>
+			<UserString key="SkinLine" value="ListBoxItemMenu"/>
 			<Widget type="Widget" skin="PanelEmpty" position="3 3 32 47" align="Stretch" name="Client"/>
 			<Widget type="ScrollBar" skin="ScrollBarV" position="35 3 15 47" align="Right VStretch" name="VScroll"/>
 		</Widget>

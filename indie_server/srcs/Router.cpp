@@ -11,11 +11,13 @@
 
 const std::map<std::string, Indie::Router::cmdPtr> Indie::Router::fnc = {
         { "/user/connect", &Indie::Router::userConnect},
-        { "/game/createRoom", &Indie::Router::createRoom },
-        { "/game/joinRoom", &Indie::Router::joinRoom },
-        { "/game/quitRoom", &Indie::Router::exitRoom },
-        { "/game/getRoomList", &Indie::Router::getRoomList },
-        { "/game/runGame", &Indie::Router::runGame },
+        { "/room/getPlayersList", &Indie::Router::getWaitingPlayerList },
+        { "/room/createRoom", &Indie::Router::createRoom },
+        { "/room/joinRoom", &Indie::Router::joinRoom },
+        { "/room/quitRoom", &Indie::Router::exitRoom },
+        { "/room/getRoomList", &Indie::Router::getRoomList },
+        { "/room/runGame", &Indie::Router::runGame },
+        { "/room/getState", &Indie::Router::getRoomState },
         { "/game/getMap", &Indie::Router::getMap },
         { "/game/getPlayerPos", &Indie::Router::getPlayerPosition },
         { "/game/updatePlayer", &Indie::Router::updatePlayerPosition },
@@ -236,5 +238,35 @@ bool    Indie::Router::listBomb(std::vector<std::string> const& input, Server& s
     return state;
 }
 
+bool    Indie::Router::getWaitingPlayerList(std::vector<std::string> const& input, Server& server) const {
+    if (input.size() != 2) {
+        return false;
+    }
+    GameManager *gameManager = GameManager::getSingleton();
+
+    bool    state = false;
+    int roomId = std::atoi(input[1].c_str());
+    if (roomId >= 0) {
+        state = gameManager->getWaitingPlayerList(roomId, server);
+    }
+    gameManager->release();
+    return state;
+}
+
+bool    Indie::Router::getRoomState(std::vector<std::string> const& input, Server& server) const {
+    if (input.size() != 2) {
+        return false;
+    }
+
+    GameManager *gameManager = GameManager::getSingleton();
+
+    bool    state = false;
+    int roomId = std::atoi(input[1].c_str());
+    if (roomId >= 0) {
+        state = gameManager->getRoomState(roomId, server);
+    }
+    gameManager->release();
+    return state;
+}
 
 Indie::Router::~Router() {}

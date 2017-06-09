@@ -31,3 +31,7 @@ unsigned int    Indie::Config::getExplosionTime() {
 unsigned int    Indie::Config::getNbTicks() {
     return 20;
 }
+
+std::string     Indie::Config::getGameName() {
+    return "Tronberman";
+}

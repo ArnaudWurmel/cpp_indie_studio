@@ -7,6 +7,7 @@
 #include <Ogre.h>
 #include "MapParser.hh"
 #include "../DataManager/DataManager.h"
+#include "../UserManager/User.hh"
 
 Indie::MapParser&   Indie::MapParser::getMapParser(std::string const& mapPath) {
     static Indie::MapParser *mapParser = NULL;
@@ -35,7 +36,7 @@ void    Indie::MapParser::loadMap(std::string const& mapPath)
     std::vector<std::string>    map;
     DataManager *dataManager = DataManager::getSingloton("127.0.0.1", 4242);
 
-    std::cout << dataManager->getMap(0, map) << std::endl;
+    std::cout << dataManager->getMap(User::getUser()->getRoomId(), map) << std::endl;
     std::vector<std::string>::iterator  it;
 
     it = map.begin();

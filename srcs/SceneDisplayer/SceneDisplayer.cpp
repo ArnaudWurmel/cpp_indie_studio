@@ -11,13 +11,6 @@
 
 Indie::SceneDisplayer::SceneDisplayer(Ogre::SceneManager *sceneManager) {
     mSceneManager = sceneManager;
-    DataManager *dataManager = Indie::DataManager::getSingloton();
-
-    if (!dataManager->joinRoom(User::getUser()->getLogName(), 0)) {
-        std::cout << "Can't join room" << std::endl;
-        throw std::exception();
-    }
-    User::getUser()->joinRoomId(0);
 }
 
 void Indie::SceneDisplayer::initScene() {
@@ -198,7 +191,6 @@ bool    Indie::SceneDisplayer::checkRight(std::unique_ptr<APlayer>& entity, std:
 Indie::SceneDisplayer::~SceneDisplayer() {
     _locker.lock();
     _thread->join();
-    DataManager::getSingloton()->quitRoom(User::getUser()->getLogName());
     mSceneManager->destroyEntity(mGroundEntity);
     EntityManager::removeAllEntities(mSceneManager);
     Ogre::MeshManager::getSingleton().remove("ground");

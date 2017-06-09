@@ -7,6 +7,7 @@
 #include "LoginViewController.hh"
 #include "../DataManager/DataManager.h"
 #include "RoomListViewController.hh"
+#include "../Config/Config.hh"
 
 Indie::LoginViewController::LoginViewController(Indie::RootViewController& delegate) : AViewController(delegate) {}
 
@@ -24,7 +25,7 @@ void    Indie::LoginViewController::initView() {
     mQuitButton->eventMouseButtonClick += MyGUI::newDelegate(this, &Indie::LoginViewController::exitAsked);
     mTextBox = _delegate.getGUI()->createWidget<MyGUI::TextBox>("TextBox", 0, 50, width, 50, MyGUI::Align::Default, "Main");
     mTextBox->setFontName("TitleFont");
-    mTextBox->setCaption("Bombertron");
+    mTextBox->setCaption(Config::getGameName());
     mTextBox->setTextAlign(MyGUI::Align::Center);
     mTextBox->setTextColour(MyGUI::Colour(1.0, 1.0, 1.0));
     mTextBox->setFontHeight(30);

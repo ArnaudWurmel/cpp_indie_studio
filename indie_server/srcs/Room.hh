@@ -29,6 +29,8 @@ namespace Indie
         bool    getPlayersPos(Server&) const;
         bool    addBomb(std::string const&, int, int, int);
         bool    listBomb(std::string const&, Server&) const;
+        void    getPlayerList(Server&) const;
+        bool    isRunning() const;
 
     public:
         static unsigned int roomId;

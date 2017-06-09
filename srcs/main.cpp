@@ -7,6 +7,7 @@
 #include "GUI/RootViewController.hh"
 #include "DataManager/DataManager.h"
 #include "UserManager/User.hh"
+#include "SoundManager/SoundManager.hh"
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
 #define WIN32_LEAN_AND_MEAN
@@ -19,8 +20,10 @@
 	int main()
 #endif
 {
+    Indie::SoundManager *soundManager = Indie::SoundManager::getSingloton();
     Indie::DataManager  *dataManager = Indie::DataManager::getSingloton("192.168.1.1", 4242);
 
+    soundManager->loadSound("resources/sound/main.ogg");
     std::srand(std::time(0));
     Indie::RootViewController    rootViewController;
     try {
@@ -34,7 +37,7 @@
 			return 1;
         }
         rootViewController.runApp();
-        dataManager->quitRoom(Indie::User::getUser()->getLogName());
+        delete soundManager;
         return 0;
     } catch (std::exception& e) {
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
@@ -43,6 +46,6 @@
         std::cerr << e.what() << std::endl;
 #endif
     }
-    dataManager->quitRoom(Indie::User::getUser()->getLogName());
+    delete soundManager;
     return 0;
 }

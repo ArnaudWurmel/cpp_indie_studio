@@ -156,6 +156,37 @@ bool    Indie::GameManager::listBomb(int roomId, std::string const& pId, Server&
     }
 }
 
+bool    Indie::GameManager::getWaitingPlayerList(int roomId, Server& server) const {
+    std::vector<std::unique_ptr<Room> >::const_iterator it;
+
+    it = _roomList.begin();
+    while (it != _roomList.end()) {
+        if ((*it)->getRoomId() == roomId) {
+            (*it)->getPlayerList(server);
+            return true;
+        }
+        ++it;
+    }
+    return false;
+}
+
+bool    Indie::GameManager::getRoomState(int roomId, Server& server) const {
+    std::vector<std::unique_ptr<Room> >::const_iterator it = _roomList.begin();
+
+    while (it != _roomList.end()) {
+        std::cout << (*it)->getRoomId() << " " << roomId << std::endl;
+        if ((*it)->getRoomId() == roomId) {
+            if ((*it)->isRunning())
+                server.setResponse("200 1");
+            else
+                server.setResponse("200 0");
+            return true;
+        }
+        ++it;
+    }
+    return false;
+}
+
 void Indie::GameManager::lock() {
     _mutexLock->lock();
 }

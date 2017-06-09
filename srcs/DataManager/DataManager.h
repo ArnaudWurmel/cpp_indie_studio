@@ -37,7 +37,11 @@ namespace   Indie {
         void                updateAllPlayers(unsigned int roomId, Ogre::SceneManager *);
         void                addBomb(unsigned int, std::string const&, int, int, int);
         void                listBomb(unsigned int, std::string const&);
+        bool                createRoom();
         std::vector<Room>   listRoom();
+        std::vector<std::string>    getPlayerList();
+        bool                gameIsRunning();
+        void                runGame();
 
     private:
         std::vector<std::string>    sendCommand(std::string const&);

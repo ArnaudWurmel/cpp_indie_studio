@@ -5,6 +5,10 @@
 #ifndef CPP_INDIE_STUDIO_ROOMLISTVIEWCONTROLLER_HH
 #define CPP_INDIE_STUDIO_ROOMLISTVIEWCONTROLLER_HH
 
+# include <vector>
+# include <utility>
+# include <functional>
+
 # include "RootViewController.hh"
 # include "../Models/Room.hh"
 
@@ -22,18 +26,25 @@ namespace   Indie {
 
 
     private:
-        void    disconnectUser(MyGUI::WidgetPtr);
-        void    refreshButton(MyGUI::WidgetPtr);
-        void    selectedRoom(MyGUI::ListBox *, size_t);
+        void    disconnectUser();
+        void    refreshButton();
+        void    createNewRoom();
 
     private:
-        MyGUI::ButtonPtr    mRefreshButton;
-        MyGUI::ButtonPtr    mDisconnectButton;
-        MyGUI::ListBox      *mListBox;
+        void    selectedRoom(MyGUI::ListBox *, size_t);
+        void    selectedAction(MyGUI::ListBox *, size_t);
+
+    private:
+        void    setUpMenu(unsigned int, unsigned int);
+
+    private:
+        MyGUI::ListBox      *mRoomList;
         MyGUI::TextBox      *mTextBox;
+        MyGUI::ListBox      *mMenuList;
 
     private:
         std::vector<Room>   _roomList;
+        std::vector<std::pair<std::string, void (Indie::RoomListViewController::*)()> > _functionPtr;
     };
 }
 
