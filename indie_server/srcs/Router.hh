@@ -51,6 +51,7 @@ namespace   Indie {
         bool listBomb(std::vector<std::string> const&, Server&) const;
         bool getWaitingPlayerList(std::vector<std::string> const&, Server&) const;
         bool getRoomState(std::vector<std::string> const&, Server&) const;
+        bool getKilledBy(std::vector<std::string> const&, Server&) const;
 
     private:
         std::vector<User> userList;

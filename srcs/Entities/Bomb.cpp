@@ -6,6 +6,7 @@
 #include "Bomb.h"
 #include "../Player/APlayer.hh"
 #include "EntityManager.hh"
+#include "../DataManager/DataManager.h"
 
 Ogre::Vector3   Indie::Bomb::getBombPosition(const APlayer& player) {
     Ogre::Vector3   ret;
@@ -125,6 +126,8 @@ void    Indie::Bomb::explode(Ogre::SceneManager *sceneManager) {
         std::vector<std::shared_ptr<Indie::AEntity> >::iterator itEntity = entityList.begin();
         if (!EntityManager::getMainPlayer()->checkCollide(*(*explosionIt))) {
             EntityManager::getMainPlayer()->explode(sceneManager);
+            if (_id != -1)
+                DataManager::getSingloton()->getKilledBy(getPId());
         }
         while (itEntity != entityList.end()) {
             if ((*itEntity)->hittedByExplosion()) {
@@ -140,6 +143,10 @@ void    Indie::Bomb::explode(Ogre::SceneManager *sceneManager) {
         ++explosionIt;
     }
     Indie::AEntity::explode(sceneManager);
+}
+
+std::string const&  Indie::Bomb::getPId() const {
+    return _pId;
 }
 
 Indie::Bomb::~Bomb() {}

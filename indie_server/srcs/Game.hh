@@ -51,6 +51,7 @@ namespace   Indie {
         void    getPlayersPos(Server&) const;
         void    addBomb(std::string const&, int, int, int);
         void    listBomb(std::string const&, Server&) const;
+        bool    getKilledBy(std::string const&);
 
     private:
         std::vector<std::unique_ptr<Bomb> > _bombList;

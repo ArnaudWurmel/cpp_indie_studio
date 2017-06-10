@@ -62,6 +62,7 @@ namespace   Indie {
         std::vector<std::string>    getPlayerList();
         bool                gameIsRunning();
         void                runGame();
+        void                getKilledBy(std::string const&);
 
     private:
         std::vector<std::string>    sendCommand(std::string const&);

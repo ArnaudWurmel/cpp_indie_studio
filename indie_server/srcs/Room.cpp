@@ -128,6 +128,12 @@ void    Indie::Room::getPlayerList(Server& server) const {
     server.setResponse(ss.str());
 }
 
+bool    Indie::Room::getKilledBy(std::string const& pId) {
+    if (_running)
+        return _game->getKilledBy(pId);
+    return false;
+}
+
 bool    Indie::Room::isRunning() const {
     return _running;
 }

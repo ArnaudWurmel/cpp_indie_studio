@@ -187,6 +187,18 @@ bool    Indie::GameManager::getRoomState(int roomId, Server& server) const {
     return false;
 }
 
+bool    Indie::GameManager::getKilledBy(int roomId, std::string const& pId) {
+    std::vector<std::unique_ptr<Room> >::const_iterator it = _roomList.begin();
+
+    while (it != _roomList.end()) {
+        if ((*it)->getRoomId() == roomId) {
+            return (*it)->getKilledBy(pId);
+        }
+        ++it;
+    }
+    return false;
+}
+
 void Indie::GameManager::lock() {
     _mutexLock->lock();
 }

@@ -320,6 +320,13 @@ void    Indie::DataManager::runGame() {
     sendCommand(route);
 }
 
+void    Indie::DataManager::getKilledBy(std::string const& otherPlayer) {
+    std::string route = "/game/getKilledBy ";
+
+    route = route + std::to_string(User::getUser()->getRoomId()) + " " + otherPlayer;
+    sendCommand(route);
+}
+
 std::vector<std::string>    Indie::DataManager::sendCommand(std::string const& route) {
     char                buf[4097];
     int                 ret;

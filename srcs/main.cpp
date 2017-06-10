@@ -25,10 +25,11 @@
 
     soundManager->loadSound("resources/sound/main.ogg");
     std::srand(std::time(0));
-    Indie::RootViewController    rootViewController;
+    Indie::RootViewController    *rootViewController = new Indie::RootViewController();
     try {
-        if (!rootViewController.loadApp())
+        if (!rootViewController->loadApp())
         {
+            delete rootViewController;
             delete dataManager;
             delete soundManager;
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
@@ -38,7 +39,8 @@
 #endif
 			return 1;
         }
-        rootViewController.runApp();
+        rootViewController->runApp();
+        delete rootViewController;
         delete soundManager;
         delete dataManager;
         return 0;
@@ -49,6 +51,7 @@
         std::cerr << e.what() << std::endl;
 #endif
     }
+    delete rootViewController;
     delete dataManager;
     delete soundManager;
     return 0;

@@ -158,4 +158,17 @@ void    Indie::Game::listBomb(std::string const& pId, Server& server) const {
     server.setResponse(ss.str());
 }
 
+bool    Indie::Game::getKilledBy(std::string const& pId) {
+    std::vector<std::unique_ptr<Player> >::iterator it = _playerList.begin();
+
+    while (it != _playerList.end()) {
+        if ((*it)->name.compare(pId) == 0) {
+            (*it)->gameScore += 10;
+            return true;
+        }
+        ++it;
+    }
+    return false;
+}
+
 Indie::Game::~Game() {}

@@ -23,7 +23,8 @@ const std::map<std::string, Indie::Router::cmdPtr> Indie::Router::fnc = {
         { "/game/updatePlayer", &Indie::Router::updatePlayerPosition },
         { "/game/getPlayersPos", &Indie::Router::getPlayerList },
         { "/game/addBomb", &Indie::Router::addBomb },
-        { "/game/bombList", &Indie::Router::listBomb }
+        { "/game/bombList", &Indie::Router::listBomb },
+        { "/game/getKilledBy", &Indie::Router::getKilledBy }
 };
 
 Indie::Router::User::User() {
@@ -278,6 +279,22 @@ bool    Indie::Router::getRoomState(std::vector<std::string> const& input, Serve
     int roomId = std::atoi(input[1].c_str());
     if (roomId >= 0) {
         state = gameManager->getRoomState(roomId, server);
+    }
+    gameManager->release();
+    return state;
+}
+
+bool    Indie::Router::getKilledBy(std::vector<std::string> const& input, Server& server) const {
+    if (input.size() != 3) {
+        return false;
+    }
+
+    GameManager *gameManager = GameManager::getSingleton();
+
+    bool    state = false;
+    int roomId = std::atoi(input[1].c_str());
+    if (roomId >= 0) {
+        state = gameManager->getKilledBy(roomId, input[2]);
     }
     gameManager->release();
     return state;

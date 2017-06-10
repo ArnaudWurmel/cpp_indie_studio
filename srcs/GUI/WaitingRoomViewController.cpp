@@ -114,12 +114,20 @@ void    Indie::WaitingRoomViewController::threadUpdate() {
     while (_continue) {
         _lock->lock();
         _playerList.clear();
-        _playerList = dataManager->getPlayerList();
-        _gameRunning = dataManager->gameIsRunning();
+        try {
+            _playerList = dataManager->getPlayerList();
+            _gameRunning = dataManager->gameIsRunning();
+        } catch (std::exception& e) {
+            std::cout << e.what() << std::endl;
+        }
         _lock->unlock();
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
-    dataManager->quitRoom(User::getUser()->getLogName());
+    try {
+        dataManager->quitRoom(User::getUser()->getLogName());
+    } catch (std::exception& e) {
+        std::cout << e.what() << std::endl;
+    }
 }
 
 Indie::WaitingRoomViewController::~WaitingRoomViewController() {
