@@ -15,8 +15,12 @@ namespace   Indie {
     public:
         struct  User
         {
+            User();
+            ~User();
+
             std::string username;
             std::string password;
+            size_t      score;
         };
 
     public:
@@ -31,14 +35,13 @@ namespace   Indie {
 
     private:
         static const std::map<std::string, cmdPtr> fnc;
-        static const std::vector<User> userList;
 
     private:
         bool userConnect(std::vector<std::string> const&, Server&) const;
         bool createRoom(std::vector<std::string> const&, Server&) const;
         bool getRoomList(std::vector<std::string> const&, Server&) const;
         bool joinRoom(std::vector<std::string> const&, Server&) const;
-        bool exitRoom(std::vector<std::string> const&, Server&) const;
+        bool exitRoom(std::vector<std::string> const&, Server&);
         bool runGame(std::vector<std::string> const&, Server&) const;
         bool getMap(std::vector<std::string> const&, Server&) const;
         bool getPlayerPosition(std::vector<std::string> const&, Server&) const;
@@ -48,6 +51,9 @@ namespace   Indie {
         bool listBomb(std::vector<std::string> const&, Server&) const;
         bool getWaitingPlayerList(std::vector<std::string> const&, Server&) const;
         bool getRoomState(std::vector<std::string> const&, Server&) const;
+
+    private:
+        std::vector<User> userList;
     };
 }
 

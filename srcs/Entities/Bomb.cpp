@@ -31,15 +31,17 @@ Indie::Bomb::Bomb(Ogre::SceneManager *sceneManager, const Indie::APlayer& delega
     addParticlesColor("Particles/Grey");
     _id = -1;
     _explodeSize = delegate.getBombRange();
+    _pId = "";
 }
 
-Indie::Bomb::Bomb(int id, int x, int y, int power) : AEntity(NULL, Ogre::Vector3(x, 35, y), "bomb.mesh", true), ExplosableEntity() {
+Indie::Bomb::Bomb(std::string const& pId, int id, int x, int y, int power) : AEntity(NULL, Ogre::Vector3(x, 35, y), "bomb.mesh", true), ExplosableEntity() {
     mTransformation = Ogre::Vector3(5.0f, 5.0f, 5.0f);
     addParticlesColor("Particles/Blue");
     addParticlesColor("Particles/Grey");
     _explodeTime = Config::getExplodeTime();
     _explodeSize = power;
     _id = id;
+    _pId = pId;
 }
 
 int const&     Indie::Bomb::getID() const {
@@ -53,9 +55,7 @@ bool    Indie::Bomb::hittedByExplosion() const {
 bool    Indie::Bomb::updateFromLoop(Ogre::SceneManager *sceneManager) {
     std::vector<std::unique_ptr<Indie::AEntity> >::iterator it;
 
-    //std::cout << "On Update " << isWaiting() << std::endl;
     if (isWaiting()) {
-        std::cout << "Entity created" << std::endl;
         Indie::AEntity::createEntity(sceneManager);
     }
     it = _explosionList.begin();

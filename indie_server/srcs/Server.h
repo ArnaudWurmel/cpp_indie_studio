@@ -7,14 +7,13 @@
 
 #include <bits/unique_ptr.h>
 #include <netdb.h>
-#include "ISocket.h"
 
 namespace   Indie {
     class   Server {
     private:
-        std::unique_ptr<ISocket>    _soc;
         struct sockaddr_in          _s_in;
         char                        _buffer[4096];
+        int _fd;
 
     public:
         Server(int port);

@@ -58,11 +58,11 @@ std::vector<std::unique_ptr<Indie::Room> > const&   Indie::GameManager::getRoomL
     return _roomList;
 }
 
-void    Indie::GameManager::exitRoom(std::string const& pName) {
+void    Indie::GameManager::exitRoom(Router::User& user) {
     std::vector<std::unique_ptr<Indie::Room> >::iterator  it = _roomList.begin();
 
     while (it != _roomList.end()) {
-        (*it)->removePlayerFromRoom(pName);
+        user.score += (*it)->removePlayerFromRoom(user.username);
         if (!(*it)->getPlayerList().size()) {
             _roomList.erase(it);
         }

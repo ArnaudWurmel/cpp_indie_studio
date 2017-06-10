@@ -228,7 +228,7 @@ void    Indie::DataManager::listBomb(unsigned int roomId, std::string const& pId
     std::vector<std::string>    tokenList = sendCommand(route);
     if (tokenList.size() == 0 || std::atoi(tokenList[0].c_str()) != 200)
         return ;
-    if ((tokenList.size() - 1) % 4 != 0 || tokenList.size() - 1 <= 0)
+    if ((tokenList.size() - 1) % 5 != 0 || tokenList.size() - 1 <= 0)
         return ;
     unsigned int i = 1;
     while (i < tokenList.size()) {
@@ -243,7 +243,7 @@ void    Indie::DataManager::listBomb(unsigned int roomId, std::string const& pId
             ++it;
         }
         if (!found) {
-            Indie::Bomb *bomb = new Bomb(std::atoi(tokenList[i].c_str()), std::atoi(tokenList[i + 2].c_str()), std::atoi(tokenList[i + 1].c_str()), std::atoi(tokenList[i + 3].c_str()));
+            Indie::Bomb *bomb = new Bomb(tokenList[i], std::atoi(tokenList[i + 1].c_str()), std::atoi(tokenList[i + 3].c_str()), std::atoi(tokenList[i + 2].c_str()), std::atoi(tokenList[i + 4].c_str()));
             EntityManager::addBomb(bomb);
         }
         i += 4;

@@ -12,6 +12,7 @@ Indie::Game::Player::Player(std::string const& pName) {
     name = pName;
     x = -1;
     y = -1;
+    this->gameScore = 0;
 }
 
 Indie::Game::Bomb::Bomb(std::string const& pId, int x_pos, int y_pos, int power) {
@@ -85,13 +86,14 @@ bool    Indie::Game::findPosForPlayer(std::unique_ptr<Player>& player) {
     return false;
 }
 
-void    Indie::Game::exitPlayer(std::string const& pName) {
+unsigned int    Indie::Game::exitPlayer(std::string const& pName) {
     std::vector<std::unique_ptr<Player> >::iterator it = _playerList.begin();
 
     while (it != _playerList.end()) {
         if (!(*it)->name.compare(pName)) {
+            unsigned int score = (*it)->gameScore;
             _playerList.erase(it);
-            return ;
+            return score;
         }
         ++it;
     }
@@ -148,7 +150,7 @@ void    Indie::Game::listBomb(std::string const& pId, Server& server) const {
     ss << "200";
     while (it != _bombList.end()) {
         if ((*it)->pId.compare(pId)) {
-            ss << " " << (*it)->id << " " << (*it)->x << " " << (*it)->y << " " << (*it)->power;
+            ss << " " << (*it)->pId << " " << (*it)->id << " " << (*it)->x << " " << (*it)->y << " " << (*it)->power;
         }
         ++it;
     }

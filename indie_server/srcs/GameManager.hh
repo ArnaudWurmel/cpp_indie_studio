@@ -9,6 +9,7 @@
 # include <memory>
 # include <vector>
 # include "Room.hh"
+# include "Router.hh"
 
 namespace   Indie
 {
@@ -24,7 +25,7 @@ namespace   Indie
         unsigned int const& createRoom();
         bool joinRoom(unsigned const&, std::string const&);
         std::vector<std::unique_ptr<Indie::Room> > const&   getRoomList();
-        void    exitRoom(std::string const& pName);
+        void    exitRoom(Router::User&);
         bool    runGame(unsigned int const&);
         bool    getMap(unsigned int const&, Server&) const;
         bool    getPlayerPosition(std::string const&, Server&) const;

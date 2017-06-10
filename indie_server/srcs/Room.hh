@@ -21,7 +21,7 @@ namespace Indie
         bool    addPlayerToRoom(std::string const&);
         unsigned int const&   getRoomId() const;
         std::vector<std::string> const& getPlayerList();
-        bool    removePlayerFromRoom(std::string const&);
+        unsigned int    removePlayerFromRoom(std::string const&);
         bool    runGame();
         bool    getMap(Server&);
         bool    getPlayerPos(std::string const&, Server&);

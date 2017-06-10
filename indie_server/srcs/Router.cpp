@@ -8,13 +8,13 @@
 #include <iostream>
 #include "Router.hh"
 #include "GameManager.hh"
+#include "ConfParser.hh"
 
 const std::map<std::string, Indie::Router::cmdPtr> Indie::Router::fnc = {
         { "/user/connect", &Indie::Router::userConnect},
         { "/room/getPlayersList", &Indie::Router::getWaitingPlayerList },
         { "/room/createRoom", &Indie::Router::createRoom },
         { "/room/joinRoom", &Indie::Router::joinRoom },
-        { "/room/quitRoom", &Indie::Router::exitRoom },
         { "/room/getRoomList", &Indie::Router::getRoomList },
         { "/room/runGame", &Indie::Router::runGame },
         { "/room/getState", &Indie::Router::getRoomState },
@@ -26,13 +26,17 @@ const std::map<std::string, Indie::Router::cmdPtr> Indie::Router::fnc = {
         { "/game/bombList", &Indie::Router::listBomb }
 };
 
-const std::vector<Indie::Router::User> Indie::Router::userList = {
-        { "Arnaud", "123" },
-        { "Erwan", "123" },
-        { "Thibaud", "123" }
-};
+Indie::Router::User::User() {
+    password = "";
+    username = "";
+    score = 0;
+}
 
-Indie::Router::Router() {}
+Indie::Router::User::~User() {}
+
+Indie::Router::Router() {
+    userList = Indie::ConfParser::getSingloton()->getUserList();
+}
 
 bool    Indie::Router::parseLine(std::string const& input, Server& server) {
     std::vector<std::string>    tokenList;
@@ -55,6 +59,8 @@ bool    Indie::Router::parseLine(std::string const& input, Server& server) {
         cmdPtr ptr = (*fnc.find(tokenList[0])).second;
         return (this->*ptr)(tokenList, server);
     }
+    if (tokenList[0].compare("/room/quitRoom") == 0)
+        return exitRoom(tokenList, server);
     return false;
 }
 
@@ -130,15 +136,23 @@ bool    Indie::Router::joinRoom(std::vector<std::string> const& input, Server& s
     return state;
 }
 
-bool    Indie::Router::exitRoom(std::vector<std::string> const& input, Server& server) const {
+bool    Indie::Router::exitRoom(std::vector<std::string> const& input, Server& server) {
     if (input.size() != 2)
         return false;
     GameManager *gameManager = GameManager::getSingleton();
 
-    gameManager->exitRoom(input[1]);
-    gameManager->release();
-    server.setResponse("200 OK");
-    return true;
+    std::vector<Router::User>::iterator   it = userList.begin();
+
+    while (it != userList.end()) {
+        if (!(*it).username.compare(input[1])) {
+            gameManager->exitRoom(*it);
+            gameManager->release();
+            server.setResponse("200 OK");
+            return true;
+        }
+        ++it;
+    }
+    return false;
 }
 
 bool    Indie::Router::runGame(std::vector<std::string> const& input, Server& server) const {

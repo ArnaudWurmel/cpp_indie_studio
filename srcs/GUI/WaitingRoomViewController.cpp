@@ -87,7 +87,7 @@ void    Indie::WaitingRoomViewController::setUpMenu(unsigned int width, unsigned
     mMenuList = _delegate.getGUI()->createWidget<MyGUI::ListBox>("ListBoxMenu", 10, 150, width / 3, height - 350, MyGUI::Align::Default, "Main");
     mMenuList->eventListSelectAccept += MyGUI::newDelegate(this, &Indie::WaitingRoomViewController::selectedAction);
     if (_isCreator)
-        _functionPtr.push_back(std::make_pair(std::string("Start Game"), &Indie::WaitingRoomViewController::runGame));
+        _functionPtr.push_back(std::make_pair(std::string("#FFFFFFStart Game"), &Indie::WaitingRoomViewController::runGame));
     _functionPtr.push_back(std::make_pair(std::string("#E74C3CExit Room"), &Indie::WaitingRoomViewController::returnToMenu));
 
     std::vector<std::pair<std::string, void (Indie::WaitingRoomViewController::*)()> >::iterator it = _functionPtr.begin();

@@ -26,19 +26,19 @@ bool    Indie::Room::addPlayerToRoom(std::string const& pName) {
     return false;
 }
 
-bool    Indie::Room::removePlayerFromRoom(std::string const& pName) {
+unsigned int    Indie::Room::removePlayerFromRoom(std::string const& pName) {
     std::vector<std::string>::iterator  it = _playerList.begin();
 
     while (it != _playerList.end()) {
         if (!(*it).compare(pName)) {
             _playerList.erase(it);
             if (_running)
-                _game->exitPlayer(pName);
-            return true;
+                return _game->exitPlayer(pName);
+            return 0;
         }
         ++it;
     }
-    return false;
+    return 0;
 }
 
 bool    Indie::Room::getMap(Server& server) {
