@@ -5,9 +5,27 @@
 #ifndef CPP_INDIE_STUDIO_DATAMANAGER_H
 #define CPP_INDIE_STUDIO_DATAMANAGER_H
 
-#include <string>
+#ifdef WIN32
+
+#include <winsock2.h>
+
+#else
+
+#include <sys/types.h>
+#include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <unistd.h>
+#include <netdb.h>
+typedef int SOCKET;
+typedef struct sockaddr_in SOCKADDR_IN;
+typedef struct sockaddr SOCKADDR;
+
+# define closesocket(s) close(s)
+
+#endif
+
+#include <string>
 #include <OgreVector3.h>
 #include <OgreSceneManager.h>
 #include "../Models/Room.hh"
@@ -18,12 +36,14 @@ namespace   Indie {
     private:
         const std::string&  _ip;
         int                 _port;
-        int                 _sockfd;
-        struct sockaddr_in  _serv;
-        struct sockaddr_in  _client;
+        SOCKET              _sockfd;
+        SOCKADDR_IN  _serv;
+        SOCKADDR_IN  _client;
 
     private:
         DataManager(const std::string&, int);
+
+    public:
         ~DataManager();
 
     public:

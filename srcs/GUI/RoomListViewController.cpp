@@ -52,7 +52,7 @@ void    Indie::RoomListViewController::createNewRoom() {
     DataManager *dataManager = DataManager::getSingloton();
 
     if (dataManager->createRoom()) {
-        _delegate.addViewController(new Indie::WaitingRoomViewController(_delegate));
+        _delegate.addViewController(new Indie::WaitingRoomViewController(_delegate, true));
         return ;
     }
 }

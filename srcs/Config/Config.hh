@@ -24,6 +24,10 @@ namespace Indie
         static unsigned int getExplodeTime();
         static unsigned int getBombRange();
         static unsigned int getExplosionTime();
+
+        /*
+         * Game infos
+         */
         static unsigned int getNbTicks();
         static std::string  getGameName();
     };

@@ -21,7 +21,7 @@
 #endif
 {
     Indie::SoundManager *soundManager = Indie::SoundManager::getSingloton();
-    Indie::DataManager  *dataManager = Indie::DataManager::getSingloton("192.168.1.1", 4242);
+    Indie::DataManager  *dataManager = Indie::DataManager::getSingloton("127.0.0.1", 4242);
 
     soundManager->loadSound("resources/sound/main.ogg");
     std::srand(std::time(0));
@@ -29,6 +29,8 @@
     try {
         if (!rootViewController.loadApp())
         {
+            delete dataManager;
+            delete soundManager;
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
 			MessageBox(NULL, "Error", "An exception has occurred!", MB_OK | MB_ICONERROR | MB_TASKMODAL);
 #else
@@ -38,6 +40,7 @@
         }
         rootViewController.runApp();
         delete soundManager;
+        delete dataManager;
         return 0;
     } catch (std::exception& e) {
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
@@ -46,6 +49,7 @@
         std::cerr << e.what() << std::endl;
 #endif
     }
+    delete dataManager;
     delete soundManager;
     return 0;
 }

@@ -9,11 +9,12 @@
 #include "../UserManager/User.hh"
 #include "../Bomberman/Bomberman.hh"
 
-Indie::WaitingRoomViewController::WaitingRoomViewController(Indie::RootViewController& delegate) : AViewController(delegate) {
+Indie::WaitingRoomViewController::WaitingRoomViewController(Indie::RootViewController& delegate, bool isCreator) : AViewController(delegate) {
     _lock = std::unique_ptr<std::mutex>(new std::mutex());
     _threadUpdate = std::unique_ptr<std::thread>(new std::thread(&Indie::WaitingRoomViewController::threadUpdate, this));
     _continue = true;
     _gameRunning = false;
+    _isCreator = isCreator;
 }
 
 void    Indie::WaitingRoomViewController::initView() {
@@ -85,7 +86,8 @@ void    Indie::WaitingRoomViewController::selectedAction(MyGUI::ListBox *_sender
 void    Indie::WaitingRoomViewController::setUpMenu(unsigned int width, unsigned int height) {
     mMenuList = _delegate.getGUI()->createWidget<MyGUI::ListBox>("ListBoxMenu", 10, 150, width / 3, height - 350, MyGUI::Align::Default, "Main");
     mMenuList->eventListSelectAccept += MyGUI::newDelegate(this, &Indie::WaitingRoomViewController::selectedAction);
-    _functionPtr.push_back(std::make_pair(std::string("Start Game"), &Indie::WaitingRoomViewController::runGame));
+    if (_isCreator)
+        _functionPtr.push_back(std::make_pair(std::string("Start Game"), &Indie::WaitingRoomViewController::runGame));
     _functionPtr.push_back(std::make_pair(std::string("#E74C3CExit Room"), &Indie::WaitingRoomViewController::returnToMenu));
 
     std::vector<std::pair<std::string, void (Indie::WaitingRoomViewController::*)()> >::iterator it = _functionPtr.begin();

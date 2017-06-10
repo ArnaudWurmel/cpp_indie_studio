@@ -16,7 +16,7 @@
 namespace Indie {
     class WaitingRoomViewController : public Indie::AViewController {
     public:
-        WaitingRoomViewController(RootViewController&);
+        WaitingRoomViewController(RootViewController&, bool isCreator = false);
         ~WaitingRoomViewController();
 
     public:
@@ -51,6 +51,7 @@ namespace Indie {
         MyGUI::ListBox      *mMenuList;
 
     private:
+        bool    _isCreator;
         std::vector<std::string>    _playerList;
         std::vector<std::pair<std::string, void (Indie::WaitingRoomViewController::*)()> > _functionPtr;
     };

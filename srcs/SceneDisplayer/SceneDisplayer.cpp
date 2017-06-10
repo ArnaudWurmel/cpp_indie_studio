@@ -11,9 +11,10 @@
 
 Indie::SceneDisplayer::SceneDisplayer(Ogre::SceneManager *sceneManager) {
     mSceneManager = sceneManager;
+    mToggleScoreboard = false;
 }
 
-void Indie::SceneDisplayer::initScene() {
+void Indie::SceneDisplayer::initScene(RootViewController& delegate) {
     MapParser&  mapParser = MapParser::getMapParser("resources/maps/level0");
 
     this->createGround();
@@ -21,6 +22,7 @@ void Indie::SceneDisplayer::initScene() {
     if (_map.size() > 0) {
         this->createMap();
     }
+    initScoreboard(delegate);
     bool    success = false;
     DataManager *dataManager = Indie::DataManager::getSingloton();
     std::cout << "Name " << User::getUser()->getLogName() << std::endl;
@@ -76,6 +78,28 @@ void Indie::SceneDisplayer::createMap() {
     }
 }
 
+void    Indie::SceneDisplayer::initScoreboard(RootViewController& delegate) {
+    unsigned int width;
+    unsigned int height;
+    unsigned int depth;
+    int          left;
+    int          top;
+
+    delegate.getRenderWindow()->getMetrics(width, height, depth, left, top);
+
+    mScoreboard = delegate.getGUI()->createWidget<MyGUI::MultiListBox>("MultiListBox", (width - (width / 2)) / 2, (height - (height / 2)) / 2, width / 2, height / 2, MyGUI::Align::Default, "Main");
+    mScoreboard->addColumn("Player Name", mScoreboard->getWidth() / 3);
+    mScoreboard->addColumn("Live time", mScoreboard->getWidth() / 3);
+    mScoreboard->addColumn("Score", mScoreboard->getWidth() / 3);
+    mScoreboard->setVisible(false);
+    mScoreboard->setEnabled(true);
+}
+
+void    Indie::SceneDisplayer::viewShouldDisapear() {
+    if (mToggleScoreboard)
+        toggleScoreboard();
+}
+
 void    Indie::SceneDisplayer::updaterThread() {
     Indie::DataManager  *dataManager = Indie::DataManager::getSingloton();
 
@@ -85,6 +109,16 @@ void    Indie::SceneDisplayer::updaterThread() {
             if (EntityManager::getMainPlayer()->isAlive())
                 dataManager->updatePlayerPos(User::getUser()->getLogName(), EntityManager::getMainPlayer()->getPosition());
             dataManager->listBomb(User::getUser()->getRoomId(), User::getUser()->getLogName());
+
+            // TODO: add score and live time to this
+            mScoreboard->removeAllItems();
+            mScoreboard->addItem(EntityManager::getMainPlayer()->getPlayerId());
+
+            std::vector<std::unique_ptr<APlayer> >::iterator    it = EntityManager::getPlayerList().begin();
+            while (it != EntityManager::getPlayerList().end()) {
+                mScoreboard->addItem((*it)->getPlayerId());
+                ++it;
+            }
             _locker.unlock();
             std::this_thread::sleep_for(std::chrono::milliseconds(5));
         }
@@ -247,11 +281,15 @@ bool    Indie::SceneDisplayer::keyPressed(const OIS::KeyEvent &ke) {
     }
     else if (ke.key == OIS::KC_G)
         EntityManager::getMainPlayer()->godMode();
+    else if (ke.key == OIS::KC_TAB)
+        toggleScoreboard();
     return true;
 }
 
 bool    Indie::SceneDisplayer::keyReleased(const OIS::KeyEvent &ke) {
-    static_cast<void>(ke);
+    if (ke.key == OIS::KC_TAB)
+        toggleScoreboard();
+    return true;
 }
 
 void    Indie::SceneDisplayer::registerMouseEvent(OIS::Mouse *mouse) {
@@ -334,4 +372,9 @@ bool Indie::SceneDisplayer::mouseReleased( const OIS::MouseEvent &arg, OIS::Mous
     static_cast<void>(arg);
     static_cast<void>(id);
     return true;
+}
+
+void    Indie::SceneDisplayer::toggleScoreboard() {
+    mToggleScoreboard = !mToggleScoreboard;
+    mScoreboard->setVisible(mToggleScoreboard);
 }

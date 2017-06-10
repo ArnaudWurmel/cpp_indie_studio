@@ -33,7 +33,6 @@ namespace Indie {
 
     private:
         bool    haveEntityWithPos(Ogre::Vector3 const&, bool&) const;
-        void    createEntity(Ogre::SceneManager *);
 
     private:
         int             _id;

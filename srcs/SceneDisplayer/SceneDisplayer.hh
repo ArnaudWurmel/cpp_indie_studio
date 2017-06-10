@@ -9,12 +9,14 @@
 # include <map>
 # include <Ogre.h>
 # include <OIS/OIS.h>
-#include <thread>
-#include <mutex>
+# include <thread>
+# include <mutex>
+# include <MYGUI/MyGUI.h>
 # include "../MapParser/MapParser.hh"
 # include "../Entities/AEntity.hh"
 # include "../Player/APlayer.hh"
 # include "../EventListener/AEventRegister.hh"
+# include "../GUI/RootViewController.hh"
 
 namespace   Indie
 {
@@ -24,9 +26,9 @@ namespace   Indie
         ~SceneDisplayer();
 
     public:
-        void    initScene();
+        void    initScene(RootViewController&);
         bool    updateScene();
-        void    updatePlayersPosition() const;
+        void    viewShouldDisapear();
 
     private:
         void    createGround();
@@ -42,7 +44,7 @@ namespace   Indie
         bool    checkRight(std::unique_ptr<APlayer>&, std::shared_ptr<AEntity> const&) const;
         /*
          * Callback for 'AEventRegister'
-        */
+         */
     public:
         void    initEventRegister();
         void    registerKeyboardEvent(OIS::Keyboard *keyboard);
@@ -52,6 +54,10 @@ namespace   Indie
         virtual bool    mouseMoved(const OIS::MouseEvent&);
         virtual bool    mousePressed(const OIS::MouseEvent&, OIS::MouseButtonID);
         virtual bool    mouseReleased(const OIS::MouseEvent&, OIS::MouseButtonID);
+
+    private:
+        void    toggleScoreboard();
+        void    initScoreboard(RootViewController&);
 
     private:
         void    movePlayerUp(OIS::Keyboard *);
@@ -71,6 +77,13 @@ namespace   Indie
         std::unique_ptr<std::thread>    _thread;
         std::mutex  _locker;
         Ogre::Entity    *mGroundEntity;
+
+        /*
+         * Scoreboard usefull variables
+         */
+    private:
+        bool    mToggleScoreboard;
+        MyGUI::MultiListBox  *mScoreboard;
     };
 }
 

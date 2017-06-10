@@ -11,6 +11,15 @@
 #include "../UserManager/User.hh"
 
 Indie::DataManager::DataManager(const std::string& ip, int port) : _ip(ip), _port(port)  {
+#ifdef WIN32
+    WSADATA wsa;
+    int err = WSAStartup(MAKEWORD(2, 2), &wsa);
+    if(err < 0)
+    {
+        puts("WSAStartup failed !");
+        exit(EXIT_FAILURE);
+    }
+#endif
     if ((_sockfd = socket(AF_INET, SOCK_DGRAM, 0)) == -1)
         throw std::exception();
     _serv.sin_family = AF_INET;
@@ -18,7 +27,12 @@ Indie::DataManager::DataManager(const std::string& ip, int port) : _ip(ip), _por
     _serv.sin_addr.s_addr = inet_addr(_ip.c_str());
 }
 
-Indie::DataManager::~DataManager() {}
+Indie::DataManager::~DataManager() {
+    closesocket(_sockfd);
+#ifdef WIN32
+    WSACleanup();
+#endif
+}
 
 Indie::DataManager *Indie::DataManager::getSingloton(const std::string& ip, int port, bool reset) {
     static Indie::DataManager *data = NULL;
@@ -80,9 +94,9 @@ bool                            Indie::DataManager::getMap(unsigned int roomId, 
     std::strncpy(buf, tmp.c_str(), 4096);
     client_size = sizeof(_client);
     server_size = sizeof(_serv);
-    if (sendto(_sockfd, buf, sizeof(buf), 0, reinterpret_cast<struct sockaddr *>(&_serv), server_size) == -1)
+    if (sendto(_sockfd, buf, sizeof(buf), 0, reinterpret_cast<SOCKADDR *>(&_serv), server_size) == -1)
         return false;
-    if ((ret = recvfrom(_sockfd, buf, sizeof(buf), 0, reinterpret_cast<struct sockaddr *>(&_client), &client_size)) == -1)
+    if ((ret = recvfrom(_sockfd, buf, sizeof(buf), 0, reinterpret_cast<SOCKADDR *>(&_client), &client_size)) == -1)
         return false;
     buf[ret] = 0;
     if (std::atoi(buf) != 200)
@@ -106,11 +120,11 @@ Ogre::Vector3 Indie::DataManager::getPlayerStart(std::string pName, bool& succes
     std::strncpy(buf, tmp.c_str(), 4096);
     client_size = sizeof(_client);
     server_size = sizeof(_serv);
-    if (sendto(_sockfd, buf, sizeof(buf), 0, reinterpret_cast<struct sockaddr *>(&_serv), server_size) == -1) {
+    if (sendto(_sockfd, buf, sizeof(buf), 0, reinterpret_cast<SOCKADDR *>(&_serv), server_size) == -1) {
         success = false;
         return Ogre::Vector3();
     }
-    if ((ret = recvfrom(_sockfd, buf, sizeof(buf), 0, reinterpret_cast<struct sockaddr *>(&_client), &client_size)) == -1) {
+    if ((ret = recvfrom(_sockfd, buf, sizeof(buf), 0, reinterpret_cast<SOCKADDR *>(&_client), &client_size)) == -1) {
         success = false;
         return Ogre::Vector3();
     }
