@@ -10,11 +10,11 @@
 #include "../Bomberman/Bomberman.hh"
 
 Indie::WaitingRoomViewController::WaitingRoomViewController(Indie::RootViewController& delegate, bool isCreator) : AViewController(delegate) {
-    _lock = std::unique_ptr<std::mutex>(new std::mutex());
-    _threadUpdate = std::unique_ptr<std::thread>(new std::thread(&Indie::WaitingRoomViewController::threadUpdate, this));
     _continue = true;
     _gameRunning = false;
     _isCreator = isCreator;
+    _lock = std::unique_ptr<std::mutex>(new std::mutex());
+    _threadUpdate = std::unique_ptr<std::thread>(new std::thread(&Indie::WaitingRoomViewController::threadUpdate, this));
 }
 
 void    Indie::WaitingRoomViewController::initView() {

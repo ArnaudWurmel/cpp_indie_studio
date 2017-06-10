@@ -175,7 +175,7 @@ void Indie::DataManager::updateAllPlayers(unsigned int roomId, Ogre::SceneManage
         (*it)->setUpdate(false);
         ++it;
     }
-    if ((tokenList.size() - 1) % 4 != 0 || tokenList.size() - 1 <= 0)
+    if ((tokenList.size() - 1) % 5 != 0 || tokenList.size() - 1 <= 0)
         return ;
     unsigned int i = 1;
     while (i < tokenList.size()) {
@@ -192,6 +192,8 @@ void Indie::DataManager::updateAllPlayers(unsigned int roomId, Ogre::SceneManage
                 newPos.z = std::atoi(tokenList[i + 1].c_str()) - (*it)->getPosition().z;
                 (*it)->move(newPos);
                 (*it)->rotate(std::atoi(tokenList[i + 3].c_str()));
+                if (std::atoi(tokenList[i + 4].c_str()) >= 0)
+                    (*it)->setScore(std::atoi(tokenList[i + 4].c_str()));
                 (*it)->setUpdate(true);
             }
             ++it;
@@ -199,9 +201,13 @@ void Indie::DataManager::updateAllPlayers(unsigned int roomId, Ogre::SceneManage
         if (!found && EntityManager::getMainPlayer()->getPlayerId().compare(tokenList[i])) {
             APlayer *player = EntityManager::createEnemy(sceneManager, Ogre::Vector3(std::atoi(tokenList[i + 2].c_str()), 30, std::atoi(tokenList[i + 1].c_str())), tokenList[i]);
             player->rotate(std::atoi(tokenList[i + 3].c_str()));
+            if (std::atoi(tokenList[i + 4].c_str()) >= 0)
+                player->setScore(std::atoi(tokenList[i + 4].c_str()));
             player->setUpdate(true);
         }
-        i += 4;
+        if (!EntityManager::getMainPlayer()->getPlayerId().compare(tokenList[i])&& std::atoi(tokenList[i + 4].c_str()) >= 0)
+            EntityManager::getMainPlayer()->setScore(std::atoi(tokenList[i + 4].c_str()));
+        i += 5;
     }
     it = EntityManager::getPlayerList().begin();
     while (it != EntityManager::getPlayerList().end()) {
@@ -219,6 +225,8 @@ void    Indie::DataManager::addBomb(unsigned int roomId, std::string const& pId,
     std::vector<std::string>    tokenList = sendCommand(route);
     if (tokenList.size() == 0 || std::atoi(tokenList[0].c_str()) != 200)
         std::cerr << "add failed" << std::endl;
+    else
+        std::cout << "Bomb created" << std::endl;
 }
 
 void    Indie::DataManager::listBomb(unsigned int roomId, std::string const& pId) {
@@ -237,7 +245,7 @@ void    Indie::DataManager::listBomb(unsigned int roomId, std::string const& pId
         std::vector<std::unique_ptr<Bomb> >::const_iterator it = EntityManager::getBombList().begin();
 
         while (!found && it != EntityManager::getBombList().end()) {
-            if ((*it)->getID() == std::atoi(tokenList[i].c_str())) {
+            if ((*it)->getID() == std::atoi(tokenList[i + 1].c_str())) {
                 found = true;
             }
             ++it;
@@ -246,7 +254,7 @@ void    Indie::DataManager::listBomb(unsigned int roomId, std::string const& pId
             Indie::Bomb *bomb = new Bomb(tokenList[i], std::atoi(tokenList[i + 1].c_str()), std::atoi(tokenList[i + 3].c_str()), std::atoi(tokenList[i + 2].c_str()), std::atoi(tokenList[i + 4].c_str()));
             EntityManager::addBomb(bomb);
         }
-        i += 4;
+        i += 5;
     }
 }
 
@@ -323,6 +331,7 @@ void    Indie::DataManager::runGame() {
 void    Indie::DataManager::getKilledBy(std::string const& otherPlayer) {
     std::string route = "/game/getKilledBy ";
 
+    std::cout << "Called" << std::endl;
     route = route + std::to_string(User::getUser()->getRoomId()) + " " + otherPlayer;
     sendCommand(route);
 }
@@ -356,8 +365,10 @@ std::vector<std::string>    Indie::DataManager::getTokenList(std::string const& 
             token += *it;
             ++it;
         }
-        if (token.size())
+        if (token.size()) {
             tokenList.push_back(token);
+            token.clear();
+        }
         while (it != line.end() && *it == ' ')
             ++it;
     }

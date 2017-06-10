@@ -88,9 +88,8 @@ void    Indie::SceneDisplayer::initScoreboard(RootViewController& delegate) {
     delegate.getRenderWindow()->getMetrics(width, height, depth, left, top);
 
     mScoreboard = delegate.getGUI()->createWidget<MyGUI::MultiListBox>("MultiListBox", (width - (width / 2)) / 2, (height - (height / 2)) / 2, width / 2, height / 2, MyGUI::Align::Default, "Main");
-    mScoreboard->addColumn("Player Name", mScoreboard->getWidth() / 3);
-    mScoreboard->addColumn("Live time", mScoreboard->getWidth() / 3);
-    mScoreboard->addColumn("Score", mScoreboard->getWidth() / 3);
+    mScoreboard->addColumn("Player Name", mScoreboard->getWidth() / 2);
+    mScoreboard->addColumn("Score", mScoreboard->getWidth() / 2);
     mScoreboard->setVisible(false);
     mScoreboard->setEnabled(true);
 }
@@ -105,18 +104,19 @@ void    Indie::SceneDisplayer::updaterThread() {
 
     while (true) {
         if (_locker.try_lock()) {
-            dataManager->updateAllPlayers(0, mSceneManager);
+            dataManager->updateAllPlayers(User::getUser()->getRoomId(), mSceneManager);
             if (EntityManager::getMainPlayer()->isAlive())
                 dataManager->updatePlayerPos(User::getUser()->getLogName(), EntityManager::getMainPlayer()->getPosition());
             dataManager->listBomb(User::getUser()->getRoomId(), User::getUser()->getLogName());
 
-            // TODO: add score and live time to this
             mScoreboard->removeAllItems();
-            mScoreboard->addItem(EntityManager::getMainPlayer()->getPlayerId());
+            mScoreboard->addItem("#F1C40F" + EntityManager::getMainPlayer()->getPlayerId());
+            mScoreboard->setSubItemNameAt(1, mScoreboard->getItemCount() - 1, std::to_string(EntityManager::getMainPlayer()->getScore()));
 
             std::vector<std::unique_ptr<APlayer> >::iterator    it = EntityManager::getPlayerList().begin();
             while (it != EntityManager::getPlayerList().end()) {
-                mScoreboard->addItem((*it)->getPlayerId());
+                mScoreboard->addItem("#E74C3C" + (*it)->getPlayerId());
+                mScoreboard->setSubItemNameAt(1, mScoreboard->getItemCount() - 1, std::to_string((*it)->getScore()));
                 ++it;
             }
             _locker.unlock();

@@ -55,7 +55,7 @@ bool    Indie::Router::parseLine(std::string const& input, Server& server) {
         while (it != input.end() && *it == ' ')
             ++it;
     }
-    std::cout << tokenList[0] << std::endl;
+    //std::cout << tokenList[0] << std::endl;
     if (tokenList.size() > 0 && fnc.find(tokenList[0]) != fnc.end()) {
         cmdPtr ptr = (*fnc.find(tokenList[0])).second;
         return (this->*ptr)(tokenList, server);
@@ -182,7 +182,6 @@ bool    Indie::Router::getMap(std::vector<std::string> const& input, Server& ser
     int roomId = std::atoi(input[1].c_str());
     bool state = false;
     if (roomId >= 0) {
-        std::cout << roomId << std::endl;
         state = gameManager->getMap(roomId, server);
     }
     gameManager->release();

@@ -23,6 +23,7 @@ Indie::APlayer::APlayer(const Indie::APlayer::PlayerType &pType,
     _updated = false;
     _pId = "";
     _mainP = mainP;
+    _score = 0;
 }
 
 
@@ -119,6 +120,15 @@ void    Indie::APlayer::godMode() {
 
 bool    Indie::APlayer::isGodMode() const {
     return _godMode;
+}
+
+unsigned int    Indie::APlayer::getScore() const
+{
+    return _score;
+}
+
+void    Indie::APlayer::setScore(unsigned int newScore) {
+    _score = newScore;
 }
 
 Indie::APlayer::~APlayer() {}

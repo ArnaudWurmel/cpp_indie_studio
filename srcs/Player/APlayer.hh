@@ -46,6 +46,9 @@ namespace Indie
         void    setUpdate(bool const&);
         bool const&    isUpdate() const;
 
+        unsigned int    getScore() const;
+        void    setScore(unsigned int);
+
     private:
         std::vector<std::unique_ptr<Indie::Bomb> >  _bombList;
 
@@ -54,6 +57,7 @@ namespace Indie
         unsigned int    _nbBombs;
         unsigned int    _bombRange;
         bool            _godMode;
+        unsigned int    _score;
 
     private:
         PlayerType  _pType;

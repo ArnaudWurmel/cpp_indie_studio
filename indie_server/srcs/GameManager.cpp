@@ -174,7 +174,6 @@ bool    Indie::GameManager::getRoomState(int roomId, Server& server) const {
     std::vector<std::unique_ptr<Room> >::const_iterator it = _roomList.begin();
 
     while (it != _roomList.end()) {
-        std::cout << (*it)->getRoomId() << " " << roomId << std::endl;
         if ((*it)->getRoomId() == roomId) {
             if ((*it)->isRunning())
                 server.setResponse("200 1");

@@ -129,7 +129,7 @@ void    Indie::Game::getPlayersPos(Server& server) const {
 
     ss << "200";
     while (it != _playerList.end()) {
-        ss << " " << (*it)->name << " " << (*it)->x << " " << (*it)->y << " " << (*it)->rotate;
+        ss << " " << (*it)->name << " " << (*it)->x << " " << (*it)->y << " " << (*it)->rotate << " " << (*it)->gameScore;
         ++it;
     }
     ss << std::endl;
@@ -137,10 +137,7 @@ void    Indie::Game::getPlayersPos(Server& server) const {
 }
 
 void    Indie::Game::addBomb(std::string const& pId, int x, int y, int power) {
-    if (_bombList.size() > 0)
-        std::cerr << (*_bombList.begin())->id << std::endl;
     _bombList.push_back(std::unique_ptr<Bomb>(new Bomb(pId, x, y, power)));
-    std::cerr << (*_bombList.begin())->id << std::endl;
 }
 
 void    Indie::Game::listBomb(std::string const& pId, Server& server) const {
@@ -162,6 +159,7 @@ bool    Indie::Game::getKilledBy(std::string const& pId) {
     std::vector<std::unique_ptr<Player> >::iterator it = _playerList.begin();
 
     while (it != _playerList.end()) {
+        std::cout << (*it)->name << " " << pId << std::endl;
         if ((*it)->name.compare(pId) == 0) {
             (*it)->gameScore += 10;
             return true;

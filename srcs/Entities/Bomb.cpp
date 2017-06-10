@@ -125,9 +125,9 @@ void    Indie::Bomb::explode(Ogre::SceneManager *sceneManager) {
     while (explosionIt != _explosionList.end()) {
         std::vector<std::shared_ptr<Indie::AEntity> >::iterator itEntity = entityList.begin();
         if (!EntityManager::getMainPlayer()->checkCollide(*(*explosionIt))) {
-            EntityManager::getMainPlayer()->explode(sceneManager);
             if (_id != -1)
                 DataManager::getSingloton()->getKilledBy(getPId());
+            EntityManager::getMainPlayer()->explode(sceneManager);
         }
         while (itEntity != entityList.end()) {
             if ((*itEntity)->hittedByExplosion()) {
