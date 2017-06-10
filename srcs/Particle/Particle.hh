@@ -20,6 +20,7 @@ namespace Indie {
 
     public:
         void    explode(Ogre::SceneManager *);
+        void    removeEntity(Ogre::SceneManager *);
 
     private:
         std::unique_ptr<Indie::AEntity> mEntity;

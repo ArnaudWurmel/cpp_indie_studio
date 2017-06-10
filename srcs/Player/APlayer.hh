@@ -28,6 +28,8 @@ namespace Indie
         bool    updateFromLoop(Ogre::SceneManager *);
         void    explode(Ogre::SceneManager *);
 
+        void    destroyEntity(Ogre::SceneManager *);
+
     public:
         Ogre::Real const&   getMoveSpeed() const;
         void            setMoveSpeed(Ogre::Real const&);

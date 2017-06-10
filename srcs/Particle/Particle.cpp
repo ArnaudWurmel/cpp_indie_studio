@@ -29,4 +29,8 @@ void    Indie::Particle::explode(Ogre::SceneManager *sceneManager) {
     mEntity->explode(sceneManager);
 }
 
+void    Indie::Particle::removeEntity(Ogre::SceneManager *sceneManager) {
+    mEntity->destroyEntity(sceneManager);
+}
+
 Indie::Particle::~Particle() {}

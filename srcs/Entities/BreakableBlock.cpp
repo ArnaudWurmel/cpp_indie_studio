@@ -30,4 +30,9 @@ bool    Indie::BreakableBlock::updateFromLoop(Ogre::SceneManager *sceneManager) 
     return mEntity != NULL || updateParticles(sceneManager);
 }
 
+void    Indie::BreakableBlock::destroyEntity(Ogre::SceneManager *sceneManager) {
+    removeAllParticles(sceneManager);
+    Indie::AEntity::destroyEntity(sceneManager);
+}
+
 Indie::BreakableBlock::~BreakableBlock() {}

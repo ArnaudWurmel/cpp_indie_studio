@@ -80,6 +80,11 @@ bool const&    Indie::APlayer::isUpdate() const {
     return _updated;
 }
 
+void    Indie::APlayer::destroyEntity(Ogre::SceneManager *sceneManager) {
+    removeAllParticles(sceneManager);
+    Indie::AEntity::destroyEntity(sceneManager);
+}
+
 /****************************
 ** Player's stat
 *////////////////////////////

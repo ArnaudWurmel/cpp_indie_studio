@@ -149,4 +149,9 @@ std::string const&  Indie::Bomb::getPId() const {
     return _pId;
 }
 
+void    Indie::Bomb::destroyEntity(Ogre::SceneManager *sceneManager) {
+    removeAllParticles(sceneManager);
+    Indie::AEntity::destroyEntity(sceneManager);
+}
+
 Indie::Bomb::~Bomb() {}

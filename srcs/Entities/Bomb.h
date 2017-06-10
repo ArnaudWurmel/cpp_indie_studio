@@ -28,6 +28,8 @@ namespace Indie {
         bool    updateFromLoop(Ogre::SceneManager *);
         void    explode(Ogre::SceneManager *);
 
+        void    destroyEntity(Ogre::SceneManager *);
+
     public:
         int const&   getID() const;
         std::string const&  getPId() const;

@@ -23,6 +23,8 @@ namespace Indie {
         void    explode(Ogre::SceneManager *sceneManager);
         bool    updateFromLoop(Ogre::SceneManager *);
 
+        void    destroyEntity(Ogre::SceneManager *);
+
     private:
         BlockType  _blockType;
     };

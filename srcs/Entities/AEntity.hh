@@ -52,7 +52,7 @@ namespace Indie
         bool    isWaiting() const;
         void    createEntity(Ogre::SceneManager *);
 
-        void    destroyEntity(Ogre::SceneManager *);
+        virtual void    destroyEntity(Ogre::SceneManager *);
 
     protected:
         Ogre::SceneNode *mSceneNode;

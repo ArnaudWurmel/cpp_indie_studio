@@ -44,6 +44,17 @@ bool    Indie::ExplosableEntity::updateParticles(Ogre::SceneManager *sceneManage
     return _particlesList.size() > 0;
 }
 
+void    Indie::ExplosableEntity::removeAllParticles(Ogre::SceneManager *sceneManager) {
+    std::vector<std::unique_ptr<Indie::Particle> >::iterator    it;
+
+    it = _particlesList.begin();
+    while (it != _particlesList.end()) {
+        (*it)->removeEntity(sceneManager);
+        ++it;
+    }
+    _particlesList.clear();
+}
+
 std::string const&  Indie::ExplosableEntity::getAMaterialName() const {
     return _materialName[std::rand() % _materialName.size()];
 }
