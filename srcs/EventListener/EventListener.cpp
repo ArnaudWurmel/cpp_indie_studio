@@ -22,6 +22,11 @@ void    Indie::EventListener::initOIS() {
     OIS::ParamList  pl;
     size_t windowHnd = 0;
     std::ostringstream    windowHndStr;
+    unsigned int	w;
+    unsigned int	h;
+    unsigned int	d;
+    int	left;
+    int	top;
 
     mRenderWindow->getCustomAttribute("WINDOW", &windowHnd);
     windowHndStr << windowHnd;
@@ -29,6 +34,10 @@ void    Indie::EventListener::initOIS() {
     mInputManager = OIS::InputManager::createInputSystem(pl);
     mKeyboard = static_cast<OIS::Keyboard*>(mInputManager->createInputObject( OIS::OISKeyboard, true));
     mMouse = static_cast<OIS::Mouse*>(mInputManager->createInputObject( OIS::OISMouse, true ));
+    mRenderWindow->getMetrics(w, h, d, left, top);
+    const OIS::MouseState &ms = mMouse->getMouseState();
+    ms.width = w;
+    ms.height = h;
 }
 
 void    Indie::EventListener::setUpEventRegister(AEventRegister *eventRegister) {
