@@ -53,6 +53,7 @@ namespace   Indie {
         bool getWaitingPlayerList(std::vector<std::string> const&, Server&) const;
         bool getRoomState(std::vector<std::string> const&, Server&) const;
         bool getKilledBy(std::vector<std::string> const&, Server&) const;
+        bool getGlobalRanking(std::vector<std::string> const&, Server&);
 
     private:
         std::vector<User> userList;

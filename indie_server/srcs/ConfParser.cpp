@@ -165,7 +165,7 @@ void    Indie::ConfParser::setScoreForUser(Router::User& user, std::string const
     user.scoreFilePath = scoreFile;
     if (scoreStream.is_open()) {
         scoreStream.read(reinterpret_cast<char *>(&header), sizeof(header));
-        if (header.magicNumber != MAGIC_NUMBER || header.scoreValue <= 0)
+        if (header.magicNumber != MAGIC_NUMBER || header.scoreValue < 0)
             throw std::exception();
         user.scoreFilePath = scoreFile;
         user.score = header.scoreValue;

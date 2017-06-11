@@ -302,4 +302,9 @@ bool    Indie::Router::getKilledBy(std::vector<std::string> const& input, Server
     return state;
 }
 
+bool    Indie::Router::getGlobalRanking(std::vector<std::string> const& input, Server& server) {
+    if (input.size() != 1)
+        return false;
+}
+
 Indie::Router::~Router() {}
