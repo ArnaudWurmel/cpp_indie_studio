@@ -306,9 +306,9 @@ void    Indie::SceneDisplayer::registerMouseEvent(OIS::Mouse *mouse) {
 
 void    Indie::SceneDisplayer::movePlayerDown(OIS::Keyboard *keyboard) {
     EntityManager::getMainPlayer()->move(Ogre::Vector3(-EntityManager::getMainPlayer()->getMoveSpeed(), 0, 0));
-    if (keyboard->isKeyDown(OIS::KC_Q) && !keyboard->isKeyDown(OIS::KC_D))
+    if (keyboard->isKeyDown(KEY_LEFT) && !keyboard->isKeyDown(KEY_RIGHT))
         EntityManager::getMainPlayer()->rotate(AEntity::Direction::DOWN_LEFT);
-    else if (keyboard->isKeyDown(OIS::KC_D) && !keyboard->isKeyDown(OIS::KC_Q))
+    else if (keyboard->isKeyDown(KEY_RIGHT) && !keyboard->isKeyDown(KEY_LEFT))
         EntityManager::getMainPlayer()->rotate(AEntity::Direction::DOWN_RIGHT);
     else
         EntityManager::getMainPlayer()->rotate(AEntity::Direction::DOWN);
@@ -316,9 +316,9 @@ void    Indie::SceneDisplayer::movePlayerDown(OIS::Keyboard *keyboard) {
 
 void    Indie::SceneDisplayer::movePlayerLeft(OIS::Keyboard *keyboard) {
     EntityManager::getMainPlayer()->move(Ogre::Vector3(0, 0, -EntityManager::getMainPlayer()->getMoveSpeed()));
-    if (keyboard->isKeyDown(OIS::KC_S) && !keyboard->isKeyDown(OIS::KC_Z))
+    if (keyboard->isKeyDown(KEY_DOWN) && !keyboard->isKeyDown(KEY_UP))
         EntityManager::getMainPlayer()->rotate(AEntity::Direction::DOWN_LEFT);
-    else if (keyboard->isKeyDown(OIS::KC_Z) && !keyboard->isKeyDown(OIS::KC_S))
+    else if (keyboard->isKeyDown(KEY_UP) && !keyboard->isKeyDown(KEY_DOWN))
         EntityManager::getMainPlayer()->rotate(AEntity::Direction::UP_LEFT);
     else
         EntityManager::getMainPlayer()->rotate(AEntity::Direction::LEFT);
@@ -326,9 +326,9 @@ void    Indie::SceneDisplayer::movePlayerLeft(OIS::Keyboard *keyboard) {
 
 void    Indie::SceneDisplayer::movePlayerUp(OIS::Keyboard *keyboard) {
     EntityManager::getMainPlayer()->move(Ogre::Vector3(EntityManager::getMainPlayer()->getMoveSpeed(), 0, 0));
-    if (keyboard->isKeyDown(OIS::KC_Q) && !keyboard->isKeyDown(OIS::KC_D))
+    if (keyboard->isKeyDown(KEY_LEFT) && !keyboard->isKeyDown(KEY_RIGHT))
         EntityManager::getMainPlayer()->rotate(AEntity::Direction::UP_LEFT);
-    else if (keyboard->isKeyDown(OIS::KC_D) && !keyboard->isKeyDown(OIS::KC_Q))
+    else if (keyboard->isKeyDown(KEY_RIGHT) && !keyboard->isKeyDown(KEY_LEFT))
         EntityManager::getMainPlayer()->rotate(AEntity::Direction::UP_RIGHT);
     else
         EntityManager::getMainPlayer()->rotate(AEntity::Direction::UP);
@@ -336,9 +336,9 @@ void    Indie::SceneDisplayer::movePlayerUp(OIS::Keyboard *keyboard) {
 
 void    Indie::SceneDisplayer::movePlayerRight(OIS::Keyboard *keyboard) {
     EntityManager::getMainPlayer()->move(Ogre::Vector3(0, 0, EntityManager::getMainPlayer()->getMoveSpeed()));
-    if (keyboard->isKeyDown(OIS::KC_Z) && !keyboard->isKeyDown(OIS::KC_S))
+    if (keyboard->isKeyDown(KEY_UP) && !keyboard->isKeyDown(KEY_DOWN))
         EntityManager::getMainPlayer()->rotate(AEntity::Direction::UP_RIGHT);
-    else if (keyboard->isKeyDown(OIS::KC_S) && !keyboard->isKeyDown(OIS::KC_Z))
+    else if (keyboard->isKeyDown(KEY_DOWN) && !keyboard->isKeyDown(KEY_UP))
         EntityManager::getMainPlayer()->rotate(AEntity::Direction::DOWN_RIGHT);
     else
         EntityManager::getMainPlayer()->rotate(AEntity::Direction::RIGHT);
