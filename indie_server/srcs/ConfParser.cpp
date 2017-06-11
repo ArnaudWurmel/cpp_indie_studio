@@ -159,14 +159,29 @@ void    Indie::ConfParser::setPasswordForUser(Router::User& user, std::string co
 }
 
 void    Indie::ConfParser::setScoreForUser(Router::User& user, std::string const& scoreFile) const {
-    std::fstream    scoreStream(scoreFile);
+    std::ifstream    scoreStream(scoreFile);
     ScoreFile       header;
 
+    user.scoreFilePath = scoreFile;
     if (scoreStream.is_open()) {
         scoreStream.read(reinterpret_cast<char *>(&header), sizeof(header));
         if (header.magicNumber != MAGIC_NUMBER || header.scoreValue <= 0)
             throw std::exception();
+        user.scoreFilePath = scoreFile;
         user.score = header.scoreValue;
+        scoreStream.close();
+    }
+}
+
+void    Indie::ConfParser::updateUserScoreFile(Router::User const& user) {
+    std::ofstream   scoreStream;
+
+    scoreStream.open(user.scoreFilePath, std::ios::trunc);
+    if (scoreStream.is_open()) {
+        ScoreFile   header;
+        header.magicNumber = MAGIC_NUMBER;
+        header.scoreValue = user.score;
+        scoreStream.write(reinterpret_cast<char *>(&header), sizeof(header));
         scoreStream.close();
     }
 }

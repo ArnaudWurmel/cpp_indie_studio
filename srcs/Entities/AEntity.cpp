@@ -96,7 +96,13 @@ void    Indie::AEntity::setScale(Ogre::Vector3 const& scale) {
 }
 
 void    Indie::AEntity::explode(Ogre::SceneManager *sceneManager) {
-    destroyEntity(sceneManager);
+    if (mIsAlive) {
+        mIsAlive = false;
+        sceneManager->destroyEntity(mEntity);
+        mEntity = NULL;
+        sceneManager->destroySceneNode(mSceneNode);
+        mSceneNode = NULL;
+    }
 }
 
 void    Indie::AEntity::destroyEntity(Ogre::SceneManager *sceneManager) {

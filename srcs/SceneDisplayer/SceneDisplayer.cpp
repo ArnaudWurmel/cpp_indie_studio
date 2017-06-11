@@ -25,7 +25,6 @@ void Indie::SceneDisplayer::initScene(RootViewController& delegate) {
     initScoreboard(delegate);
     bool    success = false;
     DataManager *dataManager = Indie::DataManager::getSingloton();
-    std::cout << "Name " << User::getUser()->getLogName() << std::endl;
     Ogre::Vector3   posPlayer = dataManager->getPlayerStart(User::getUser()->getLogName(), success);
     if (!success)
         throw std::exception();
@@ -354,20 +353,20 @@ void    Indie::SceneDisplayer::moveCameraDown(OIS::Keyboard *keyboard) {
     }
 }
 
-bool Indie::SceneDisplayer::mouseMoved( const OIS::MouseEvent &arg )
+bool Indie::SceneDisplayer::mouseMoved( const OIS::MouseEvent &arg)
 {
     static_cast<void>(arg);
     return true;
 }
 
-bool Indie::SceneDisplayer::mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id )
+bool Indie::SceneDisplayer::mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 {
     static_cast<void>(arg);
     static_cast<void>(id);
     return true;
 }
 
-bool Indie::SceneDisplayer::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id )
+bool Indie::SceneDisplayer::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 {
     static_cast<void>(arg);
     static_cast<void>(id);

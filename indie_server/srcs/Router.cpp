@@ -31,6 +31,7 @@ Indie::Router::User::User() {
     password = "";
     username = "";
     score = 0;
+    scoreFilePath = "";
 }
 
 Indie::Router::User::~User() {}
@@ -147,12 +148,14 @@ bool    Indie::Router::exitRoom(std::vector<std::string> const& input, Server& s
     while (it != userList.end()) {
         if (!(*it).username.compare(input[1])) {
             gameManager->exitRoom(*it);
+            ConfParser::getSingloton()->updateUserScoreFile(*it);
             gameManager->release();
             server.setResponse("200 OK");
             return true;
         }
         ++it;
     }
+    gameManager->release();
     return false;
 }
 

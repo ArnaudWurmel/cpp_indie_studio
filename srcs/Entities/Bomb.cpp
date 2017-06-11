@@ -151,6 +151,13 @@ std::string const&  Indie::Bomb::getPId() const {
 
 void    Indie::Bomb::destroyEntity(Ogre::SceneManager *sceneManager) {
     removeAllParticles(sceneManager);
+    std::vector<std::unique_ptr<Indie::AEntity> >::iterator it = _explosionList.begin();
+
+    while (it != _explosionList.end()) {
+        (*it)->destroyEntity(sceneManager);
+        ++it;
+    }
+    _explosionList.clear();
     Indie::AEntity::destroyEntity(sceneManager);
 }
 
