@@ -10,6 +10,7 @@
 # include "../MapParser/MapParser.hh"
 # include "Block.hh"
 # include "../Player/APlayer.hh"
+# include "../PowerUp/PowerUp.hh"
 
 namespace Indie {
     class EntityManager {
@@ -17,8 +18,6 @@ namespace Indie {
         enum    EntityType {
             BLOCK = 0,
             DYNAMIC_BLOCK,
-            HUMAN,
-            ENEMY,
             PARTICLE,
             EMPTY
         };
@@ -39,6 +38,9 @@ namespace Indie {
         static void addBomb(Indie::Bomb *);
         static std::vector<std::unique_ptr<Indie::Bomb> >&  getBombList();
 
+        static void addBoost(Indie::PowerUp *);
+        static std::vector<std::unique_ptr<Indie::PowerUp> >&   getPowerUpList();
+
         static void removeAllEntities(Ogre::SceneManager *);
 
 
@@ -56,6 +58,7 @@ namespace Indie {
         std::vector<std::shared_ptr<Indie::AEntity> >   _entityList;
         std::vector<std::unique_ptr<Indie::APlayer> >   _enemyList;
         std::vector<std::unique_ptr<Indie::Bomb> >  _bombList;
+        std::vector<std::unique_ptr<Indie::PowerUp> >   _powerUpList;
         std::unique_ptr<Indie::APlayer> _mainPlayer;
     };
 }

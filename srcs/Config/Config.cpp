@@ -35,3 +35,7 @@ unsigned int    Indie::Config::getNbTicks() {
 std::string     Indie::Config::getGameName() {
     return "Tronberman";
 }
+
+Ogre::Real  Indie::Config::getSpeedBoostIncrease() {
+    return Ogre::Real(0.5);
+}

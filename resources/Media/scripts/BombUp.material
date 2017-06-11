@@ -1,0 +1,140 @@
+// BombUp001 genrated by blender2ogre 0.6.0
+
+material BombUp001 
+{
+    receive_shadows on 
+
+    technique
+    {
+        pass BombUp001
+        {
+            ambient 0.012438831850886345 0.8000000715255737 0.0 1.0
+            diffuse 0.009951065628991507 0.640000066757203 0.0 1.0
+            specular 0.5 0.5 0.5 1.0 12.5
+            emissive 0.0 0.0 0.0 1.0
+
+            alpha_to_coverage off
+            colour_write on
+            cull_hardware clockwise
+            depth_check on
+            depth_func less_equal
+            depth_write on
+            illumination_stage 
+            light_clip_planes off
+            light_scissor off
+            lighting on
+            normalise_normals off
+            polygon_mode solid
+            scene_blend one zero
+            scene_blend_op add
+            shading gouraud
+            transparent_sorting on
+
+        }
+    }
+}
+// BombUp002 genrated by blender2ogre 0.6.0
+
+material BombUp002 
+{
+    receive_shadows on 
+
+    technique
+    {
+        pass BombUp002
+        {
+            ambient 0.30644744634628296 1.0 0.0 1.0
+            diffuse 0.2451579607301646 0.800000011920929 0.0 1.0
+            specular 0.5 0.5 0.5 1.0 12.5
+            emissive 0.0 0.0 0.0 1.0
+
+            alpha_to_coverage off
+            colour_write on
+            cull_hardware clockwise
+            depth_check on
+            depth_func less_equal
+            depth_write on
+            illumination_stage 
+            light_clip_planes off
+            light_scissor off
+            lighting on
+            normalise_normals off
+            polygon_mode solid
+            scene_blend one zero
+            scene_blend_op add
+            shading gouraud
+            transparent_sorting on
+
+        }
+    }
+}
+// BombUp003 genrated by blender2ogre 0.6.0
+
+material BombUp003 
+{
+    receive_shadows on 
+
+    technique
+    {
+        pass BombUp003
+        {
+            ambient 0.02302391268312931 0.46720051765441895 0.0 1.0
+            diffuse 0.018419130420969876 0.37376041969299933 0.0 1.0
+            specular 0.5 0.5 0.5 1.0 12.5
+            emissive 0.0 0.0 0.0 1.0
+
+            alpha_to_coverage off
+            colour_write on
+            cull_hardware clockwise
+            depth_check on
+            depth_func less_equal
+            depth_write on
+            illumination_stage 
+            light_clip_planes off
+            light_scissor off
+            lighting on
+            normalise_normals off
+            polygon_mode solid
+            scene_blend one zero
+            scene_blend_op add
+            shading gouraud
+            transparent_sorting on
+
+        }
+    }
+}
+// BombUp004 genrated by blender2ogre 0.6.0
+
+material BombUp004 
+{
+    receive_shadows on 
+
+    technique
+    {
+        pass BombUp004
+        {
+            ambient 1.0 1.0 1.0 1.0
+            diffuse 0.800000011920929 0.800000011920929 0.800000011920929 1.0
+            specular 0.5 0.5 0.5 1.0 12.5
+            emissive 0.0 0.0 0.0 1.0
+
+            alpha_to_coverage off
+            colour_write on
+            cull_hardware clockwise
+            depth_check on
+            depth_func less_equal
+            depth_write on
+            illumination_stage 
+            light_clip_planes off
+            light_scissor off
+            lighting on
+            normalise_normals off
+            polygon_mode solid
+            scene_blend one zero
+            scene_blend_op add
+            shading gouraud
+            transparent_sorting on
+
+        }
+    }
+}

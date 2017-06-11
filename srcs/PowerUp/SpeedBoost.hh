@@ -13,7 +13,7 @@ namespace Indie {
         ~SpeedBoost();
 
     public:
-        virtual void    boostPlayer(APlayer&) const;
+        virtual void    boostPlayer(APlayer&, Ogre::SceneManager *);
     };
 }
 

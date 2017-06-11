@@ -10,6 +10,7 @@
 #include "../Entities/EntityManager.hh"
 #include "../UserManager/User.hh"
 #include "../Exception/Exception.hh"
+#include "../PowerUp/SpeedBoost.hh"
 
 Indie::DataManager::DataManager(const std::string& ip, int port) : _ip(ip), _port(port)  {
 #ifdef WIN32
@@ -350,6 +351,37 @@ std::vector<std::pair<std::string, int> >   Indie::DataManager::getGlobalRanking
         i += 2;
     }
     return res;
+}
+
+void    Indie::DataManager::getPowerUpList() {
+    std::string route = "/game/getPowerUpList ";
+
+    route += std::to_string(User::getUser()->getRoomId());
+    std::vector<std::string>    tokenList = sendCommand(route);
+
+    if (tokenList.size() - 1 <= 0 || (tokenList.size() - 1) % 4 != 0)
+        return ;
+    unsigned int    i = 1;
+    while (i < tokenList.size()) {
+         //std::cout << tokenList[i] << std::endl;
+        std::vector<std::unique_ptr<PowerUp> >::iterator it = EntityManager::getPowerUpList().begin();
+        bool    founded = false;
+
+        while (!founded && it != EntityManager::getPowerUpList().end()) {
+            if ((*it)->getID() == std::atoi(tokenList[i].c_str()))
+               // std::cout << "Founded" << std::endl;
+                founded = true;
+            ++it;
+        }
+        if (!founded) {
+            //std::cout << tokenList[i + 3] << std::endl;
+            if (!tokenList[i + 3].compare("2")) {
+                //std::cout << "Entity added at " << tokenList[i + 2] << tokenList[i + 3] << std::endl;
+                EntityManager::addBoost(new Indie::SpeedBoost(NULL, Ogre::Vector3(std::atoi(tokenList[i + 1].c_str()), 30, std::atoi(tokenList[i + 2].c_str())), std::atoi(tokenList[i].c_str())));
+            }
+        }
+        i += 4;
+    }
 }
 
 std::vector<std::string>    Indie::DataManager::sendCommand(std::string const& route) {

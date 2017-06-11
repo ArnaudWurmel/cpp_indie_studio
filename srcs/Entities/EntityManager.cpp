@@ -111,6 +111,16 @@ void    Indie::EntityManager::removeAllEntities(Ogre::SceneManager *sceneManager
     entityManager->_mainPlayer.reset();
 }
 
+void    Indie::EntityManager::addBoost(Indie::PowerUp *powerUp) {
+    Indie::EntityManager    *entityManager = getEntityManager();
+
+    entityManager->_powerUpList.push_back(std::unique_ptr<Indie::PowerUp>(powerUp));
+}
+
+std::vector<std::unique_ptr<Indie::PowerUp> >&    Indie::EntityManager::getPowerUpList() {
+    return Indie::EntityManager::getEntityManager()->_powerUpList;
+}
+
 Indie::EntityManager::EntityManager() {}
 
 Indie::EntityManager::~EntityManager() {

@@ -1,0 +1,156 @@
+// black genrated by blender2ogre 0.6.0
+
+material black 
+{
+    receive_shadows on 
+
+    technique
+    {
+        pass black
+        {
+            ambient 0.0 0.0 0.0 1.0
+            diffuse 0.0 0.0 0.0 1.0
+            specular 0.5 0.5 0.5 1.0 12.5
+            emissive 0.0 0.0 0.0 1.0
+
+            alpha_to_coverage off
+            colour_write on
+            cull_hardware clockwise
+            depth_check on
+            depth_func less_equal
+            depth_write on
+            illumination_stage 
+            light_clip_planes off
+            light_scissor off
+            lighting on
+            normalise_normals off
+            polygon_mode solid
+            scene_blend one zero
+            scene_blend_op add
+            shading gouraud
+            transparent_sorting on
+
+            texture_unit 
+            {
+                texture glowpanel.png
+                tex_address_mode wrap
+                scale 1.0 1.0
+                tex_coord_set 0
+                colour_op modulate
+            }
+        }
+    }
+}
+// glowuvmap genrated by blender2ogre 0.6.0
+
+material glowuvmap 
+{
+    receive_shadows on 
+
+    technique
+    {
+        pass glowuvmap
+        {
+            ambient 0.0 0.0 0.0 1.0
+            diffuse 0.0 0.0 0.0 1.0
+            specular 0.5 0.5 0.5 1.0 12.5
+            emissive 0.0 0.0 0.0 1.0
+
+            alpha_to_coverage off
+            colour_write on
+            cull_hardware clockwise
+            depth_check on
+            depth_func less_equal
+            depth_write on
+            illumination_stage 
+            light_clip_planes off
+            light_scissor off
+            lighting on
+            normalise_normals off
+            polygon_mode solid
+            scene_blend one zero
+            scene_blend_op add
+            shading gouraud
+            transparent_sorting on
+
+            texture_unit 
+            {
+                texture glowpanel.png
+                tex_address_mode wrap
+                scale 1.0 1.0
+                tex_coord_set 0
+                colour_op modulate
+            }
+        }
+    }
+}
+// Helmet white genrated by blender2ogre 0.6.0
+
+material "Helmet white"
+{
+    receive_shadows on 
+
+    technique
+    {
+        pass Helmet white
+        {
+            ambient 1.0 1.0 1.0 0.5214285850524902
+            diffuse 0.800000011920929 0.800000011920929 0.800000011920929 0.5214285850524902
+            specular 0.5 0.5 0.5 0.5214285850524902 12.5
+            emissive 0.0 0.0 0.0 0.5214285850524902
+
+            alpha_to_coverage off
+            colour_write on
+            cull_hardware clockwise
+            depth_check on
+            depth_func less_equal
+            depth_write on
+            illumination_stage 
+            light_clip_planes off
+            light_scissor off
+            lighting on
+            normalise_normals off
+            polygon_mode solid
+            scene_blend one zero
+            scene_blend_op add
+            shading gouraud
+            transparent_sorting on
+
+        }
+    }
+}
+// Yellow genrated by blender2ogre 0.6.0
+
+material Yellow 
+{
+    receive_shadows on 
+
+    technique
+    {
+        pass Yellow
+        {
+            ambient 0.800000011920929 0.800000011920929 0.0 1.0
+            diffuse 0.6400000190734865 0.6400000190734865 0.0 1.0
+            specular 0.5 0.5 0.5 1.0 12.5
+            emissive 0.0 0.0 0.0 1.0
+
+            alpha_to_coverage off
+            colour_write on
+            cull_hardware clockwise
+            depth_check on
+            depth_func less_equal
+            depth_write on
+            illumination_stage 
+            light_clip_planes off
+            light_scissor off
+            lighting on
+            normalise_normals off
+            polygon_mode solid
+            scene_blend one zero
+            scene_blend_op add
+            shading gouraud
+            transparent_sorting on
+
+        }
+    }
+}

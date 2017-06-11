@@ -8,7 +8,7 @@
 #include "../Player/APlayer.hh"
 
 namespace   Indie {
-    class PowerUp : public AEntity{
+    class PowerUp : public AEntity, public ExplosableEntity {
     public:
         PowerUp(Ogre::SceneManager *, std::string const&, Ogre::Vector3 const&, int);
         ~PowerUp();
@@ -18,13 +18,16 @@ namespace   Indie {
         virtual bool    hittedByExplosion() const;
 
     public:
-        virtual void    boostPlayer(APlayer&) const = 0;
+        virtual void    boostPlayer(APlayer&, Ogre::SceneManager *) = 0;
 
     public:
         int getID() const;
 
     protected:
         int    _id;
+
+    private:
+        size_t  _mTime;
     };
 }
 

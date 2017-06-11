@@ -109,6 +109,7 @@ void    Indie::SceneDisplayer::updaterThread() {
             if (EntityManager::getMainPlayer()->isAlive())
                 dataManager->updatePlayerPos(User::getUser()->getLogName(), EntityManager::getMainPlayer()->getPosition());
             dataManager->listBomb(User::getUser()->getRoomId(), User::getUser()->getLogName());
+            dataManager->getPowerUpList();
 
             mScoreboard->removeAllItems();
             mScoreboard->addItem("#F1C40F" + EntityManager::getMainPlayer()->getPlayerId());
@@ -156,6 +157,16 @@ bool    Indie::SceneDisplayer::updateScene() {
     while (itB != EntityManager::getBombList().end()) {
         (*itB)->updateFromLoop(mSceneManager);
         ++itB;
+    }
+
+    std::vector<std::unique_ptr<PowerUp> >::iterator    itPU = EntityManager::getPowerUpList().begin();
+
+    while (itPU != EntityManager::getPowerUpList().end()) {
+        if (!(*itPU)->checkCollide(*EntityManager::getMainPlayer().get())) {
+            (*itPU)->boostPlayer(*EntityManager::getMainPlayer().get(), mSceneManager);
+        }
+        (*itPU)->updateFromLoop(mSceneManager);
+        ++itPU;
     }
     return true;
 }
