@@ -27,7 +27,8 @@ const std::map<std::string, Indie::Router::cmdPtr> Indie::Router::fnc = {
         { "/game/getPlayersPos", &Indie::Router::getPlayerList },
         { "/game/addBomb", &Indie::Router::addBomb },
         { "/game/bombList", &Indie::Router::listBomb },
-        { "/game/getKilledBy", &Indie::Router::getKilledBy }
+        { "/game/getKilledBy", &Indie::Router::getKilledBy },
+        { "/game/getPowerUpList", &Indie::Router::getPowerUpList }
 };
 
 Indie::Router::User::User() {
@@ -324,6 +325,20 @@ bool    Indie::Router::getGlobalRanking(std::vector<std::string> const& input, S
 
 bool    Indie::Router::sortVector(Router::User const& u1, Router::User const& u2) {
     return u1.score >= u2.score;
+}
+
+bool    Indie::Router::getPowerUpList(std::vector<std::string> const& input, Server& server) const {
+    if (input.size() != 2)
+        return false;
+
+    GameManager *gameManager = GameManager::getSingleton();
+    bool    state = false;
+    int roomId = std::atoi(input[1].c_str());
+    if (roomId >= 0) {
+        state = gameManager->getPowerUpList(roomId, server);
+    }
+    gameManager->release();
+    return state;
 }
 
 Indie::Router::~Router() {}

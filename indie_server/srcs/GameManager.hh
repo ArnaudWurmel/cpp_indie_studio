@@ -36,6 +36,7 @@ namespace   Indie
         bool    getWaitingPlayerList(int roomId, Server&) const;
         bool    getRoomState(int roomId, Server&) const;
         bool    getKilledBy(int roomId, std::string const&);
+        bool    getPowerUpList(int roomId, Server&) const;
 
     public:
         void    lock();

@@ -54,6 +54,7 @@ namespace   Indie {
         bool getRoomState(std::vector<std::string> const&, Server&) const;
         bool getKilledBy(std::vector<std::string> const&, Server&) const;
         bool getGlobalRanking(std::vector<std::string> const&, Server&) const;
+        bool getPowerUpList(std::vector<std::string> const&, Server&) const;
 
     private:
         static bool sortVector(Router::User const&, Router::User const&);

@@ -4,9 +4,11 @@
 
 #include <iostream>
 #include <sstream>
+#include <algorithm>
 #include "Game.hh"
 
 unsigned int    Indie::Game::Bomb::bombId = 0;
+unsigned int    Indie::Game::PowerUp::powerUpId = 0;
 
 Indie::Game::Player::Player(std::string const& pName) {
     name = pName;
@@ -21,11 +23,20 @@ Indie::Game::Bomb::Bomb(std::string const& pId, int x_pos, int y_pos, int power)
     y = y_pos;
     this->power = power;
     id = Indie::Game::Bomb::bombId;
-    std::cerr << id << std::endl;
-    std::cerr << Indie::Game::Bomb::bombId << std::endl;
     Indie::Game::Bomb::bombId = Indie::Game::Bomb::bombId + 1;
-    std::cerr << id << std::endl;
-    std::cerr << Indie::Game::Bomb::bombId << std::endl;
+}
+
+Indie::Game::PowerUp::PowerUp(std::pair<int, int> const& powerPos) {
+    std::vector<PowerUp::PowerUpType>   powerList;
+
+    powerList.push_back(PowerUpType::BOMB_BOOST);
+    powerList.push_back(PowerUpType::BOMB_RANGE);
+    powerList.push_back(PowerUpType::SPEED);
+    type = powerList[std::rand() % powerList.size()];
+    id = powerUpId;
+    pos.first = powerPos.first;
+    pos.second = powerPos.second;
+    powerUpId += 1;
 }
 
 Indie::Game::Game(std::vector<std::string> const& playerList) {
@@ -38,6 +49,21 @@ Indie::Game::Game(std::vector<std::string> const& playerList) {
         _playerList.push_back(std::unique_ptr<Player>(new Player(*it)));
         findPosForPlayer(_playerList.back());
         ++it;
+    }
+    getAllPowerUpAvailablePos();
+    std::random_shuffle(_powerUpPos.begin(), _powerUpPos.end());
+    createPowerUp(20);
+}
+
+void    Indie::Game::createPowerUp(unsigned int nbPower) {
+    unsigned int    i = 0;
+
+    while (i < nbPower && _powerUpPos.size() > 0) {
+        std::pair<int, int> pos(_powerUpPos.back());
+
+        _powerUpList.push_back(std::unique_ptr<PowerUp>(new PowerUp(pos)));
+        _powerUpPos.pop_back();
+        ++i;
     }
 }
 
@@ -97,6 +123,7 @@ unsigned int    Indie::Game::exitPlayer(std::string const& pName) {
         }
         ++it;
     }
+    return 0;
 }
 
 bool    Indie::Game::addPlayerToGame(std::string const& pName) {
@@ -155,6 +182,31 @@ void    Indie::Game::listBomb(std::string const& pId, Server& server) const {
     server.setResponse(ss.str());
 }
 
+void    Indie::Game::getAllPowerUpAvailablePos() {
+    std::vector<std::string>::iterator  it = _map.begin();
+    long   x;
+    long   y;
+
+    y = 0;
+    _powerUpPos.clear();
+    while (it != _map.end()) {
+        x = 0;
+        std::string::iterator itString = (*it).begin();
+
+        while (itString != (*it).end()) {
+            if ((*itString) == '0') {
+                long gamePos_x = ((*it).size() * 100 / 2) - (x * 100);
+                long gamePos_y = (_map.size() * 100 / 2) - (y * 100);
+                _powerUpPos.push_back(std::make_pair(gamePos_x, gamePos_y));
+            }
+            ++itString;
+            ++x;
+        }
+        ++y;
+        ++it;
+    }
+}
+
 bool    Indie::Game::getKilledBy(std::string const& pId) {
     std::vector<std::unique_ptr<Player> >::iterator it = _playerList.begin();
 
@@ -167,6 +219,18 @@ bool    Indie::Game::getKilledBy(std::string const& pId) {
         ++it;
     }
     return false;
+}
+
+void    Indie::Game::getPowerUpList(Server& server) const {
+    std::stringstream   ss;
+    std::vector<std::unique_ptr<PowerUp> >::const_iterator  it = _powerUpList.begin();
+
+    ss << "200";
+    while (it != _powerUpList.end()) {
+        ss << " " << (*it)->id << " " << (*it)->pos.first << " " << (*it)->pos.second << " " << (*it)->type;
+        ++it;
+    }
+    server.setResponse(ss.str());
 }
 
 Indie::Game::~Game() {}

@@ -134,6 +134,14 @@ bool    Indie::Room::getKilledBy(std::string const& pId) {
     return false;
 }
 
+bool    Indie::Room::getPowerUpList(Server& server) const {
+    if (_running) {
+        _game->getPowerUpList(server);
+        return true;
+    }
+    return false;
+}
+
 bool    Indie::Room::isRunning() const {
     return _running;
 }

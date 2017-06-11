@@ -60,6 +60,9 @@ namespace   Indie
         void    initScoreboard(RootViewController&);
 
     private:
+        void    setFPSCameraPosition();
+
+    private:
         void    movePlayerUp(OIS::Keyboard *);
         void    movePlayerDown(OIS::Keyboard *);
         void    movePlayerLeft(OIS::Keyboard *);
@@ -77,6 +80,7 @@ namespace   Indie
         std::unique_ptr<std::thread>    _thread;
         std::mutex  _locker;
         Ogre::Entity    *mGroundEntity;
+        bool    mFPSmode;
 
         /*
          * Scoreboard usefull variables

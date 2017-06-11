@@ -32,6 +32,7 @@ namespace Indie
         void    getPlayerList(Server&) const;
         bool    isRunning() const;
         bool    getKilledBy(std::string const&);
+        bool    getPowerUpList(Server&) const;
 
     public:
         static unsigned int roomId;
