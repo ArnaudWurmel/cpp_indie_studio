@@ -50,7 +50,7 @@ namespace Indie {
         static AEntity    *createDynamicBlock(Ogre::SceneManager *, Ogre::Vector3 const&);
         static AEntity    *createDynamicParticle(Ogre::SceneManager *, Ogre::Vector3 const&);
         static AEntity    *createHuman(Ogre::SceneManager *, Ogre::Vector3 const&, std::string const&);
-        static APlayer    *createEnemy(Ogre::SceneManager *, Ogre::Vector3 const&, std::string const&);
+        static APlayer    *createEnemy(Ogre::SceneManager *, Ogre::Vector3 const&, std::string const&, bool AI = false);
 
     private:
         std::vector<std::shared_ptr<Indie::AEntity> >   _entityList;

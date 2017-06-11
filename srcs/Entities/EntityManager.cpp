@@ -8,6 +8,7 @@
 #include "EntityManager.hh"
 #include "../Entities/BreakableBlock.hh"
 #include "../Player/HumanPlayer.hh"
+#include "../Player/AI.hh"
 
 Indie::EntityManager    *Indie::EntityManager::getEntityManager(bool reset) {
     static Indie::EntityManager *entityManager = NULL;
@@ -157,8 +158,12 @@ Indie::AEntity  *Indie::EntityManager::createDynamicParticle(Ogre::SceneManager 
     return new Indie::Block(sceneManager, entityPos);
 }
 
-Indie::APlayer  *Indie::EntityManager::createEnemy(Ogre::SceneManager *sceneManager, Ogre::Vector3 const& entityPos, std::string const& pId) {
-    Indie::HumanPlayer  *player = new Indie::HumanPlayer(entityPos, sceneManager, pId);
+Indie::APlayer  *Indie::EntityManager::createEnemy(Ogre::SceneManager *sceneManager, Ogre::Vector3 const& entityPos, std::string const& pId, bool AI) {
+    Indie::APlayer  *player;
+    if (!AI)
+        player = new Indie::HumanPlayer(entityPos, sceneManager, pId);
+    else
+        player = new Indie::AI(entityPos, sceneManager, pId);
 
     addPlayer(player);
     return player;
