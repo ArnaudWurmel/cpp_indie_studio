@@ -18,6 +18,19 @@
 # include "../EventListener/AEventRegister.hh"
 # include "../GUI/RootViewController.hh"
 
+#ifdef WIN32
+# define KEY_UP (OIS::KC_W)
+# define KEY_DOWN (OIS::KC_S)
+# define KEY_LEFT (OIS::KC_A)
+# define KEY_RIGHT (OIS::KC_D)
+#else
+# define KEY_UP (OIS::KC_Z)
+# define KEY_DOWN (OIS::KC_S)
+# define KEY_LEFT (OIS::KC_Q)
+# define KEY_RIGHT (OIS::KC_D)
+#endif
+
+
 namespace   Indie
 {
     class SceneDisplayer : public Indie::AEventRegister {

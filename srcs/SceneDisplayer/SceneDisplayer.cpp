@@ -229,9 +229,9 @@ void    Indie::SceneDisplayer::setFPSCameraPosition() {
     if (camera && EntityManager::getMainPlayer()->isAlive()) {
         camera->setPosition(Ogre::Vector3(EntityManager::getMainPlayer()->getPosition().x, EntityManager::getMainPlayer()->getPosition().y + 20, EntityManager::getMainPlayer()->getPosition().z));
         Ogre::Vector3   lookAt;
-        lookAt.x = EntityManager::getMainPlayer()->getPosition().x + sin(EntityManager::getMainPlayer()->getRotation() * (2 * M_PI / 360.0));
+        lookAt.x = EntityManager::getMainPlayer()->getPosition().x + sin(EntityManager::getMainPlayer()->getRotation() * (2 * 3.14f / 360.0));
         lookAt.y = EntityManager::getMainPlayer()->getPosition().y + 20;
-        lookAt.z = EntityManager::getMainPlayer()->getPosition().z + cos(EntityManager::getMainPlayer()->getRotation()* (2 * M_PI / 360.0));
+        lookAt.z = EntityManager::getMainPlayer()->getPosition().z + cos(EntityManager::getMainPlayer()->getRotation()* (2 * 3.14f / 360.0));
         camera->lookAt(lookAt);
     }
 }
@@ -248,17 +248,17 @@ Indie::SceneDisplayer::~SceneDisplayer() {
 ** Callback register
 *//////////////////////////////////
 void Indie::SceneDisplayer::initEventRegister() {
-    _functionPtr.insert(std::make_pair(OIS::KC_Z, &Indie::SceneDisplayer::movePlayerUp));
-    _functionPtr.insert(std::make_pair(OIS::KC_S, &Indie::SceneDisplayer::movePlayerDown));
-    _functionPtr.insert(std::make_pair(OIS::KC_D, &Indie::SceneDisplayer::movePlayerRight));
-    _functionPtr.insert(std::make_pair(OIS::KC_Q, &Indie::SceneDisplayer::movePlayerLeft));
+    _functionPtr.insert(std::make_pair(KEY_UP, &Indie::SceneDisplayer::movePlayerUp));
+    _functionPtr.insert(std::make_pair(KEY_DOWN, &Indie::SceneDisplayer::movePlayerDown));
+    _functionPtr.insert(std::make_pair(KEY_RIGHT, &Indie::SceneDisplayer::movePlayerRight));
+    _functionPtr.insert(std::make_pair(KEY_LEFT, &Indie::SceneDisplayer::movePlayerLeft));
     _functionPtr.insert(std::make_pair(OIS::KC_UP, &Indie::SceneDisplayer::moveCameraUp));
     _functionPtr.insert(std::make_pair(OIS::KC_DOWN, &Indie::SceneDisplayer::moveCameraDown));
 
-    _collideGetter.insert(std::make_pair(OIS::KC_Z, &Indie::SceneDisplayer::checkUp));
-    _collideGetter.insert(std::make_pair(OIS::KC_S, &Indie::SceneDisplayer::checkDown));
-    _collideGetter.insert(std::make_pair(OIS::KC_Q, &Indie::SceneDisplayer::checkLeft));
-    _collideGetter.insert(std::make_pair(OIS::KC_D, &Indie::SceneDisplayer::checkRight));
+    _collideGetter.insert(std::make_pair(KEY_UP, &Indie::SceneDisplayer::checkUp));
+    _collideGetter.insert(std::make_pair(KEY_DOWN, &Indie::SceneDisplayer::checkDown));
+    _collideGetter.insert(std::make_pair(KEY_LEFT, &Indie::SceneDisplayer::checkLeft));
+    _collideGetter.insert(std::make_pair(KEY_RIGHT, &Indie::SceneDisplayer::checkRight));
 }
 
 void    Indie::SceneDisplayer::registerKeyboardEvent(OIS::Keyboard *keyboard) {

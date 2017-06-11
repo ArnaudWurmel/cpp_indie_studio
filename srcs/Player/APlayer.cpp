@@ -6,6 +6,7 @@
 #include "APlayer.hh"
 #include "../Config/Config.hh"
 #include "../DataManager/DataManager.h"
+#include "../UserManager/User.hh"
 
 Indie::APlayer::APlayer(const Indie::APlayer::PlayerType &pType,
                         Ogre::Vector3 const& entityPos,
@@ -110,7 +111,7 @@ void    Indie::APlayer::plantABomb(Ogre::SceneManager *sceneManager) {
     if (_bombList.size() < _nbBombs) {
         DataManager *dataManager = DataManager::getSingloton();
 
-        dataManager->addBomb(0, _pId, Bomb::getBombPosition(*this).z, Bomb::getBombPosition(*this).x, _bombRange);
+        dataManager->addBomb(User::getUser()->getRoomId(), _pId, Bomb::getBombPosition(*this).z, Bomb::getBombPosition(*this).x, _bombRange);
         _bombList.push_back(std::unique_ptr<Indie::Bomb>(new Indie::Bomb(sceneManager, *this)));
     }
 }
