@@ -35,6 +35,7 @@ namespace Indie
         void            setMoveSpeed(Ogre::Real const&);
 
         unsigned int    getBombRange() const;
+        void            setBombRange(unsigned int);
 
         void            addABomb();
         void            plantABomb(Ogre::SceneManager *);

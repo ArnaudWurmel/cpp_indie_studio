@@ -32,7 +32,7 @@ Indie::Game::PowerUp::PowerUp(std::pair<int, int> const& powerPos) {
     powerList.push_back(PowerUpType::BOMB_BOOST);
     powerList.push_back(PowerUpType::BOMB_RANGE);
     powerList.push_back(PowerUpType::SPEED);
-    type = PowerUpType::SPEED;//powerList[std::rand() % powerList.size()];
+    type = powerList[std::rand() % powerList.size()];
     id = powerUpId;
     pos.first = powerPos.first;
     pos.second = powerPos.second;

@@ -11,6 +11,8 @@
 #include "../UserManager/User.hh"
 #include "../Exception/Exception.hh"
 #include "../PowerUp/SpeedBoost.hh"
+#include "../PowerUp/SpeedBoost.hh"
+#include "../PowerUp/ExtendBoost.hh"
 
 Indie::DataManager::DataManager(const std::string& ip, int port) : _ip(ip), _port(port)  {
 #ifdef WIN32
@@ -374,10 +376,14 @@ void    Indie::DataManager::getPowerUpList() {
             ++it;
         }
         if (!founded) {
+            std::cout << tokenList[i + 3] << std::endl;
             //std::cout << tokenList[i + 3] << std::endl;
             if (!tokenList[i + 3].compare("2")) {
-                //std::cout << "Entity added at " << tokenList[i + 2] << tokenList[i + 3] << std::endl;
+                std::cout << "Speed buf added" << std::endl;
                 EntityManager::addBoost(new Indie::SpeedBoost(NULL, Ogre::Vector3(std::atoi(tokenList[i + 1].c_str()), 30, std::atoi(tokenList[i + 2].c_str())), std::atoi(tokenList[i].c_str())));
+            }
+            else if (!tokenList[i + 3].compare("1")) {
+                EntityManager::addBoost(new Indie::ExtendBoost(NULL, Ogre::Vector3(std::atoi(tokenList[i + 1].c_str()), 30, std::atoi(tokenList[i + 2].c_str())), std::atoi(tokenList[i].c_str())));
             }
         }
         i += 4;

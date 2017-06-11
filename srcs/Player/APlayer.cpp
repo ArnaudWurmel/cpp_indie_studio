@@ -120,6 +120,10 @@ unsigned int    Indie::APlayer::getBombRange() const {
     return _bombRange;
 }
 
+void    Indie::APlayer::setBombRange(unsigned int bombRange) {
+    _bombRange = bombRange;
+}
+
 void    Indie::APlayer::godMode() {
     _godMode = !_godMode;
 }
