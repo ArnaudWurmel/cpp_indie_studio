@@ -7,6 +7,7 @@
 #include "../Config/Config.hh"
 #include "WaitingRoomViewController.hh"
 #include "../UserManager/User.hh"
+#include "GlobalRankingViewController.hh"
 
 Indie::RoomListViewController::RoomListViewController(RootViewController& delegate) : AViewController(delegate) {
 
@@ -38,6 +39,7 @@ void    Indie::RoomListViewController::setUpMenu(unsigned int width, unsigned in
     mMenuList->eventListSelectAccept += MyGUI::newDelegate(this, &Indie::RoomListViewController::selectedAction);
     _functionPtr.push_back(std::make_pair(std::string("#FFFFFFCreate Room"), &Indie::RoomListViewController::createNewRoom));
     _functionPtr.push_back(std::make_pair(std::string("#FFFFFFRefresh List"), &Indie::RoomListViewController::refreshButton));
+    _functionPtr.push_back(std::make_pair(std::string("#FFFFFFGlobal Ranking"), &Indie::RoomListViewController::showGlobalRanking));
     _functionPtr.push_back(std::make_pair(std::string("#E74C3CLog out"), &Indie::RoomListViewController::disconnectUser));
 
     std::vector<std::pair<std::string, void (Indie::RoomListViewController::*)()> >::iterator it = _functionPtr.begin();
@@ -95,6 +97,10 @@ void    Indie::RoomListViewController::refreshButton() {
         mRoomList->addItem(displayInfo, *it);
         ++it;
     }
+}
+
+void    Indie::RoomListViewController::showGlobalRanking() {
+    _delegate.addViewController(new Indie::GlobalRankingViewController(_delegate));
 }
 
 void    Indie::RoomListViewController::viewShouldReapear() {

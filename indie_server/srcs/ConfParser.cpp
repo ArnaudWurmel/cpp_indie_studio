@@ -169,6 +169,7 @@ void    Indie::ConfParser::setScoreForUser(Router::User& user, std::string const
             throw std::exception();
         user.scoreFilePath = scoreFile;
         user.score = header.scoreValue;
+        std::cout << user.score << std::endl;
         scoreStream.close();
     }
 }
@@ -181,6 +182,7 @@ void    Indie::ConfParser::updateUserScoreFile(Router::User const& user) {
         ScoreFile   header;
         header.magicNumber = MAGIC_NUMBER;
         header.scoreValue = user.score;
+        std::cout << "writing score of : " << user.score << std::endl;
         scoreStream.write(reinterpret_cast<char *>(&header), sizeof(header));
         scoreStream.close();
     }

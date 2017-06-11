@@ -3,15 +3,18 @@
 //
 
 #include <string>
+#include <algorithm>
 #include <map>
 #include <vector>
 #include <iostream>
+#include <sstream>
 #include "Router.hh"
 #include "GameManager.hh"
 #include "ConfParser.hh"
 
 const std::map<std::string, Indie::Router::cmdPtr> Indie::Router::fnc = {
         { "/user/connect", &Indie::Router::userConnect},
+        { "/user/getGlobalRanking", &Indie::Router::getGlobalRanking },
         { "/room/getPlayersList", &Indie::Router::getWaitingPlayerList },
         { "/room/createRoom", &Indie::Router::createRoom },
         { "/room/joinRoom", &Indie::Router::joinRoom },
@@ -56,6 +59,8 @@ bool    Indie::Router::parseLine(std::string const& input, Server& server) {
         while (it != input.end() && *it == ' ')
             ++it;
     }
+    std::sort(userList.begin(), userList.end(), &Indie::Router::sortVector);
+
     //std::cout << tokenList[0] << std::endl;
     if (tokenList.size() > 0 && fnc.find(tokenList[0]) != fnc.end()) {
         cmdPtr ptr = (*fnc.find(tokenList[0])).second;
@@ -302,9 +307,23 @@ bool    Indie::Router::getKilledBy(std::vector<std::string> const& input, Server
     return state;
 }
 
-bool    Indie::Router::getGlobalRanking(std::vector<std::string> const& input, Server& server) {
+bool    Indie::Router::getGlobalRanking(std::vector<std::string> const& input, Server& server) const {
     if (input.size() != 1)
         return false;
+    std::stringstream   ss;
+    std::vector<User>::const_iterator it = userList.begin();
+
+    ss << "200";
+    while (it != userList.end()) {
+        ss << " " << (*it).username << " " << (*it).score;
+        ++it;
+    }
+    server.setResponse(ss.str());
+    return true;
+}
+
+bool    Indie::Router::sortVector(Router::User const& u1, Router::User const& u2) {
+    return u1.score >= u2.score;
 }
 
 Indie::Router::~Router() {}

@@ -331,9 +331,24 @@ void    Indie::DataManager::runGame() {
 void    Indie::DataManager::getKilledBy(std::string const& otherPlayer) {
     std::string route = "/game/getKilledBy ";
 
-    std::cout << "Called" << std::endl;
     route = route + std::to_string(User::getUser()->getRoomId()) + " " + otherPlayer;
     sendCommand(route);
+}
+
+std::vector<std::pair<std::string, int> >   Indie::DataManager::getGlobalRanking() {
+    std::string route = "/user/getGlobalRanking";
+    std::vector<std::pair<std::string, int> >   res;
+
+    std::vector<std::string>    tokenList = sendCommand(route);
+
+    if ((tokenList.size() - 1) % 2 != 0 || std::atoi(tokenList[0].c_str()) != 200)
+        return res;
+    unsigned int    i = 1;
+    while (i < tokenList.size()) {
+        res.push_back(std::make_pair(tokenList[i], std::atoi(tokenList[i + 1].c_str())));
+        i += 2;
+    }
+    return res;
 }
 
 std::vector<std::string>    Indie::DataManager::sendCommand(std::string const& route) {

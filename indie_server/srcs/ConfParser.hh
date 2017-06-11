@@ -48,6 +48,9 @@ namespace Indie {
         void    setScoreForUser(Router::User&, std::string const&) const;
 
     private:
+
+
+    private:
         unsigned int    _port;
 
     private:
