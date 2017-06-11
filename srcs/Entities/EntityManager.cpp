@@ -9,6 +9,7 @@
 #include "../Entities/BreakableBlock.hh"
 #include "../Player/HumanPlayer.hh"
 #include "../Player/AI.hh"
+#include "../Exception/Exception.hh"
 
 Indie::EntityManager    *Indie::EntityManager::getEntityManager(bool reset) {
     static Indie::EntityManager *entityManager = NULL;
@@ -34,7 +35,7 @@ std::vector<std::shared_ptr<Indie::AEntity> >& Indie::EntityManager::getEntityLi
 
     if (entityManager)
         return (entityManager->_entityList);
-    throw std::exception();
+    throw EntityManagerException();
 }
 
 void    Indie::EntityManager::setMainPlayer(Indie::APlayer *player) {
@@ -49,7 +50,7 @@ std::unique_ptr<Indie::APlayer>&    Indie::EntityManager::getMainPlayer() {
 
     if (entityManager)
         return (entityManager->_mainPlayer);
-    throw std::exception();
+    throw EntityManagerException();
 }
 
 void    Indie::EntityManager::addPlayer(Indie::APlayer *player) {
@@ -59,16 +60,14 @@ void    Indie::EntityManager::addPlayer(Indie::APlayer *player) {
         entityManager->_enemyList.push_back(std::unique_ptr<Indie::APlayer>(player));
         return ;
     }
-    throw std::exception();
-}
+    throw EntityManagerException();}
 
 std::vector<std::unique_ptr<Indie::APlayer> >&  Indie::EntityManager::getPlayerList() {
     Indie::EntityManager    *entityManager = getEntityManager();
 
     if (entityManager)
         return entityManager->_enemyList;
-    throw std::exception();
-}
+    throw EntityManagerException();}
 
 void    Indie::EntityManager::addBomb(Indie::Bomb *bomb) {
     Indie::EntityManager    *entityManager = getEntityManager();
@@ -77,8 +76,7 @@ void    Indie::EntityManager::addBomb(Indie::Bomb *bomb) {
         entityManager->_bombList.push_back(std::unique_ptr<Indie::Bomb>(bomb));
         return ;
     }
-    throw std::exception();
-}
+    throw EntityManagerException();}
 
 std::vector<std::unique_ptr<Indie::Bomb> >& Indie::EntityManager::getBombList() {
     Indie::EntityManager    *entityManager = getEntityManager();
@@ -86,7 +84,7 @@ std::vector<std::unique_ptr<Indie::Bomb> >& Indie::EntityManager::getBombList() 
     if (entityManager) {
         return entityManager->_bombList;
     }
-    throw std::exception();
+    throw EntityManagerException();
 }
 
 void    Indie::EntityManager::removeAllEntities(Ogre::SceneManager *sceneManager) {

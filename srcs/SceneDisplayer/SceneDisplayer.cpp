@@ -8,6 +8,7 @@
 #include "../Player/HumanPlayer.hh"
 #include "../DataManager/DataManager.h"
 #include "../UserManager/User.hh"
+#include "../Exception/Exception.hh"
 
 Indie::SceneDisplayer::SceneDisplayer(Ogre::SceneManager *sceneManager) {
     mSceneManager = sceneManager;
@@ -27,7 +28,7 @@ void Indie::SceneDisplayer::initScene(RootViewController& delegate) {
     DataManager *dataManager = Indie::DataManager::getSingloton();
     Ogre::Vector3   posPlayer = dataManager->getPlayerStart(User::getUser()->getLogName(), success);
     if (!success)
-        throw std::exception();
+        throw GameException();
     EntityManager::createHuman(mSceneManager, Ogre::Vector3(posPlayer.x, 25, posPlayer.z), User::getUser()->getLogName());
     initEventRegister();
     _thread = std::unique_ptr<std::thread>(new std::thread(&Indie::SceneDisplayer::updaterThread, this));

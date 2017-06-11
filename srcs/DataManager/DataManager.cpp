@@ -9,6 +9,7 @@
 #include "DataManager.h"
 #include "../Entities/EntityManager.hh"
 #include "../UserManager/User.hh"
+#include "../Exception/Exception.hh"
 
 Indie::DataManager::DataManager(const std::string& ip, int port) : _ip(ip), _port(port)  {
 #ifdef WIN32
@@ -21,7 +22,7 @@ Indie::DataManager::DataManager(const std::string& ip, int port) : _ip(ip), _por
     }
 #endif
     if ((_sockfd = socket(AF_INET, SOCK_DGRAM, 0)) == -1)
-        throw std::exception();
+        throw NetworkException();
     _serv.sin_family = AF_INET;
     _serv.sin_port = htons(_port);
     _serv.sin_addr.s_addr = inet_addr(_ip.c_str());
@@ -361,9 +362,9 @@ std::vector<std::string>    Indie::DataManager::sendCommand(std::string const& r
     client_size = sizeof(_client);
     server_size = sizeof(_serv);
     if (sendto(_sockfd, buf, sizeof(buf), 0, reinterpret_cast<struct sockaddr *>(&_serv), server_size) == -1)
-        throw std::exception();
+        throw NetworkException();
     if ((ret = recvfrom(_sockfd, buf, sizeof(buf), 0, reinterpret_cast<struct sockaddr *>(&_client), &client_size)) == -1)
-        throw std::exception();
+        throw NetworkException();
     buf[ret] = 0;
     return getTokenList(buf);
 }

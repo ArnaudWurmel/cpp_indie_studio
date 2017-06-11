@@ -7,6 +7,7 @@
 #include <iostream>
 #include <sstream>
 #include "ConfParser.hh"
+#include "../../srcs/Exception/Exception.hh"
 
 Indie::ConfParser    *Indie::ConfParser::getSingloton(bool reset) {
     static Indie::ConfParser    *confParser = NULL;
@@ -48,16 +49,16 @@ std::string    Indie::ConfParser::getContentForSection(std::string const& sectio
             if (!inSection && !line.compare("[" + section + "]"))
                 inSection = true;
             else if (!line.compare("[" + section + "]"))
-                throw std::exception();
+                throw Indie::FileParsingError();
             if (inSection && !line.compare("[/" + section + "]"))
                 end = true;
             else if (!inSection && !line.compare("[/" + section + "]"))
-                throw std::exception();
+                throw Indie::FileParsingError();
         }
         file.close();
     }
     if (res.size() == 0)
-        throw std::exception();
+        throw Indie::FileParsingError();
     return res;
 }
 
@@ -70,19 +71,19 @@ std::pair<std::string, std::string> Indie::ConfParser::getKeyValue(std::string c
         ++it;
     }
     if (it == line.end())
-        throw std::exception();
+        throw Indie::FileParsingError();
     ++it;
     if (*it != '\"')
-        throw std::exception();
+        throw Indie::FileParsingError();
     ++it;
     if (it == line.end())
-        throw std::exception();
+        throw Indie::FileParsingError();
     while (it != line.end() && *it != '\"') {
         ret.second += *it;
         ++it;
     }
     if (it == line.end())
-        throw std::exception();
+        throw Indie::FileParsingError();
     return ret;
 }
 
@@ -90,7 +91,7 @@ void    Indie::ConfParser::setPort(std::string const& line) {
     int port = std::atoi(line.c_str());
 
     if (port <= 0)
-        throw std::exception();
+        throw Indie::FileParsingError();
     _port = port;
 }
 
@@ -166,7 +167,7 @@ void    Indie::ConfParser::setScoreForUser(Router::User& user, std::string const
     if (scoreStream.is_open()) {
         scoreStream.read(reinterpret_cast<char *>(&header), sizeof(header));
         if (header.magicNumber != MAGIC_NUMBER || header.scoreValue < 0)
-            throw std::exception();
+            throw Indie::FileParsingError();
         user.scoreFilePath = scoreFile;
         user.score = header.scoreValue;
         std::cout << user.score << std::endl;
