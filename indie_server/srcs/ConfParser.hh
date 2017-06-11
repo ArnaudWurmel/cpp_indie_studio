@@ -32,6 +32,7 @@ namespace Indie {
     public:
         unsigned int    getPort() const;
         std::vector<Router::User> const&    getUserList() const;
+        void            updateUserScoreFile(Router::User const&);
 
     private:
         void    loadServerConf();

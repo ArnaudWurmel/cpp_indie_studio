@@ -2,6 +2,7 @@
 // Created by wurmel_a on 27/05/17.
 //
 
+#include <iostream>
 #include "EntityManager.hh"
 #include "ExplosableEntity.hh"
 

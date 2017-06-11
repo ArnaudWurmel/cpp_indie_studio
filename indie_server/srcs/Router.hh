@@ -20,6 +20,7 @@ namespace   Indie {
 
             std::string username;
             std::string password;
+            std::string scoreFilePath;
             size_t      score;
         };
 
