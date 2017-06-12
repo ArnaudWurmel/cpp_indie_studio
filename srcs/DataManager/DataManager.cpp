@@ -230,8 +230,6 @@ void    Indie::DataManager::addBomb(unsigned int roomId, std::string const& pId,
     std::vector<std::string>    tokenList = sendCommand(route);
     if (tokenList.size() == 0 || std::atoi(tokenList[0].c_str()) != 200)
         std::cerr << "add failed" << std::endl;
-    else
-        std::cout << "Bomb created" << std::endl;
 }
 
 void    Indie::DataManager::listBomb(unsigned int roomId, std::string const& pId) {

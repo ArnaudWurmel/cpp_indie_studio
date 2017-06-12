@@ -12,7 +12,7 @@ material Bomberman/Block
 	}
 }
 
-material Bomberman/BreakableBlock
+material Bomberman/BlockGround
 {
 	technique
 	{
@@ -21,7 +21,25 @@ material Bomberman/BreakableBlock
 
 			texture_unit
 			{
+				texture ground.png
+			}
+		}
+	}
+}
+
+material Bomberman/BreakableBlock
+{
+	technique
+	{
+		pass
+		{
+            lighting off
+            scene_blend alpha_blend
+            depth_write off
+			texture_unit
+			{
 				texture cubeBreakable.png
+				alpha_op_ex source1 src_manual src_texture 0.9
 			}
 		}
 	}

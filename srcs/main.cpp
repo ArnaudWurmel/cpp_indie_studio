@@ -23,7 +23,7 @@
     Indie::SoundManager *soundManager = Indie::SoundManager::getSingloton();
     Indie::DataManager  *dataManager = Indie::DataManager::getSingloton("192.168.1.1", 4242);
 
-    soundManager->loadSound("resources/sound/main.ogg");
+//    soundManager->loadSound("resources/sound/main.ogg");
     std::srand(std::time(0));
     Indie::RootViewController    *rootViewController = new Indie::RootViewController();
     try {

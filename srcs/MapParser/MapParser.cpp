@@ -53,6 +53,7 @@ void    Indie::MapParser::loadMap(std::string const& mapPath)
                 lineVec.push_back(MapParser::TileType::EMPTY);
             ++itString;
         }
+        std::cout << lineVec.size() << std::endl;
         _map.push_back(lineVec);
         ++it;
     }

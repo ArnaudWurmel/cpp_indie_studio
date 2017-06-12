@@ -19,7 +19,7 @@ Indie::SceneDisplayer::SceneDisplayer(Ogre::SceneManager *sceneManager) {
 void Indie::SceneDisplayer::initScene(RootViewController& delegate) {
     MapParser&  mapParser = MapParser::getMapParser("resources/maps/level0");
 
-    this->createGround();
+//    this->createGround();
     _map = mapParser.getMap();
     if (_map.size() > 0) {
         this->createMap();
@@ -30,7 +30,7 @@ void Indie::SceneDisplayer::initScene(RootViewController& delegate) {
     Ogre::Vector3   posPlayer = dataManager->getPlayerStart(User::getUser()->getLogName(), success);
     if (!success)
         throw GameException();
-    EntityManager::createHuman(mSceneManager, Ogre::Vector3(posPlayer.x, 25, posPlayer.z), User::getUser()->getLogName());
+    EntityManager::createHuman(mSceneManager, Ogre::Vector3(posPlayer.x, 32, posPlayer.z), User::getUser()->getLogName());
     /*try {
         EntityManager::createEnemy(mSceneManager, Ogre::Vector3(0, 0, 0), "AI001", true);
     } catch (std::exception& e) {
@@ -41,7 +41,8 @@ void Indie::SceneDisplayer::initScene(RootViewController& delegate) {
 }
 
 void Indie::SceneDisplayer::createGround() {
-    Ogre::Plane plane(Ogre::Vector3::UNIT_Y, 0);
+
+   /* Ogre::Plane plane(Ogre::Vector3::UNIT_Y, 0);
     Ogre::MeshManager::getSingleton().createPlane(
             "ground",
             Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
@@ -54,7 +55,7 @@ void Indie::SceneDisplayer::createGround() {
     mGroundEntity = mSceneManager->createEntity("ground");
     mSceneManager->getRootSceneNode()->createChildSceneNode()->attachObject(mGroundEntity);
     mGroundEntity->setCastShadows(false);
-    mGroundEntity->setMaterialName("Bomberman/Ground");
+    mGroundEntity->setMaterialName("Bomberman/Ground");*/
 }
 
 void Indie::SceneDisplayer::createMap() {
@@ -76,6 +77,8 @@ void Indie::SceneDisplayer::createMap() {
             long x = _map.size() * 100 / 2 - (i * 100);
             long z = ((*it).size() * 100) / 2 - (100 * j);
             EntityManager::createEntity(converter[*it_line], mSceneManager, Ogre::Vector3(x, 50, z));
+            _groundEntityList.push_back(std::unique_ptr<AEntity>(new Indie::Block(mSceneManager, Ogre::Vector3(x, -51, z))));
+            _groundEntityList.back()->setMaterialName("Bomberman/BlockGround");
             ++it_line;
             ++j;
         }
@@ -255,9 +258,16 @@ void    Indie::SceneDisplayer::setFPSCameraPosition() {
 Indie::SceneDisplayer::~SceneDisplayer() {
     _locker.lock();
     _thread->join();
-    mSceneManager->destroyEntity(mGroundEntity);
+    //mSceneManager->destroyEntity(mGroundEntity);
     EntityManager::removeAllEntities(mSceneManager);
-    Ogre::MeshManager::getSingleton().remove("ground");
+    //Ogre::MeshManager::getSingleton().remove("ground");
+    std::vector<std::unique_ptr<AEntity> >::iterator    it = _groundEntityList.begin();
+
+    while (it != _groundEntityList.end()) {
+        (*it)->destroyEntity(mSceneManager);
+        ++it;
+    }
+    _groundEntityList.clear();
 }
 
 /**********************************

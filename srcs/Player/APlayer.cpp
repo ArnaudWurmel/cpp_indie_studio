@@ -83,6 +83,12 @@ bool const&    Indie::APlayer::isUpdate() const {
 
 void    Indie::APlayer::destroyEntity(Ogre::SceneManager *sceneManager) {
     removeAllParticles(sceneManager);
+    std::vector<std::unique_ptr<Bomb> >::iterator   it = _bombList.begin();
+
+    while (it != _bombList.end()) {
+        (*it)->destroyEntity(sceneManager);
+        ++it;
+    }
     Indie::AEntity::destroyEntity(sceneManager);
 }
 

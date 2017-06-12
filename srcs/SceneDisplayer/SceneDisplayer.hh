@@ -101,6 +101,9 @@ namespace   Indie
     private:
         bool    mToggleScoreboard;
         MyGUI::MultiListBox  *mScoreboard;
+
+    private:
+        std::vector<std::unique_ptr<AEntity> >  _groundEntityList;
     };
 }
 

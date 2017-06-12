@@ -11,15 +11,39 @@
 Ogre::Vector3   Indie::Bomb::getBombPosition(const APlayer& player) {
     Ogre::Vector3   ret;
 
-    if (player.getPosition().x > 0)
-        ret.x = player.getPosition().x - (static_cast<int>(player.getPosition().x) % 100) + 50;
-    else
-        ret.x = player.getPosition().x - (static_cast<int>(player.getPosition().x) % 100) - 50;
-    ret.y = 50;
-    if (player.getPosition().z > 0)
-        ret.z = player.getPosition().z - (static_cast<int>(player.getPosition().z) % 100) + 50;
-    else
-        ret.z = player.getPosition().z - (static_cast<int>(player.getPosition().z) % 100) - 50;
+    if (player.getPosition().x >= 0) {
+        ret.x = player.getPosition().x - (static_cast<int>(player.getPosition().x) % 100);
+        if (MapParser::getMapParser("").getMap().size() % 2)
+            ret.x += 50;
+        else if (static_cast<int>(player.getPosition().x) % 100 >= 50) {
+            ret.x += 100;
+        }
+    }
+    else {
+        ret.x = player.getPosition().x - (static_cast<int>(player.getPosition().x) % 100);
+        if (MapParser::getMapParser("").getMap().size() % 2)
+            ret.x -= 50;
+        else if (static_cast<int>(player.getPosition().x) % 100 <= -50) {
+            ret.x -= 100;
+        }
+    }
+    if (player.getPosition().z >= 0) {
+        ret.z = player.getPosition().z - (static_cast<int>(player.getPosition().z) % 100);
+        if ((*MapParser::getMapParser("").getMap().begin()).size() % 2)
+            ret.z += 50;
+        else if (static_cast<int>(player.getPosition().z) % 100 >= 50) {
+            ret.z += 100;
+        }
+    }
+    else {
+        ret.z = player.getPosition().z - (static_cast<int>(player.getPosition().z) % 100);
+        if ((*MapParser::getMapParser("").getMap().begin()).size() % 2)
+            ret.z -= 50;
+        else if (static_cast<int>(player.getPosition().z) % 100 <= -50)
+            ret.z -= 100;
+    }
+    ret.x = static_cast<int>(ret.x);
+    ret.z = static_cast<int>(ret.z);
     ret.y = 35;
     return (ret);
 }
