@@ -365,21 +365,16 @@ void    Indie::DataManager::getPowerUpList() {
         return ;
     unsigned int    i = 1;
     while (i < tokenList.size()) {
-         //std::cout << tokenList[i] << std::endl;
         std::vector<std::unique_ptr<PowerUp> >::iterator it = EntityManager::getPowerUpList().begin();
         bool    founded = false;
 
         while (!founded && it != EntityManager::getPowerUpList().end()) {
             if ((*it)->getID() == std::atoi(tokenList[i].c_str()))
-               // std::cout << "Founded" << std::endl;
                 founded = true;
             ++it;
         }
         if (!founded) {
-            std::cout << tokenList[i + 3] << std::endl;
-            //std::cout << tokenList[i + 3] << std::endl;
             if (!tokenList[i + 3].compare("2")) {
-                std::cout << "Speed buf added" << std::endl;
                 EntityManager::addBoost(new Indie::SpeedBoost(NULL, Ogre::Vector3(std::atoi(tokenList[i + 1].c_str()), 30, std::atoi(tokenList[i + 2].c_str())), std::atoi(tokenList[i].c_str())));
             }
             else if (!tokenList[i + 3].compare("1")) {

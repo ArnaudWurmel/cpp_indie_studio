@@ -110,15 +110,10 @@ void    Indie::RootViewController::loadResources() {
 }
 
 Indie::RootViewController::~RootViewController() {
+    mEventListener->setUpEventRegister(NULL);
     while (mControllerList.size() > 0) {
         mControllerList.back()->viewShouldDisapear();
         mControllerList.pop_back();
-        if (mControllerList.size() > 0) {
-            mEventListener->setUpEventRegister(mControllerList.back().get());
-            mControllerList.back()->viewShouldReapear();
-        }
-        else
-            mEventListener->setUpEventRegister(this);
     }
     mControllerList.clear();
     mGUI->shutdown();

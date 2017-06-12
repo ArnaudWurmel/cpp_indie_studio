@@ -21,8 +21,12 @@ namespace   Indie {
         void    viewShouldReapear();
 
     private:
+        void    returnBack(MyGUI::WidgetPtr);
+
+    private:
         MyGUI::TextBox      *mTextBox;
         MyGUI::MultiListBox  *mScoreboard;
+        MyGUI::ButtonPtr    mButton;
 
     private:
         std::vector<std::pair<std::string, int> >   _data;
