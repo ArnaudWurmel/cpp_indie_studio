@@ -51,6 +51,9 @@ namespace   Indie
         AI(Ogre::Vector3 const& entityPos, Ogre::SceneManager *sceneManager, std::string const& pId, bool mainP = false);
         ~AI();
 
+    public:
+        bool    updateFromLoop(Ogre::SceneManager *);
+
     private:
         bool    isForward();
         bool    isBackward();

@@ -9,6 +9,9 @@
 #include "AI.hh"
 #include "../MapParser/MapParser.hh"
 #include "../Entities/EntityManager.hh"
+#include "../DataManager/DataManager.h"
+#include "../UserManager/User.hh"
+#include "../Exception/Exception.hh"
 
 
 /*
@@ -44,8 +47,27 @@ Indie::AI::AI(Ogre::Vector3 const &entityPos, Ogre::SceneManager *sceneManager, 
     mTransformation = Ogre::Vector3(50.0f, 50.0f, 50.0f);
     addParticlesColor("Particles/Pink");
     addParticlesColor("Particles/Grey");
+    if (!DataManager::getSingloton()->joinRoom(pId, User::getUser()->getRoomId()))
+        throw GameException();
+    bool    success = false;
+    DataManager::getSingloton()->getPlayerStart(pId, success);
+    if (!success)
+        throw GameException();
     _pId = pId;
     createMap();
+}
+
+bool    Indie::AI::updateFromLoop(Ogre::SceneManager *sceneManager) {
+    resetMap();
+    addBlock(EntityManager::getEntityList());
+    addPlayers(EntityManager::getPlayerList(), EntityManager::getMainPlayer());
+    if (findEnemy()) {
+        findPath();
+        if (_path.size()) {
+
+        }
+    }
+    return APlayer::updateFromLoop(sceneManager);
 }
 
 /*

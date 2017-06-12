@@ -31,6 +31,11 @@ void Indie::SceneDisplayer::initScene(RootViewController& delegate) {
     if (!success)
         throw GameException();
     EntityManager::createHuman(mSceneManager, Ogre::Vector3(posPlayer.x, 25, posPlayer.z), User::getUser()->getLogName());
+    try {
+        EntityManager::createEnemy(mSceneManager, Ogre::Vector3(0, 0, 0), "AI001", true);
+    } catch (std::exception& e) {
+        std::cout << e.what() << std::endl;
+    }
     initEventRegister();
     _thread = std::unique_ptr<std::thread>(new std::thread(&Indie::SceneDisplayer::updaterThread, this));
 }
