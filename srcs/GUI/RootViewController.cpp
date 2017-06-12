@@ -114,6 +114,9 @@ Indie::RootViewController::~RootViewController() {
     while (mControllerList.size() > 0) {
         mControllerList.back()->viewShouldDisapear();
         mControllerList.pop_back();
+        if (mControllerList.size() > 0) {
+            mControllerList.back()->viewShouldReapear();
+        }
     }
     mControllerList.clear();
     mGUI->shutdown();

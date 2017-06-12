@@ -2,14 +2,21 @@
 // Created by wurmel_a on 29/05/17.
 //
 
+#include <unistd.h>
 #include <iostream>
 #include <sstream>
 #include "Room.hh"
 #include "Server.h"
+#include "ConfParser.hh"
+#include "../../srcs/Exception/Exception.hh"
 
 unsigned int Indie::Room::roomId = 0;
 
 Indie::Room::Room() {
+    _mapList = ConfParser::getSingloton()->getMapList();
+    if (_mapList.size() <= 0)
+        throw GameException();
+    _currentMap = _mapList.begin();
     _roomId = roomId;
     Indie::Room::roomId += 1;
     _running = false;
@@ -67,8 +74,14 @@ bool    Indie::Room::getMap(Server& server) {
 bool    Indie::Room::runGame() {
     if (_running)
         return false;
-    _running = true;
-    _game = std::unique_ptr<Indie::Game>(new Indie::Game(_playerList));
+    try {
+        Indie::Game *game = new Indie::Game(_playerList, *_currentMap);
+        _game = std::unique_ptr<Indie::Game>(game);
+        _running = true;
+    } catch (std::exception& e) {
+        std::cout << e.what();
+        _running = false;
+    }
     return true;
 }
 

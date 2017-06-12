@@ -22,7 +22,7 @@ namespace   Indie
         static GameManager* getSingleton(bool reset = false);
 
     public:
-        unsigned int const& createRoom();
+        unsigned int const& createRoom(bool&);
         bool joinRoom(unsigned const&, std::string const&);
         std::vector<std::unique_ptr<Indie::Room> > const&   getRoomList();
         void    exitRoom(Router::User&);

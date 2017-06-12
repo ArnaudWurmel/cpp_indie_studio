@@ -8,6 +8,7 @@
 #include <sstream>
 #include "ConfParser.hh"
 #include "../../srcs/Exception/Exception.hh"
+#include <unistd.h>
 
 Indie::ConfParser    *Indie::ConfParser::getSingloton(bool reset) {
     static Indie::ConfParser    *confParser = NULL;
@@ -146,6 +147,7 @@ void    Indie::ConfParser::loadServerConf() {
 
     functionPtr.insert(std::make_pair("PORT", &Indie::ConfParser::setPort));
     functionPtr.insert(std::make_pair("USERS", &Indie::ConfParser::loadUserList));
+    functionPtr.insert(std::make_pair("MAP_LIST", &Indie::ConfParser::loadMapList));
     while (std::getline(ss, line)) {
         std::pair<std::string, std::string> keyValue = getKeyValue(line);
 
@@ -185,6 +187,29 @@ void    Indie::ConfParser::updateUserScoreFile(Router::User const& user) {
         scoreStream.write(reinterpret_cast<char *>(&header), sizeof(header));
         scoreStream.close();
     }
+}
+
+void    Indie::ConfParser::loadMapList(std::string const& line) {
+    std::string::const_iterator it = line.begin();
+    std::string mapFile;
+
+    while (it != line.end()) {
+        if ((*it) == ';') {
+            if (access(("maps/" + mapFile).c_str(), R_OK) == 0)
+                _mapList.push_back("maps/" + mapFile);
+            mapFile.clear();
+        }
+        else {
+            mapFile.push_back(*it);
+        }
+        ++it;
+    }
+    if (_mapList.size() <= 0)
+        throw GameException();
+}
+
+std::vector<std::string> const&    Indie::ConfParser::getMapList() const {
+    return _mapList;
 }
 
 Indie::ConfParser::~ConfParser() {}

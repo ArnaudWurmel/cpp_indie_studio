@@ -107,6 +107,13 @@ void    Indie::EntityManager::removeAllEntities(Ogre::SceneManager *sceneManager
         (*itB)->destroyEntity(sceneManager);
         entityManager->_bombList.erase(itB);
     }
+
+    std::vector<std::unique_ptr<PowerUp> >::iterator    itPU = entityManager->_powerUpList.begin();
+
+    while (itPU != entityManager->_powerUpList.end()) {
+        (*itPU)->destroyEntity(sceneManager);
+        entityManager->_powerUpList.erase(itPU);
+    }
     entityManager->_mainPlayer->destroyEntity(sceneManager);
     entityManager->_mainPlayer.reset();
 }

@@ -77,8 +77,11 @@ bool Indie::Router::createRoom(std::vector<std::string> const& tokenList, Server
         return false;
 
     GameManager *gameManager = GameManager::getSingleton();
+    bool    success = true;
 
-    unsigned int    roomId = gameManager->createRoom();
+    unsigned int    roomId = gameManager->createRoom(success);
+    if (!success)
+        return false;
     bool state = gameManager->joinRoom(roomId, tokenList[1]);
     gameManager->release();
     if (state) {

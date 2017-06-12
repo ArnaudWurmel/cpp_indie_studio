@@ -6,6 +6,7 @@
 #include <sstream>
 #include <algorithm>
 #include "Game.hh"
+#include "../../srcs/Exception/Exception.hh"
 
 unsigned int    Indie::Game::Bomb::bombId = 0;
 unsigned int    Indie::Game::PowerUp::powerUpId = 0;
@@ -39,11 +40,13 @@ Indie::Game::PowerUp::PowerUp(std::pair<int, int> const& powerPos) {
     powerUpId += 1;
 }
 
-Indie::Game::Game(std::vector<std::string> const& playerList) {
+Indie::Game::Game(std::vector<std::string> const& playerList, std::string const& mapFile) {
     std::vector<std::string>::const_iterator  it;
 
-    MapParser   mapParser("maps/level0");
+    MapParser   mapParser(mapFile);
     _map = mapParser.getMap();
+    if (_map.size() == 0)
+        throw GameException();
     it = playerList.begin();
     while (it != playerList.end()) {
         _playerList.push_back(std::unique_ptr<Player>(new Player(*it)));
@@ -98,7 +101,7 @@ bool    Indie::Game::findPosForPlayer(std::unique_ptr<Player>& player) {
 
         while (cell != (*it).end()) {
             if (*cell == 'P') {
-                player->y = (_map.size() * 100 / 2) - (y * 100);
+                player->y = ((_map.size() * 100 / 2) - (y * 100));
                 player->x = ((*it).size() * 100 / 2) - (x * 100);
                 *cell = ' ';
                 return true;
@@ -197,7 +200,7 @@ void    Indie::Game::getAllPowerUpAvailablePos() {
             if ((*itString) == '0') {
                 long gamePos_x = ((*it).size() * 100 / 2) - (x * 100);
                 long gamePos_y = (_map.size() * 100 / 2) - (y * 100);
-                _powerUpPos.push_back(std::make_pair(gamePos_x, gamePos_y));
+                _powerUpPos.push_back(std::make_pair(gamePos_y, gamePos_x));
             }
             ++itString;
             ++x;

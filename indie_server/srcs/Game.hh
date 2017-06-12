@@ -58,7 +58,7 @@ namespace   Indie {
             std::pair<int, int> pos;
         };
     public:
-        Game(std::vector<std::string> const&);
+        Game(std::vector<std::string> const&, std::string const&);
         ~Game();
 
     public:

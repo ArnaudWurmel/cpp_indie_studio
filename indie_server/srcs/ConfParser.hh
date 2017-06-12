@@ -33,6 +33,7 @@ namespace Indie {
         unsigned int    getPort() const;
         std::vector<Router::User> const&    getUserList() const;
         void            updateUserScoreFile(Router::User const&);
+        std::vector<std::string> const& getMapList() const;
 
     private:
         void    loadServerConf();
@@ -42,6 +43,7 @@ namespace Indie {
     private:
         void    setPort(std::string const&);
         void    loadUserList(std::string const&);
+        void    loadMapList(std::string const&);
 
     private:
         void    setPasswordForUser(Router::User&, std::string const&) const;
@@ -56,6 +58,7 @@ namespace Indie {
     private:
         std::string     _filepath;
         std::vector<Router::User>   _userList;
+        std::vector<std::string>    _mapList;
     };
 }
 

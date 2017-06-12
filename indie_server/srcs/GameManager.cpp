@@ -24,11 +24,16 @@ Indie::GameManager::GameManager() {
 
 }
 
-unsigned int const& Indie::GameManager::createRoom() {
-    Indie::Room *room = new Indie::Room();
+unsigned int const& Indie::GameManager::createRoom(bool& success) {
+    try {
+        Indie::Room *room = new Indie::Room();
 
-    _roomList.push_back(std::unique_ptr<Indie::Room>(room));
-    return room->getRoomId();
+        _roomList.push_back(std::unique_ptr<Indie::Room>(room));
+        return room->getRoomId();
+    } catch (std::exception& e) {
+        success = false;
+        std::cout << e.what() << std::endl;
+    }
 }
 
 bool Indie::GameManager::joinRoom(unsigned int const& roomId, std::string const& pName) {

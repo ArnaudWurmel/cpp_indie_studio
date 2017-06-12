@@ -38,6 +38,8 @@ namespace Indie
         static unsigned int roomId;
 
     private:
+        std::vector<std::string>::iterator  _currentMap;
+        std::vector<std::string>    _mapList;
         std::vector<std::string>   _playerList;
         unsigned int                _roomId;
         bool    _running;
