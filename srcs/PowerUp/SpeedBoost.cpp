@@ -4,8 +4,8 @@
 
 #include "SpeedBoost.hh"
 
-Indie::SpeedBoost::SpeedBoost(Ogre::SceneManager *sceneManager, Ogre::Vector3 const &entityPos, int id) : PowerUp(sceneManager, "BombUp.mesh", entityPos, id) {
-    mTransformation = Ogre::Vector3(1.5f, 1.5f, 1.5f);
+Indie::SpeedBoost::SpeedBoost(Ogre::SceneManager *sceneManager, Ogre::Vector3 const &entityPos, int id) : PowerUp(sceneManager, "SpeedUp.mesh", entityPos, id) {
+    mTransformation = Ogre::Vector3(0.5f, 0.5f, 0.5f);
     addParticlesColor("Particles/Vert");
 }
 

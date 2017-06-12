@@ -13,6 +13,7 @@
 #include "../PowerUp/SpeedBoost.hh"
 #include "../PowerUp/SpeedBoost.hh"
 #include "../PowerUp/ExtendBoost.hh"
+#include "../PowerUp/BombUp.hh"
 
 Indie::DataManager::DataManager(const std::string& ip, int port) : _ip(ip), _port(port)  {
 #ifdef WIN32
@@ -379,6 +380,9 @@ void    Indie::DataManager::getPowerUpList() {
             }
             else if (!tokenList[i + 3].compare("1")) {
                 EntityManager::addBoost(new Indie::ExtendBoost(NULL, Ogre::Vector3(std::atoi(tokenList[i + 1].c_str()), 30, std::atoi(tokenList[i + 2].c_str())), std::atoi(tokenList[i].c_str())));
+            }
+            else if (!tokenList[i + 3].compare("0")) {
+                EntityManager::addBoost(new Indie::BombUp(NULL, Ogre::Vector3(std::atoi(tokenList[i + 1].c_str()), 30, std::atoi(tokenList[i + 2].c_str())), std::atoi(tokenList[i].c_str())));
             }
         }
         i += 4;
