@@ -444,4 +444,6 @@ bool    Indie::AI::isANode(const std::pair<unsigned int, unsigned int> &pos) {
 **  Destructeur
 */
 
-Indie::AI::~AI() {}
+Indie::AI::~AI() {
+    DataManager::getSingloton()->quitRoom(_pId);
+}
