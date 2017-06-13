@@ -30,14 +30,6 @@ Indie::DataManager::DataManager(const std::string& ip, int port) : _ip(ip), _por
     _serv.sin_family = AF_INET;
     _serv.sin_port = htons(_port);
     _serv.sin_addr.s_addr = inet_addr(_ip.c_str());
-
-    struct timeval timeout;
-    timeout.tv_sec = 10;
-    timeout.tv_usec = 0;
-    if (setsockopt (_sockfd, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout, sizeof(timeout)) < 0)
-      throw NetworkException();
-    if (setsockopt (_sockfd, SOL_SOCKET, SO_SNDTIMEO, (char *)&timeout, sizeof(timeout)) < 0)
-      throw NetworkException();
 }
 
 Indie::DataManager::~DataManager() {
@@ -124,14 +116,14 @@ bool                            Indie::DataManager::getMap(unsigned int roomId, 
 
 Ogre::Vector3 Indie::DataManager::getPlayerStart(std::string pName, bool& success) {
     std::string         tmp = "/game/getPlayerPos ";
-    char                buf[4096];
+    char                buf[4097];
     int                 ret;
     socklen_t           client_size;
     socklen_t           server_size;
 
     tmp += pName;
     bzero(buf, 4096);
-    std::strncpy(buf, tmp.c_str(), 4096);
+    std::strncpy(buf, tmp.c_str(), 4095);
     client_size = sizeof(_client);
     server_size = sizeof(_serv);
     if (sendto(_sockfd, buf, sizeof(buf), 0, reinterpret_cast<struct sockaddr *>(&_serv), server_size) == -1) {
@@ -142,7 +134,6 @@ Ogre::Vector3 Indie::DataManager::getPlayerStart(std::string pName, bool& succes
         success = false;
         return Ogre::Vector3(0, 0, 0);
     }
-    buf[ret] = 0;
     if (std::atoi(buf) != 200) {
         success = false;
         return Ogre::Vector3();
@@ -390,7 +381,7 @@ void    Indie::DataManager::getPowerUpList() {
             ++it;
         }
         if (!founded) {
-           /* if (!tokenList[i + 3].compare("2")) {
+            if (!tokenList[i + 3].compare("2")) {
                 EntityManager::addBoost(new Indie::SpeedBoost(NULL, Ogre::Vector3(std::atoi(tokenList[i + 1].c_str()), 30, std::atoi(tokenList[i + 2].c_str())), std::atoi(tokenList[i].c_str())));
             }
             else if (!tokenList[i + 3].compare("1")) {
@@ -398,7 +389,7 @@ void    Indie::DataManager::getPowerUpList() {
             }
             else {
                 EntityManager::addBoost(new Indie::BombUp(NULL, Ogre::Vector3(std::atoi(tokenList[i + 1].c_str()), 30, std::atoi(tokenList[i + 2].c_str())), std::atoi(tokenList[i].c_str())));
-            }*/
+            }
         }
         i += 4;
     }
@@ -422,13 +413,13 @@ bool    Indie::DataManager::takePowerUp(int powerUpId) {
 }
 
 std::vector<std::string>    Indie::DataManager::sendCommand(std::string const& route) {
-    char                buf[4096];
+    char                buf[4097];
     int                 ret;
     socklen_t           client_size;
     socklen_t           server_size;
 
     bzero(buf, 4096);
-    std::strncpy(buf, route.c_str(), 4095);
+    std::strncpy(buf, route.c_str(), 4096);
     client_size = sizeof(_client);
     server_size = sizeof(_serv);
     if (sendto(_sockfd, buf, 4096, 0, reinterpret_cast<struct sockaddr *>(&_serv), server_size) == -1)
