@@ -16,6 +16,12 @@ namespace   Indie {
     public:
         virtual bool    updateFromLoop(Ogre::SceneManager *);
         virtual bool    hittedByExplosion() const;
+        void    explode(Ogre::SceneManager *);
+        virtual void    destroyEntity(Ogre::SceneManager *);
+
+    public:
+        bool    isTaken() const;
+        void    setTaken(bool);
 
     public:
         virtual void    boostPlayer(APlayer&, Ogre::SceneManager *) = 0;
@@ -28,6 +34,7 @@ namespace   Indie {
 
     private:
         size_t  _mTime;
+        bool    _isTaken;
     };
 }
 

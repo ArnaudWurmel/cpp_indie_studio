@@ -43,8 +43,10 @@ void    Indie::EventListener::initOIS() {
 void    Indie::EventListener::setUpEventRegister(AEventRegister *eventRegister) {
     Ogre::LogManager::getSingletonPtr()->logMessage("Event register setted.");
     mEventRegister = eventRegister;
-    mKeyboard->setEventCallback(mEventRegister);
-    mMouse->setEventCallback(mEventRegister);
+    if (mEventRegister != NULL) {
+        mKeyboard->setEventCallback(mEventRegister);
+        mMouse->setEventCallback(mEventRegister);
+    }
 }
 
 /***************************************
@@ -81,8 +83,10 @@ bool Indie::EventListener::frameRenderingQueued(const Ogre::FrameEvent &evt) {
 
     if(mRenderWindow->isClosed())
         return false;
-    mKeyboard->capture();
-    mMouse->capture();
+    if (mEventRegister) {
+        mKeyboard->capture();
+        mMouse->capture();
+    }
     return true;
 }
 

@@ -11,7 +11,6 @@
 #include "../UserManager/User.hh"
 #include "../Exception/Exception.hh"
 #include "../PowerUp/SpeedBoost.hh"
-#include "../PowerUp/SpeedBoost.hh"
 #include "../PowerUp/ExtendBoost.hh"
 #include "../PowerUp/BombUp.hh"
 
@@ -362,14 +361,22 @@ void    Indie::DataManager::getPowerUpList() {
 
     if (tokenList.size() - 1 <= 0 || (tokenList.size() - 1) % 4 != 0)
         return ;
+    std::vector<std::unique_ptr<PowerUp> >::iterator it = EntityManager::getPowerUpList().begin();
+
+    while (it != EntityManager::getPowerUpList().end()) {
+        (*it)->setTaken(true);
+        ++it;
+    }
     unsigned int    i = 1;
     while (i < tokenList.size()) {
-        std::vector<std::unique_ptr<PowerUp> >::iterator it = EntityManager::getPowerUpList().begin();
+        it = EntityManager::getPowerUpList().begin();
         bool    founded = false;
 
         while (!founded && it != EntityManager::getPowerUpList().end()) {
-            if ((*it)->getID() == std::atoi(tokenList[i].c_str()))
+            if ((*it)->getID() == std::atoi(tokenList[i].c_str())) {
                 founded = true;
+                (*it)->setTaken(false);
+            }
             ++it;
         }
         if (!founded) {
@@ -379,11 +386,18 @@ void    Indie::DataManager::getPowerUpList() {
             else if (!tokenList[i + 3].compare("1")) {
                 EntityManager::addBoost(new Indie::ExtendBoost(NULL, Ogre::Vector3(std::atoi(tokenList[i + 1].c_str()), 30, std::atoi(tokenList[i + 2].c_str())), std::atoi(tokenList[i].c_str())));
             }
-            else if (!tokenList[i + 3].compare("0")) {
+            else {
                 EntityManager::addBoost(new Indie::BombUp(NULL, Ogre::Vector3(std::atoi(tokenList[i + 1].c_str()), 30, std::atoi(tokenList[i + 2].c_str())), std::atoi(tokenList[i].c_str())));
             }
         }
         i += 4;
+    }
+    it = EntityManager::getPowerUpList().begin();
+    while (it != EntityManager::getPowerUpList().end()) {
+        if ((*it)->isTaken()) {
+            (*it)->explode(NULL);
+        }
+        ++it;
     }
 }
 
