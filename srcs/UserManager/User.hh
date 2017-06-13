@@ -21,7 +21,7 @@ namespace Indie {
         void    joinRoomId(int roomId);
 
     public:
-        static User    *getUser(std::string const& logName = "", std::string const& passwd = "");
+        static User    *getUser(std::string const& logName = "", std::string const& passwd = "", bool reset = false);
 
     private:
         std::string _logName;

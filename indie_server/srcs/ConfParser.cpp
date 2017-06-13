@@ -196,7 +196,7 @@ void    Indie::ConfParser::loadMapList(std::string const& line) {
     while (it != line.end()) {
         if ((*it) == ';') {
             if (access(("maps/" + mapFile).c_str(), R_OK) == 0)
-                _mapList.push_back("maps/" + mapFile);
+                _mapList.push_back(mapFile);
             mapFile.clear();
         }
         else {

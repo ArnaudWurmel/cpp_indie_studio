@@ -26,7 +26,7 @@ namespace Indie {
         virtual void    viewShouldReapear();
 
     private:
-        void    setUpMenu(unsigned int, unsigned int);
+        void    setUpMenu();
         void    selectedAction(MyGUI::ListBox *, size_t);
 
         /*
@@ -35,6 +35,7 @@ namespace Indie {
     private:
         void    returnToMenu();
         void    runGame();
+        void    changeMap();
 
     private:
         void    threadUpdate();
@@ -53,6 +54,7 @@ namespace Indie {
     private:
         bool    _isCreator;
         std::vector<std::string>    _playerList;
+        std::string                 _mapName;
         std::vector<std::pair<std::string, void (Indie::WaitingRoomViewController::*)()> > _functionPtr;
     };
 

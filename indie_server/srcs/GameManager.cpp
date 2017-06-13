@@ -63,6 +63,19 @@ std::vector<std::unique_ptr<Indie::Room> > const&   Indie::GameManager::getRoomL
     return _roomList;
 }
 
+bool    Indie::GameManager::nextMap(int roomId) {
+    std::vector<std::unique_ptr<Indie::Room> >::iterator    it = _roomList.begin();
+
+    while (it != _roomList.end()) {
+        if ((*it)->getRoomId() == roomId) {
+            (*it)->setNextMap();
+            return true;
+        }
+        ++it;
+    }
+    return false;
+}
+
 void    Indie::GameManager::exitRoom(Router::User& user) {
     std::vector<std::unique_ptr<Indie::Room> >::iterator  it = _roomList.begin();
 
@@ -158,6 +171,7 @@ bool    Indie::GameManager::listBomb(int roomId, std::string const& pId, Server&
         if ((*it)->getRoomId() == roomId) {
             return (*it)->listBomb(pId, server);
         }
+        ++it;
     }
 }
 
@@ -180,10 +194,13 @@ bool    Indie::GameManager::getRoomState(int roomId, Server& server) const {
 
     while (it != _roomList.end()) {
         if ((*it)->getRoomId() == roomId) {
+            std::string response = "200 ";
             if ((*it)->isRunning())
-                server.setResponse("200 1");
+                response += "1 ";
             else
-                server.setResponse("200 0");
+                response += "0 ";
+            response += (*it)->getCurrentMap();
+            server.setResponse(response);
             return true;
         }
         ++it;

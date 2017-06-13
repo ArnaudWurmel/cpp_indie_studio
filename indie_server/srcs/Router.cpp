@@ -21,6 +21,7 @@ const std::map<std::string, Indie::Router::cmdPtr> Indie::Router::fnc = {
         { "/room/getRoomList", &Indie::Router::getRoomList },
         { "/room/runGame", &Indie::Router::runGame },
         { "/room/getState", &Indie::Router::getRoomState },
+        { "/room/setNextMap", &Indie::Router::setNextMap },
         { "/game/getMap", &Indie::Router::getMap },
         { "/game/getPlayerPos", &Indie::Router::getPlayerPosition },
         { "/game/updatePlayer", &Indie::Router::updatePlayerPosition },
@@ -352,10 +353,27 @@ bool    Indie::Router::takePowerUp(std::vector<std::string> const& input, Server
     GameManager *gameManager = GameManager::getSingleton();
     bool    state = false;
     int roomId = std::atoi(input[1].c_str());
-    std::cout << roomId << std::endl;
     if (roomId >= 0) {
         state = gameManager->takePowerUp(roomId, std::atoi(input[2].c_str()));
-        server.setResponse("200 Success");
+        if (state)
+            server.setResponse("200 Success");
+    }
+    gameManager->release();
+    return state;
+}
+
+bool    Indie::Router::setNextMap(std::vector<std::string> const& input, Server& server) const {
+    if (input.size() != 2) {
+        return false;
+    }
+
+    GameManager *gameManager = GameManager::getSingleton();
+    bool    state = false;
+    int roomId = std::atoi(input[1].c_str());
+    if (roomId >= 0) {
+        state = gameManager->nextMap(roomId);
+        if (state)
+            server.setResponse("200 Success");
     }
     gameManager->release();
     return state;

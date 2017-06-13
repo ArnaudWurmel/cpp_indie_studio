@@ -60,7 +60,7 @@ bool                    Indie::DataManager::connect(const std::string& login, co
     std::vector<std::string>    tokenList = sendCommand(tmp);
     if (tokenList.size() == 0 || std::atoi(tokenList[0].c_str()) != 200)
         return false;
-    User::getUser(login, pass);
+    User::getUser(login, pass, true);
     return true;
 }
 
@@ -313,14 +313,15 @@ std::vector<std::string>    Indie::DataManager::getPlayerList() {
     return res;
 }
 
-bool    Indie::DataManager::gameIsRunning() {
+bool    Indie::DataManager::gameIsRunning(std::string& mapName) {
     std::string route = "/room/getState ";
 
     route += std::to_string(User::getUser()->getRoomId());
 
     std::vector<std::string>    tokenList = sendCommand(route);
-    if (tokenList.size() != 2 || std::atoi(tokenList[0].c_str()) != 200)
+    if (tokenList.size() != 3 || std::atoi(tokenList[0].c_str()) != 200)
         return false;
+    mapName = tokenList[2];
     return std::atoi(tokenList[1].c_str()) == 1;
 }
 
@@ -410,6 +411,13 @@ bool    Indie::DataManager::takePowerUp(int powerUpId) {
     if (tokenList.size() == 0 || std::atoi(tokenList[0].c_str()) != 200)
         return false;
     return true;
+}
+
+void    Indie::DataManager::setNextMap(int roomId) {
+    std::string route = "/room/setNextMap ";
+
+    route = route + std::to_string(roomId);
+    sendCommand(route);
 }
 
 std::vector<std::string>    Indie::DataManager::sendCommand(std::string const& route) {

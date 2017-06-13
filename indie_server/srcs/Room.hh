@@ -34,6 +34,9 @@ namespace Indie
         bool    getKilledBy(std::string const&);
         bool    getPowerUpList(Server&) const;
         bool    takePowerUp(int powerUpId);
+    public:
+        std::string const&  getCurrentMap() const;
+        void    setNextMap();
 
     public:
         static unsigned int roomId;

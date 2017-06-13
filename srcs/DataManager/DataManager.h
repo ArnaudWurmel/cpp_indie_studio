@@ -63,12 +63,13 @@ namespace   Indie {
         bool                createRoom();
         std::vector<Room>   listRoom();
         std::vector<std::string>    getPlayerList();
-        bool                gameIsRunning();
+        bool                gameIsRunning(std::string&);
         void                runGame();
         void                getKilledBy(std::string const&);
         std::vector<std::pair<std::string, int> >   getGlobalRanking();
         void                getPowerUpList();
         bool                takePowerUp(int powerUpId);
+        void                setNextMap(int roomId);
 
     private:
         std::vector<std::string>    sendCommand(std::string const&);

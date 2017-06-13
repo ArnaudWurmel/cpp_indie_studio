@@ -14,6 +14,7 @@ Indie::WaitingRoomViewController::WaitingRoomViewController(Indie::RootViewContr
     _gameRunning = false;
     _isCreator = isCreator;
     _lock = std::unique_ptr<std::mutex>(new std::mutex());
+    _mapName = "N/A";
     _threadUpdate = std::unique_ptr<std::thread>(new std::thread(&Indie::WaitingRoomViewController::threadUpdate, this));
 }
 
@@ -27,7 +28,9 @@ void    Indie::WaitingRoomViewController::initView() {
     _delegate.getGUI()->showPointer();
     _delegate.getRenderWindow()->getMetrics(width, height, depth, left, top);
     mPlayerList = _delegate.getGUI()->createWidget<MyGUI::ListBox>("ListBoxPlayerList", width - ((width / 3) + 10), 150, width / 3, height - 350, MyGUI::Align::Default, "Main");
-    setUpMenu(width, height);
+    mMenuList = _delegate.getGUI()->createWidget<MyGUI::ListBox>("ListBoxMenu", 10, 150, width / 3, height - 350, MyGUI::Align::Default, "Main");
+    mMenuList->eventListSelectAccept += MyGUI::newDelegate(this, &Indie::WaitingRoomViewController::selectedAction);
+    setUpMenu();
     mTextBox = _delegate.getGUI()->createWidget<MyGUI::TextBox>("TextBox", 0, 50, width, 50, MyGUI::Align::Default, "Main");
     mTextBox->setFontName("TitleFont");
     mTextBox->setCaption(Indie::Config::getGameName());
@@ -54,6 +57,9 @@ Indie::AViewController::ExitStatus   Indie::WaitingRoomViewController::updateVie
         toDisp += *it;
         mPlayerList->addItem(toDisp, NULL);
         ++it;
+    }
+    if (mMenuList->getItemCount() > 1) {
+        mMenuList->setItemNameAt(1, "#FFFFFFMap name : #F1C40F" + _mapName);
     }
     _lock->unlock();
     return _state;
@@ -83,13 +89,11 @@ void    Indie::WaitingRoomViewController::selectedAction(MyGUI::ListBox *_sender
     }
 }
 
-void    Indie::WaitingRoomViewController::setUpMenu(unsigned int width, unsigned int height) {
-    mMenuList = _delegate.getGUI()->createWidget<MyGUI::ListBox>("ListBoxMenu", 10, 150, width / 3, height - 350, MyGUI::Align::Default, "Main");
-    mMenuList->eventListSelectAccept += MyGUI::newDelegate(this, &Indie::WaitingRoomViewController::selectedAction);
+void    Indie::WaitingRoomViewController::setUpMenu() {
     if (_isCreator)
         _functionPtr.push_back(std::make_pair(std::string("#FFFFFFStart Game"), &Indie::WaitingRoomViewController::runGame));
+    _functionPtr.push_back(std::make_pair("#FFFFFFMap name : #F1C40F" + _mapName, &Indie::WaitingRoomViewController::changeMap));
     _functionPtr.push_back(std::make_pair(std::string("#E74C3CExit Room"), &Indie::WaitingRoomViewController::returnToMenu));
-
     std::vector<std::pair<std::string, void (Indie::WaitingRoomViewController::*)()> >::iterator it = _functionPtr.begin();
 
     while (it != _functionPtr.end()) {
@@ -116,17 +120,24 @@ void    Indie::WaitingRoomViewController::threadUpdate() {
         _playerList.clear();
         try {
             _playerList = dataManager->getPlayerList();
-            _gameRunning = dataManager->gameIsRunning();
+            _gameRunning = dataManager->gameIsRunning(_mapName);
+            std::cout << _mapName << std::endl;
         } catch (std::exception& e) {
             std::cout << e.what() << std::endl;
         }
         _lock->unlock();
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
     }
     try {
         dataManager->quitRoom(User::getUser()->getLogName());
     } catch (std::exception& e) {
         std::cout << e.what() << std::endl;
+    }
+}
+
+void    Indie::WaitingRoomViewController::changeMap() {
+    if (_isCreator) {
+        DataManager::getSingloton()->setNextMap(User::getUser()->getRoomId());
     }
 }
 

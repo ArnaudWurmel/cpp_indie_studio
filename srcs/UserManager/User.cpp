@@ -4,10 +4,15 @@
 
 #include "User.hh"
 
-Indie::User *Indie::User::getUser(std::string const& logName, std::string const& passwd) {
+Indie::User *Indie::User::getUser(std::string const& logName, std::string const& passwd, bool reset) {
     static User *user = NULL;
 
-    if (user == NULL)
+    if (reset) {
+        if (user)
+            delete user;
+        user = new User(logName, passwd);
+    }
+    else if (user == NULL)
         user = new User(logName, passwd);
     return user;
 }

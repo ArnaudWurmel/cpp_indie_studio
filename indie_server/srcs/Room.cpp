@@ -75,7 +75,7 @@ bool    Indie::Room::runGame() {
     if (_running)
         return false;
     try {
-        Indie::Game *game = new Indie::Game(_playerList, *_currentMap);
+        Indie::Game *game = new Indie::Game(_playerList, "maps/" + *_currentMap);
         _game = std::unique_ptr<Indie::Game>(game);
         _running = true;
     } catch (std::exception& e) {
@@ -164,6 +164,18 @@ bool    Indie::Room::takePowerUp(int powerUpId) {
 
 bool    Indie::Room::isRunning() const {
     return _running;
+}
+
+std::string const&  Indie::Room::getCurrentMap() const {
+    return *_currentMap;
+}
+
+void    Indie::Room::setNextMap() {
+    if (_running)
+        return ;
+    ++_currentMap;
+    if (_currentMap == _mapList.end())
+        _currentMap = _mapList.begin();
 }
 
 Indie::Room::~Room() {}
