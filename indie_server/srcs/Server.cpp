@@ -38,9 +38,11 @@ void    Indie::Server::serverLoop() {
                 throw NetworkException();
             }
             buffer[readSize] = '\0';
+            std::cout << "Start parsing for " << buffer << std::endl;
             if (!router.parseLine(buffer, *this)) {
                 setResponse("500 Error");
             }
+            std::cout << "End parsing, result : " << _buffer << std::endl;
             if (sendto(_fd, _buffer, sizeof(_buffer), 0, &upaddrfrom, fromLen) == -1)
                 throw NetworkException();
         }

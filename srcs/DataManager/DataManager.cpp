@@ -26,6 +26,7 @@ Indie::DataManager::DataManager(const std::string& ip, int port) : _ip(ip), _por
 #endif
     if ((_sockfd = socket(AF_INET, SOCK_DGRAM, 0)) == -1)
         throw NetworkException();
+    bzero(&_serv, sizeof(_serv));
     _serv.sin_family = AF_INET;
     _serv.sin_port = htons(_port);
     _serv.sin_addr.s_addr = inet_addr(_ip.c_str());
@@ -123,22 +124,23 @@ bool                            Indie::DataManager::getMap(unsigned int roomId, 
 
 Ogre::Vector3 Indie::DataManager::getPlayerStart(std::string pName, bool& success) {
     std::string         tmp = "/game/getPlayerPos ";
-    char                buf[4097];
+    char                buf[4096];
     int                 ret;
     socklen_t           client_size;
     socklen_t           server_size;
 
     tmp += pName;
+    bzero(buf, 4096);
     std::strncpy(buf, tmp.c_str(), 4096);
     client_size = sizeof(_client);
     server_size = sizeof(_serv);
-    if (sendto(_sockfd, buf, sizeof(buf), 0, reinterpret_cast<SOCKADDR *>(&_serv), server_size) == -1) {
+    if (sendto(_sockfd, buf, sizeof(buf), 0, reinterpret_cast<struct sockaddr *>(&_serv), server_size) == -1) {
         success = false;
-        return Ogre::Vector3();
+        return Ogre::Vector3(0, 0, 0);
     }
-    if ((ret = recvfrom(_sockfd, buf, sizeof(buf), 0, reinterpret_cast<SOCKADDR *>(&_client), &client_size)) == -1) {
+    if ((ret = recvfrom(_sockfd, buf, sizeof(buf), 0, reinterpret_cast<struct sockaddr *>(&_client), &client_size)) == -1) {
         success = false;
-        return Ogre::Vector3();
+        return Ogre::Vector3(0, 0, 0);
     }
     buf[ret] = 0;
     if (std::atoi(buf) != 200) {
@@ -146,7 +148,7 @@ Ogre::Vector3 Indie::DataManager::getPlayerStart(std::string pName, bool& succes
         return Ogre::Vector3();
     }
     success = true;
-    Ogre::Vector3   pos;
+    Ogre::Vector3   pos(0, 0, 0);
 
     int idx = 0;
     while (buf[idx] && buf[idx] != ' ')
@@ -388,7 +390,7 @@ void    Indie::DataManager::getPowerUpList() {
             ++it;
         }
         if (!founded) {
-            if (!tokenList[i + 3].compare("2")) {
+           /* if (!tokenList[i + 3].compare("2")) {
                 EntityManager::addBoost(new Indie::SpeedBoost(NULL, Ogre::Vector3(std::atoi(tokenList[i + 1].c_str()), 30, std::atoi(tokenList[i + 2].c_str())), std::atoi(tokenList[i].c_str())));
             }
             else if (!tokenList[i + 3].compare("1")) {
@@ -396,7 +398,7 @@ void    Indie::DataManager::getPowerUpList() {
             }
             else {
                 EntityManager::addBoost(new Indie::BombUp(NULL, Ogre::Vector3(std::atoi(tokenList[i + 1].c_str()), 30, std::atoi(tokenList[i + 2].c_str())), std::atoi(tokenList[i].c_str())));
-            }
+            }*/
         }
         i += 4;
     }
@@ -420,17 +422,20 @@ bool    Indie::DataManager::takePowerUp(int powerUpId) {
 }
 
 std::vector<std::string>    Indie::DataManager::sendCommand(std::string const& route) {
-    char                buf[4097];
+    char                buf[4096];
     int                 ret;
     socklen_t           client_size;
     socklen_t           server_size;
 
-    std::strncpy(buf, route.c_str(), 4096);
+    bzero(buf, 4096);
+    std::strncpy(buf, route.c_str(), 4095);
     client_size = sizeof(_client);
     server_size = sizeof(_serv);
-    if (sendto(_sockfd, buf, sizeof(buf), 0, reinterpret_cast<struct sockaddr *>(&_serv), server_size) == -1)
+    if (sendto(_sockfd, buf, 4096, 0, reinterpret_cast<struct sockaddr *>(&_serv), server_size) == -1)
         throw NetworkException();
-    if ((ret = recvfrom(_sockfd, buf, sizeof(buf), 0, reinterpret_cast<struct sockaddr *>(&_client), &client_size)) == -1)
+    bzero(&_client, sizeof(_client));
+    bzero(buf, sizeof(buf));
+    if ((ret = recvfrom(_sockfd, buf, 4096, 0, reinterpret_cast<struct sockaddr *>(&_client), &client_size)) == -1)
         throw NetworkException();
     buf[ret] = 0;
     return getTokenList(buf);

@@ -25,6 +25,7 @@ Indie::APlayer::APlayer(const Indie::APlayer::PlayerType &pType,
     _pId = "";
     _mainP = mainP;
     _score = 0;
+    mRotation = 0;
 }
 
 
