@@ -9,7 +9,9 @@
 #include "RoomListViewController.hh"
 #include "../Config/Config.hh"
 
-Indie::LoginViewController::LoginViewController(Indie::RootViewController& delegate) : AViewController(delegate) {}
+Indie::LoginViewController::LoginViewController(Indie::RootViewController& delegate) : AViewController(delegate) {
+    mSplashscreenTime = 0;
+}
 
 void    Indie::LoginViewController::initView() {
     unsigned int width;
@@ -35,11 +37,11 @@ void    Indie::LoginViewController::initView() {
     mConnectButton = _delegate.getGUI()->createWidget<MyGUI::Button>("Button", (width  - 200) / 2, (height - 26) / 2 + 70, 200, 26, MyGUI::Align::Default, "Main");
     mConnectButton->setCaption("Sign in");
     mConnectButton->eventMouseButtonClick += MyGUI::newDelegate(this, &Indie::LoginViewController::logMyUser);
-    Ogre::MaterialPtr material = Ogre::MaterialManager::getSingleton().create("Background", "General");
-    material->getTechnique(0)->getPass(0)->createTextureUnitState("background.jpeg");
-    material->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
-    material->getTechnique(0)->getPass(0)->setDepthWriteEnabled(false);
-    material->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+    mMaterial = Ogre::MaterialManager::getSingleton().create("Background", "General");
+    mMaterial->getTechnique(0)->getPass(0)->createTextureUnitState("splashscreen.png");
+    Ogre::TextureUnitState *FadeTextureLayer = mMaterial->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+    mMaterial->getTechnique(0)->getPass(0)->setSceneBlending(Ogre::SBT_TRANSPARENT_ALPHA);
+    FadeTextureLayer->setAlphaOperation(Ogre::LBX_SOURCE1, Ogre::LBS_MANUAL, Ogre::LBS_CURRENT, 0);
     mBackgroundRect = std::unique_ptr<Ogre::Rectangle2D>(new Ogre::Rectangle2D(true));
     mBackgroundRect->setCorners(-1.0, 1.0, 1.0, -1.0);
     mBackgroundRect->setMaterial("Background");
@@ -49,6 +51,7 @@ void    Indie::LoginViewController::initView() {
     mBackgroundRect->setBoundingBox(aabInf);
     Ogre::SceneNode* node = _delegate.getSceneManager()->getRootSceneNode()->createChildSceneNode("Background");
     node->attachObject(mBackgroundRect.get());
+    viewShouldDisapear();
 }
 
 void    Indie::LoginViewController::viewShouldDisapear() {
@@ -69,6 +72,30 @@ void    Indie::LoginViewController::viewShouldReapear() {
 }
 
 Indie::LoginViewController::ExitStatus    Indie::LoginViewController::updateView() {
+    if (mSplashscreenTime < 240) {
+        if (mSplashscreenTime <= 90) {
+            Ogre::TextureUnitState *FadeTextureLayer = mMaterial->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+            mMaterial->getTechnique(0)->getPass(0)->setSceneBlending(Ogre::SBT_TRANSPARENT_ALPHA);
+            FadeTextureLayer->setAlphaOperation(Ogre::LBX_SOURCE1, Ogre::LBS_MANUAL, Ogre::LBS_CURRENT, (mSplashscreenTime / 90.0));
+        }
+        else if (mSplashscreenTime >= 150) {
+            Ogre::TextureUnitState *FadeTextureLayer = mMaterial->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+            mMaterial->getTechnique(0)->getPass(0)->setSceneBlending(Ogre::SBT_TRANSPARENT_ALPHA);
+            FadeTextureLayer->setAlphaOperation(Ogre::LBX_SOURCE1, Ogre::LBS_MANUAL, Ogre::LBS_CURRENT, 1.0 - ((mSplashscreenTime - 150) / 90.0));
+        }
+        mSplashscreenTime += 1;
+    }
+    else if (mSplashscreenTime == 240) {
+        Ogre::MaterialManager::getSingleton().remove("Background", "General");
+        mMaterial = Ogre::MaterialManager::getSingleton().create("Background", "General");
+        mMaterial->getTechnique(0)->getPass(0)->createTextureUnitState("background.jpeg");
+        mMaterial->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+        mMaterial->getTechnique(0)->getPass(0)->setDepthWriteEnabled(false);
+        mMaterial->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+        mBackgroundRect->setMaterial("Background");
+        ++mSplashscreenTime;
+        viewShouldReapear();
+    }
     return _state;
 }
 

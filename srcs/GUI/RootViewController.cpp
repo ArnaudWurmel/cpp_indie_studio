@@ -79,7 +79,7 @@ void    Indie::RootViewController::createCamera() {
     mCamera->lookAt(Ogre::Vector3(0, 0, 0));
     mCamera->setNearClipDistance(5);
     vp = mRenderWindow->addViewport(mCamera);
-    vp->setBackgroundColour(Ogre::ColourValue(255, 255, 255));
+    vp->setBackgroundColour(Ogre::ColourValue(0, 0, 0));
     mCamera->setAspectRatio(Ogre::Real(vp->getActualWidth()) / Ogre::Real(vp->getActualHeight()));
 }
 

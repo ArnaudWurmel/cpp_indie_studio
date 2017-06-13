@@ -28,7 +28,8 @@ const std::map<std::string, Indie::Router::cmdPtr> Indie::Router::fnc = {
         { "/game/addBomb", &Indie::Router::addBomb },
         { "/game/bombList", &Indie::Router::listBomb },
         { "/game/getKilledBy", &Indie::Router::getKilledBy },
-        { "/game/getPowerUpList", &Indie::Router::getPowerUpList }
+        { "/game/getPowerUpList", &Indie::Router::getPowerUpList },
+        { "/game/takePowerUp", &Indie::Router::takePowerUp }
 };
 
 Indie::Router::User::User() {
@@ -339,6 +340,22 @@ bool    Indie::Router::getPowerUpList(std::vector<std::string> const& input, Ser
     int roomId = std::atoi(input[1].c_str());
     if (roomId >= 0) {
         state = gameManager->getPowerUpList(roomId, server);
+    }
+    gameManager->release();
+    return state;
+}
+
+bool    Indie::Router::takePowerUp(std::vector<std::string> const& input, Server& server) const {
+    if (input.size() != 3)
+        return false;
+
+    GameManager *gameManager = GameManager::getSingleton();
+    bool    state = false;
+    int roomId = std::atoi(input[1].c_str());
+    std::cout << roomId << std::endl;
+    if (roomId >= 0) {
+        state = gameManager->takePowerUp(roomId, std::atoi(input[2].c_str()));
+        server.setResponse("200 Success");
     }
     gameManager->release();
     return state;

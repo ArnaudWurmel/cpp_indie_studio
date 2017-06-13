@@ -3,6 +3,7 @@
 //
 
 #include "PowerUp.hh"
+#include "../DataManager/DataManager.h"
 
 Indie::PowerUp::PowerUp(Ogre::SceneManager *sceneManager, std::string const& entityName, Ogre::Vector3 const& entityPos, int id) : AEntity(sceneManager, entityPos, entityName.c_str(), true) {
     _id = id;
@@ -46,6 +47,10 @@ void    Indie::PowerUp::explode(Ogre::SceneManager *sceneManager) {
     }
     else
         mBackgroundKill = true;
+}
+
+bool    Indie::PowerUp::takePowerUp() const {
+    return DataManager::getSingloton()->takePowerUp(_id);
 }
 
 void    Indie::PowerUp::destroyEntity(Ogre::SceneManager *sceneManager) {

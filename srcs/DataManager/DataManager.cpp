@@ -401,6 +401,16 @@ void    Indie::DataManager::getPowerUpList() {
     }
 }
 
+bool    Indie::DataManager::takePowerUp(int powerUpId) {
+    std::string route = "/game/takePowerUp ";
+
+    route = route + std::to_string(User::getUser()->getRoomId()) + " " + std::to_string(powerUpId);
+    std::vector<std::string>    tokenList = sendCommand(route);
+    if (tokenList.size() == 0 || std::atoi(tokenList[0].c_str()) != 200)
+        return false;
+    return true;
+}
+
 std::vector<std::string>    Indie::DataManager::sendCommand(std::string const& route) {
     char                buf[4097];
     int                 ret;

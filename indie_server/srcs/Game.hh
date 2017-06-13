@@ -73,6 +73,7 @@ namespace   Indie {
         void    listBomb(std::string const&, Server&) const;
         bool    getKilledBy(std::string const&);
         void    getPowerUpList(Server&) const;
+        bool    takePowerUp(int powerUpId);
 
     private:
         void    getAllPowerUpAvailablePos();

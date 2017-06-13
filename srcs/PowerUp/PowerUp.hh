@@ -23,6 +23,8 @@ namespace   Indie {
         bool    isTaken() const;
         void    setTaken(bool);
 
+        bool    takePowerUp() const;
+
     public:
         virtual void    boostPlayer(APlayer&, Ogre::SceneManager *) = 0;
 

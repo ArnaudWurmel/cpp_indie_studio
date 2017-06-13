@@ -236,4 +236,18 @@ void    Indie::Game::getPowerUpList(Server& server) const {
     server.setResponse(ss.str());
 }
 
+bool    Indie::Game::takePowerUp(int powerUpId) {
+    std::vector<std::unique_ptr<PowerUp> >::iterator    it = _powerUpList.begin();
+
+    while (it != _powerUpList.end()) {
+        std::cout << powerUpId << " " << (*it)->id << std::endl;
+        if ((*it)->id == powerUpId) {
+            _powerUpList.erase(it);
+            return true;
+        }
+        ++it;
+    }
+    return false;
+}
+
 Indie::Game::~Game() {}

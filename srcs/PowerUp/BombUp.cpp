@@ -10,7 +10,7 @@ Indie::BombUp::BombUp(Ogre::SceneManager *sceneManager, Ogre::Vector3 const &ent
 }
 
 void    Indie::BombUp::boostPlayer(APlayer& player, Ogre::SceneManager *sceneManager) {
-    if (isAlive()) {
+    if (isAlive() && takePowerUp()) {
         player.addABomb();
         createAllParticles(sceneManager, getPosition(), 10.0);
         explode(sceneManager);

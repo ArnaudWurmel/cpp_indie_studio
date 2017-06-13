@@ -68,6 +68,7 @@ namespace   Indie {
         void                getKilledBy(std::string const&);
         std::vector<std::pair<std::string, int> >   getGlobalRanking();
         void                getPowerUpList();
+        bool                takePowerUp(int powerUpId);
 
     private:
         std::vector<std::string>    sendCommand(std::string const&);

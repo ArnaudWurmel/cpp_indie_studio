@@ -33,6 +33,7 @@ namespace Indie
         bool    isRunning() const;
         bool    getKilledBy(std::string const&);
         bool    getPowerUpList(Server&) const;
+        bool    takePowerUp(int powerUpId);
 
     public:
         static unsigned int roomId;

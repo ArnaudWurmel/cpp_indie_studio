@@ -215,6 +215,18 @@ bool    Indie::GameManager::getPowerUpList(int roomId, Server& server) const {
     return false;
 }
 
+bool    Indie::GameManager::takePowerUp(int roomId, int powerId) {
+    std::vector<std::unique_ptr<Room> >::iterator   it = _roomList.begin();
+
+    while (it != _roomList.end()) {
+        if ((*it)->getRoomId() == roomId) {
+            return (*it)->takePowerUp(powerId);
+        }
+        ++it;
+    }
+    return false;
+}
+
 void Indie::GameManager::lock() {
     _mutexLock->lock();
 }

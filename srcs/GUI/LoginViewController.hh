@@ -38,6 +38,10 @@ namespace   Indie {
 
     private:
         std::unique_ptr<Ogre::Rectangle2D>  mBackgroundRect;
+        Ogre::MaterialPtr mMaterial;
+
+    private:
+        size_t  mSplashscreenTime;
     };
 }
 

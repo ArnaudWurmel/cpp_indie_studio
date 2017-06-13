@@ -10,7 +10,7 @@ Indie::SpeedBoost::SpeedBoost(Ogre::SceneManager *sceneManager, Ogre::Vector3 co
 }
 
 void    Indie::SpeedBoost::boostPlayer(APlayer& player, Ogre::SceneManager *sceneManager) {
-    if (isAlive()) {
+    if (isAlive() && takePowerUp()) {
         player.setMoveSpeed(player.getMoveSpeed() + Config::getSpeedBoostIncrease());
         createAllParticles(sceneManager, getPosition(), 20.0);
         explode(sceneManager);

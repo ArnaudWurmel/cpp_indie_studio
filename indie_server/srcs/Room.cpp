@@ -155,6 +155,13 @@ bool    Indie::Room::getPowerUpList(Server& server) const {
     return false;
 }
 
+bool    Indie::Room::takePowerUp(int powerUpId) {
+    if (_running) {
+        return _game->takePowerUp(powerUpId);
+    }
+    return false;
+}
+
 bool    Indie::Room::isRunning() const {
     return _running;
 }
