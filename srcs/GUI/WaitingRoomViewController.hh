@@ -28,6 +28,7 @@ namespace Indie {
     private:
         void    setUpMenu();
         void    selectedAction(MyGUI::ListBox *, size_t);
+        void    setImageForMap();
 
         /*
          * Menu's callback functions
@@ -50,6 +51,7 @@ namespace Indie {
         MyGUI::ListBox      *mPlayerList;
         MyGUI::TextBox      *mTextBox;
         MyGUI::ListBox      *mMenuList;
+        MyGUI::ImageBox     *mMapBox;
 
     private:
         bool    _isCreator;

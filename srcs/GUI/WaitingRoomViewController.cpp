@@ -2,6 +2,7 @@
 // Created by wurmel_a on 09/06/17.
 //
 
+#include <OgreRectangle2D.h>
 #include "../Config/Config.hh"
 #include "RoomListViewController.hh"
 #include "WaitingRoomViewController.hh"
@@ -28,7 +29,7 @@ void    Indie::WaitingRoomViewController::initView() {
     _delegate.getGUI()->showPointer();
     _delegate.getRenderWindow()->getMetrics(width, height, depth, left, top);
     mPlayerList = _delegate.getGUI()->createWidget<MyGUI::ListBox>("ListBoxPlayerList", width - ((width / 3) + 10), 150, width / 3, height - 350, MyGUI::Align::Default, "Main");
-    mMenuList = _delegate.getGUI()->createWidget<MyGUI::ListBox>("ListBoxMenu", 10, 150, width / 3, height - 350, MyGUI::Align::Default, "Main");
+    mMenuList = _delegate.getGUI()->createWidget<MyGUI::ListBox>("ListBoxMenu", 10, 150, width / 3, height / 3, MyGUI::Align::Default, "Main");
     mMenuList->eventListSelectAccept += MyGUI::newDelegate(this, &Indie::WaitingRoomViewController::selectedAction);
     setUpMenu();
     mTextBox = _delegate.getGUI()->createWidget<MyGUI::TextBox>("TextBox", 0, 50, width, 50, MyGUI::Align::Default, "Main");
@@ -37,6 +38,19 @@ void    Indie::WaitingRoomViewController::initView() {
     mTextBox->setTextAlign(MyGUI::Align::Center);
     mTextBox->setTextColour(MyGUI::Colour(1.0, 1.0, 1.0));
     mTextBox->setFontHeight(30);
+    mMapBox = _delegate.getGUI()->createWidget<MyGUI::ImageBox>("ImageBox", 10, 150 + height / 3 + 10, height - (150 + height / 3 + 10), height - (150 + height / 3 + 10), MyGUI::Align::Default, "Main");
+    setImageForMap();
+}
+
+void    Indie::WaitingRoomViewController::setImageForMap() {
+   Ogre::MaterialPtr ptr = Ogre::MaterialManager::getSingleton().getByName("MapOverview/" + _mapName);
+
+    if (ptr) {
+        mMapBox->setImageTexture(_mapName + ".png");
+    }
+    else {
+        mMapBox->setImageTexture("Unknown.png");
+    }
 }
 
 Indie::AViewController::ExitStatus   Indie::WaitingRoomViewController::updateView() {
@@ -61,6 +75,7 @@ Indie::AViewController::ExitStatus   Indie::WaitingRoomViewController::updateVie
     if (mMenuList->getItemCount() > 1) {
         mMenuList->setItemNameAt(1, "#FFFFFFMap name : #F1C40F" + _mapName);
     }
+    setImageForMap();
     _lock->unlock();
     return _state;
 }

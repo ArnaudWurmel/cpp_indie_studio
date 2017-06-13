@@ -1,0 +1,47 @@
+material MapOverview/level0
+{
+	technique
+	{
+		pass
+		{
+            lighting off
+            depth_write off
+			texture_unit
+			{
+				texture Level0.png
+			}
+		}
+	}
+}
+
+material MapOverview/arena
+{
+	technique
+	{
+		pass
+		{
+            lighting off
+            depth_write off
+			texture_unit
+			{
+				texture Arena.png
+			}
+		}
+	}
+}
+
+material MapOverview/unknown
+{
+    technique
+    {
+        pass
+        {
+            lighting off
+            depth_write off
+            texture_unit
+            {
+                texture Unknown.png
+            }
+        }
+    }
+}

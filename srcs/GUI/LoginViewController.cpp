@@ -46,13 +46,14 @@ void    Indie::LoginViewController::initView() {
     mBackgroundRect->setCorners(-1.0, 1.0, 1.0, -1.0);
     mBackgroundRect->setMaterial("Background");
     mBackgroundRect->setRenderQueueGroup(Ogre::RENDER_QUEUE_BACKGROUND);
-    Ogre::AxisAlignedBox aabInf;
-    aabInf.setInfinite();
-    mBackgroundRect->setBoundingBox(aabInf);
+    Ogre::AxisAlignedBox axisAlignedBox(Ogre::Vector3(0, 0, 0), Ogre::Vector3(height, 0, width));
+    //aabInf.setInfinite();
+    mBackgroundRect->setBoundingBox(axisAlignedBox);
     Ogre::SceneNode* node = _delegate.getSceneManager()->getRootSceneNode()->createChildSceneNode("Background");
     node->attachObject(mBackgroundRect.get());
     _delegate.getGUI()->hidePointer();
     viewShouldDisapear();
+    mBackgroundRect->setVisible(true);
 }
 
 void    Indie::LoginViewController::viewShouldDisapear() {

@@ -23,7 +23,6 @@ Indie::MapParser::MapParser(std::string const& mapPath) : _map(0)
     _convert.insert(std::make_pair('#', Indie::MapParser::TileType::STATIC_BLOCK));
     _convert.insert(std::make_pair('0', Indie::MapParser::TileType::DYNAMIC_BLOCK));
     Ogre::LogManager::getSingletonPtr()->logMessage("*** START MAP PARSING ***");
-    this->loadMap(mapPath);
 }
 
 std::vector<std::vector<Indie::MapParser::TileType>> const& Indie::MapParser::getMap()

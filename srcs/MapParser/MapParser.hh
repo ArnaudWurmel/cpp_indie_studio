@@ -28,7 +28,7 @@ namespace   Indie {
     public:
         std::vector<std::vector<TileType> > const& getMap();
 
-    private:
+    public:
         void    loadMap(std::string const&);
 
     private:

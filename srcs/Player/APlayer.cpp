@@ -15,6 +15,7 @@ Indie::APlayer::APlayer(const Indie::APlayer::PlayerType &pType,
 {
     if (mainP)
         mSceneNode->showBoundingBox(true);
+    mSceneNode->setVisible(false, false);
     _moveSpeed = Indie::Config::getMoveSpeed();
     _nbBombs = Indie::Config::getInitialNbBomb();
     _bombRange = Indie::Config::getBombRange();

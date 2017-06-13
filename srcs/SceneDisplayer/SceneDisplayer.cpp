@@ -19,7 +19,7 @@ Indie::SceneDisplayer::SceneDisplayer(Ogre::SceneManager *sceneManager) {
 void Indie::SceneDisplayer::initScene(RootViewController& delegate) {
     MapParser&  mapParser = MapParser::getMapParser("resources/maps/level0");
 
-//    this->createGround();
+    mapParser.loadMap("");
     _map = mapParser.getMap();
     if (_map.size() > 0) {
         this->createMap();
