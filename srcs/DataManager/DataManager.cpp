@@ -29,6 +29,14 @@ Indie::DataManager::DataManager(const std::string& ip, int port) : _ip(ip), _por
     _serv.sin_family = AF_INET;
     _serv.sin_port = htons(_port);
     _serv.sin_addr.s_addr = inet_addr(_ip.c_str());
+
+    struct timeval timeout;
+    timeout.tv_sec = 10;
+    timeout.tv_usec = 0;
+    if (setsockopt (_sockfd, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout, sizeof(timeout)) < 0)
+      throw NetworkException();
+    if (setsockopt (_sockfd, SOL_SOCKET, SO_SNDTIMEO, (char *)&timeout, sizeof(timeout)) < 0)
+      throw NetworkException();
 }
 
 Indie::DataManager::~DataManager() {

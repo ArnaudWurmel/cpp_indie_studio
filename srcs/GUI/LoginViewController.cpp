@@ -51,6 +51,7 @@ void    Indie::LoginViewController::initView() {
     mBackgroundRect->setBoundingBox(aabInf);
     Ogre::SceneNode* node = _delegate.getSceneManager()->getRootSceneNode()->createChildSceneNode("Background");
     node->attachObject(mBackgroundRect.get());
+    _delegate.getGUI()->hidePointer();
     viewShouldDisapear();
 }
 
