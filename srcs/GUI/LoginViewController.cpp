@@ -87,7 +87,11 @@ Indie::LoginViewController::ExitStatus    Indie::LoginViewController::updateView
         mSplashscreenTime += 1;
     }
     else if (mSplashscreenTime == 240) {
-        Ogre::MaterialManager::getSingleton().remove("Background", "General");
+#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
+		Ogre::MaterialManager::getSingleton().remove("Background");
+#else
+		Ogre::MaterialManager::getSingleton().remove("Background", "General");
+#endif
         mMaterial = Ogre::MaterialManager::getSingleton().create("Background", "General");
         mMaterial->getTechnique(0)->getPass(0)->createTextureUnitState("background.jpeg");
         mMaterial->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
