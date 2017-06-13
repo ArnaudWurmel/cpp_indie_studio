@@ -41,7 +41,7 @@ bool    Indie::PowerUp::hittedByExplosion() const {
 
 void    Indie::PowerUp::explode(Ogre::SceneManager *sceneManager) {
     if (sceneManager && mSceneNode != NULL && mEntity != NULL) {
-        createAllParticles(sceneManager, getPosition(), getSize().y * 200);
+        createAllParticles(sceneManager, getPosition(), 10);
         Indie::AEntity::explode(sceneManager);
     }
     else
