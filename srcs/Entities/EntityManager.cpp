@@ -28,11 +28,11 @@ void    Indie::EntityManager::addEntity(AEntity *entity) {
     Indie::EntityManager    *entityManager = getEntityManager();
 
     if (entityManager) {
-        entityManager->_entityList.push_back(std::shared_ptr<AEntity>(entity));
+        entityManager->_entityList.push_back(entity);
     }
 }
 
-std::vector<std::shared_ptr<Indie::AEntity> >& Indie::EntityManager::getEntityList() {
+std::vector<Indie::AEntity *>& Indie::EntityManager::getEntityList() {
     Indie::EntityManager    *entityManager = getEntityManager();
 
     if (entityManager) {
@@ -45,10 +45,10 @@ void    Indie::EntityManager::setMainPlayer(Indie::APlayer *player) {
     Indie::EntityManager    *entityManager = getEntityManager();
 
     if (entityManager)
-        entityManager->_mainPlayer = std::unique_ptr<Indie::APlayer>(player);
+        entityManager->_mainPlayer = player;
 }
 
-std::unique_ptr<Indie::APlayer>&    Indie::EntityManager::getMainPlayer() {
+Indie::APlayer    *Indie::EntityManager::getMainPlayer() {
     Indie::EntityManager    *entityManager = getEntityManager();
 
     if (entityManager)
@@ -60,12 +60,12 @@ void    Indie::EntityManager::addPlayer(Indie::APlayer *player) {
     Indie::EntityManager    *entityManager = getEntityManager();
 
     if (entityManager) {
-        entityManager->_enemyList.push_back(std::unique_ptr<Indie::APlayer>(player));
+        entityManager->_enemyList.push_back(player);
         return ;
     }
     throw EntityManagerException();}
 
-std::vector<std::unique_ptr<Indie::APlayer> >&  Indie::EntityManager::getPlayerList() {
+std::vector<Indie::APlayer *>&  Indie::EntityManager::getPlayerList() {
     Indie::EntityManager    *entityManager = getEntityManager();
 
     if (entityManager)
@@ -76,12 +76,12 @@ void    Indie::EntityManager::addBomb(Indie::Bomb *bomb) {
     Indie::EntityManager    *entityManager = getEntityManager();
 
     if (entityManager) {
-        entityManager->_bombList.push_back(std::unique_ptr<Indie::Bomb>(bomb));
+        entityManager->_bombList.push_back(bomb);
         return ;
     }
     throw EntityManagerException();}
 
-std::vector<std::unique_ptr<Indie::Bomb> >& Indie::EntityManager::getBombList() {
+std::vector<Indie::Bomb *>& Indie::EntityManager::getBombList() {
     Indie::EntityManager    *entityManager = getEntityManager();
 
     if (entityManager) {
@@ -93,41 +93,48 @@ std::vector<std::unique_ptr<Indie::Bomb> >& Indie::EntityManager::getBombList() 
 void    Indie::EntityManager::removeAllEntities(Ogre::SceneManager *sceneManager) {
     Indie::EntityManager    *entityManager = getEntityManager();
 
-    std::vector<std::shared_ptr<AEntity> >::iterator    it = entityManager->_entityList.begin();
+    std::vector<AEntity *>::iterator    it = entityManager->_entityList.begin();
 
     while (it != entityManager->_entityList.end()) {
         (*it)->destroyEntity(sceneManager);
-        entityManager->_entityList.erase(it);
+        delete (*it);
+        ++it;
     }
-    std::vector<std::unique_ptr<APlayer> >::iterator    itP = entityManager->_enemyList.begin();
+    entityManager->_entityList.clear();
+    std::vector<APlayer *>::iterator    itP = entityManager->_enemyList.begin();
     while (itP != entityManager->_enemyList.end()) {
         (*itP)->destroyEntity(sceneManager);
-        entityManager->_enemyList.erase(itP);
+        delete (*itP);
+        ++itP;
     }
-    std::vector<std::unique_ptr<Bomb> >::iterator   itB = entityManager->_bombList.begin();
+    entityManager->_enemyList.clear();
+    std::vector<Bomb *>::iterator   itB = entityManager->_bombList.begin();
 
     while (itB != entityManager->_bombList.end()) {
         (*itB)->destroyEntity(sceneManager);
-        entityManager->_bombList.erase(itB);
+        delete (*itB);
+        ++itB;
     }
-
-    std::vector<std::unique_ptr<PowerUp> >::iterator    itPU = entityManager->_powerUpList.begin();
+    entityManager->_bombList.clear();
+    std::vector<PowerUp *>::iterator    itPU = entityManager->_powerUpList.begin();
 
     while (itPU != entityManager->_powerUpList.end()) {
         (*itPU)->destroyEntity(sceneManager);
-        entityManager->_powerUpList.erase(itPU);
+        delete *itPU;
+        ++itPU;
     }
     entityManager->_mainPlayer->destroyEntity(sceneManager);
-    entityManager->_mainPlayer.reset();
+    delete entityManager->_mainPlayer;
+    entityManager->_mainPlayer = NULL;
 }
 
 void    Indie::EntityManager::addBoost(Indie::PowerUp *powerUp) {
     Indie::EntityManager    *entityManager = getEntityManager();
 
-    entityManager->_powerUpList.push_back(std::unique_ptr<Indie::PowerUp>(powerUp));
+    entityManager->_powerUpList.push_back(powerUp);
 }
 
-std::vector<std::unique_ptr<Indie::PowerUp> >&    Indie::EntityManager::getPowerUpList() {
+std::vector<Indie::PowerUp* >&    Indie::EntityManager::getPowerUpList() {
     return Indie::EntityManager::getEntityManager()->_powerUpList;
 }
 

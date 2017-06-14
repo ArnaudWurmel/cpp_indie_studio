@@ -182,7 +182,7 @@ void Indie::DataManager::updateAllPlayers(unsigned int roomId, Ogre::SceneManage
     std::vector<std::string>    tokenList = sendCommand(route);
     if (tokenList.size() == 0 || std::atoi(tokenList[0].c_str()) != 200)
         return ;
-    std::vector<std::unique_ptr<APlayer> >::iterator    it = EntityManager::getPlayerList().begin();
+    std::vector<APlayer *>::iterator    it = EntityManager::getPlayerList().begin();
     while (it != EntityManager::getPlayerList().end()) {
         (*it)->setUpdate(false);
         ++it;
@@ -254,7 +254,7 @@ void    Indie::DataManager::listBomb(unsigned int roomId, std::string const& pId
     while (i < tokenList.size()) {
         bool    found = false;
 
-        std::vector<std::unique_ptr<Bomb> >::const_iterator it = EntityManager::getBombList().begin();
+        std::vector<Bomb *>::const_iterator it = EntityManager::getBombList().begin();
 
         while (!found && it != EntityManager::getBombList().end()) {
             if ((*it)->getID() == std::atoi(tokenList[i + 1].c_str())) {
@@ -372,7 +372,7 @@ void    Indie::DataManager::getPowerUpList() {
 
     if (tokenList.size() - 1 <= 0 || (tokenList.size() - 1) % 4 != 0)
         return ;
-    std::vector<std::unique_ptr<PowerUp> >::iterator it = EntityManager::getPowerUpList().begin();
+    std::vector<PowerUp *>::iterator it = EntityManager::getPowerUpList().begin();
 
     while (it != EntityManager::getPowerUpList().end()) {
         (*it)->setTaken(true);

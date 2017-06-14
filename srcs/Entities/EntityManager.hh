@@ -28,19 +28,19 @@ namespace Indie {
 
         static EntityManager*   getEntityManager(bool reset = false);
         static void addEntity(AEntity *);
-        static std::vector<std::shared_ptr<Indie::AEntity> >&   getEntityList();
+        static std::vector<Indie::AEntity *>&   getEntityList();
 
         static void setMainPlayer(Indie::APlayer *);
-        static std::unique_ptr<Indie::APlayer>& getMainPlayer();
+        static Indie::APlayer *getMainPlayer();
 
         static void addPlayer(Indie::APlayer *);
-        static std::vector<std::unique_ptr<Indie::APlayer> >&   getPlayerList();
+        static std::vector<Indie::APlayer *>&   getPlayerList();
 
         static void addBomb(Indie::Bomb *);
-        static std::vector<std::unique_ptr<Indie::Bomb> >&  getBombList();
+        static std::vector<Indie::Bomb *>&  getBombList();
 
         static void addBoost(Indie::PowerUp *);
-        static std::vector<std::unique_ptr<Indie::PowerUp> >&   getPowerUpList();
+        static std::vector<Indie::PowerUp * >&   getPowerUpList();
 
         static void removeAllEntities(Ogre::SceneManager *);
 
@@ -59,11 +59,11 @@ namespace Indie {
         static APlayer    *createEnemy(Ogre::SceneManager *, Ogre::Vector3 const&, std::string const&, bool AI = false);
 
     private:
-        std::vector<std::shared_ptr<Indie::AEntity> >   _entityList;
-        std::vector<std::unique_ptr<Indie::APlayer> >   _enemyList;
-        std::vector<std::unique_ptr<Indie::Bomb> >  _bombList;
-        std::vector<std::unique_ptr<Indie::PowerUp> >   _powerUpList;
-        std::unique_ptr<Indie::APlayer> _mainPlayer;
+        std::vector<Indie::AEntity* >   _entityList;
+        std::vector<Indie::APlayer* >   _enemyList;
+        std::vector<Indie::Bomb* >  _bombList;
+        std::vector<Indie::PowerUp* >   _powerUpList;
+        Indie::APlayer *_mainPlayer;
         std::unique_ptr<std::mutex> _lock;
     };
 }

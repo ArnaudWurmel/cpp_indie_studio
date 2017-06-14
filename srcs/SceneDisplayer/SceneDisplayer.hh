@@ -49,12 +49,12 @@ namespace   Indie
         void    updaterThread();
 
     private:
-        bool    makeCollide(std::unique_ptr<APlayer>&, OIS::KeyCode const&);
+        bool    makeCollide(APlayer *, OIS::KeyCode const&);
 
-        bool    checkUp(std::unique_ptr<APlayer>&, std::shared_ptr<AEntity> const&) const;
-        bool    checkDown(std::unique_ptr<APlayer>&, std::shared_ptr<AEntity> const&) const;
-        bool    checkLeft(std::unique_ptr<APlayer>&, std::shared_ptr<AEntity> const&) const;
-        bool    checkRight(std::unique_ptr<APlayer>&, std::shared_ptr<AEntity> const&) const;
+        bool    checkUp(APlayer *, AEntity const *) const;
+        bool    checkDown(APlayer *, AEntity const *) const;
+        bool    checkLeft(APlayer *, AEntity const *) const;
+        bool    checkRight(APlayer *, AEntity const *) const;
         /*
          * Callback for 'AEventRegister'
          */
@@ -85,7 +85,7 @@ namespace   Indie
 
     private:
         std::map<OIS::KeyCode, void (Indie::SceneDisplayer::*)(OIS::Keyboard *)> _functionPtr;
-        std::map<OIS::KeyCode, bool (Indie::SceneDisplayer::*)(std::unique_ptr<APlayer>&, std::shared_ptr<AEntity> const&) const>  _collideGetter;
+        std::map<OIS::KeyCode, bool (Indie::SceneDisplayer::*)(APlayer *, AEntity const *) const>  _collideGetter;
 
     private:
         Ogre::SceneManager  *mSceneManager;

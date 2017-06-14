@@ -107,7 +107,7 @@ bool    Indie::Bomb::updateFromLoop(Ogre::SceneManager *sceneManager) {
 }
 
 bool    Indie::Bomb::haveEntityWithPos(Ogre::Vector3 const& entityPos, bool& shouldContinue) const {
-    std::vector<std::shared_ptr<AEntity> >::iterator    it = EntityManager::getEntityList().begin();
+    std::vector<AEntity *>::iterator    it = EntityManager::getEntityList().begin();
     bool    ret = shouldContinue;
 
     while (it != EntityManager::getEntityList().end()) {
@@ -144,10 +144,10 @@ void    Indie::Bomb::explode(Ogre::SceneManager *sceneManager) {
         ++i;
     }
     std::vector<std::unique_ptr<Indie::AEntity> >::iterator   explosionIt = _explosionList.begin();
-    std::vector<std::shared_ptr<Indie::AEntity> >&  entityList = EntityManager::getEntityList();
+    std::vector<Indie::AEntity *>&  entityList = EntityManager::getEntityList();
 
     while (explosionIt != _explosionList.end()) {
-        std::vector<std::shared_ptr<Indie::AEntity> >::iterator itEntity = entityList.begin();
+        std::vector<Indie::AEntity *>::iterator itEntity = entityList.begin();
         if (!EntityManager::getMainPlayer()->checkCollide(*(*explosionIt))) {
             if (_id != -1)
                 DataManager::getSingloton()->getKilledBy(getPId());

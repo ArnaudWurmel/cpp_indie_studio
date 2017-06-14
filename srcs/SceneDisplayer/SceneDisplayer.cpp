@@ -123,7 +123,7 @@ void    Indie::SceneDisplayer::updaterThread() {
             mScoreboard->addItem("#F1C40F" + EntityManager::getMainPlayer()->getPlayerId());
             mScoreboard->setSubItemNameAt(1, mScoreboard->getItemCount() - 1, std::to_string(EntityManager::getMainPlayer()->getScore()));
 
-            std::vector<std::unique_ptr<APlayer> >::iterator    it = EntityManager::getPlayerList().begin();
+            std::vector<APlayer *>::iterator    it = EntityManager::getPlayerList().begin();
             while (it != EntityManager::getPlayerList().end()) {
                 mScoreboard->addItem("#E74C3C" + (*it)->getPlayerId());
                 mScoreboard->setSubItemNameAt(1, mScoreboard->getItemCount() - 1, std::to_string((*it)->getScore()));
@@ -139,7 +139,7 @@ void    Indie::SceneDisplayer::updaterThread() {
 }
 
 bool    Indie::SceneDisplayer::updateScene() {
-    std::vector<std::shared_ptr<AEntity> >::iterator    it;
+    std::vector<AEntity *>::iterator    it;
 
     EntityManager::lockEntities();
     if (!EntityManager::getMainPlayer()->updateFromLoop(mSceneManager)) {
@@ -154,7 +154,7 @@ bool    Indie::SceneDisplayer::updateScene() {
         else
             ++it;
     }
-    std::vector<std::unique_ptr<APlayer> >::iterator    itP;
+    std::vector<APlayer *>::iterator    itP;
 
     itP = EntityManager::getPlayerList().begin();
     while (itP != EntityManager::getPlayerList().end()) {
@@ -164,17 +164,17 @@ bool    Indie::SceneDisplayer::updateScene() {
             ++itP;
     }
 
-    std::vector<std::unique_ptr<Bomb> >::iterator   itB = EntityManager::getBombList().begin();
+    std::vector<Bomb* >::iterator   itB = EntityManager::getBombList().begin();
     while (itB != EntityManager::getBombList().end()) {
         (*itB)->updateFromLoop(mSceneManager);
         ++itB;
     }
 
-    std::vector<std::unique_ptr<PowerUp> >::iterator    itPU = EntityManager::getPowerUpList().begin();
+    std::vector<PowerUp *>::iterator    itPU = EntityManager::getPowerUpList().begin();
 
     while (itPU != EntityManager::getPowerUpList().end()) {
-        if (!(*itPU)->checkCollide(*EntityManager::getMainPlayer().get())) {
-            (*itPU)->boostPlayer(*EntityManager::getMainPlayer().get(), mSceneManager);
+        if (!(*itPU)->checkCollide(*EntityManager::getMainPlayer())) {
+            (*itPU)->boostPlayer(*EntityManager::getMainPlayer(), mSceneManager);
         }
         (*itPU)->updateFromLoop(mSceneManager);
         ++itPU;
@@ -183,12 +183,12 @@ bool    Indie::SceneDisplayer::updateScene() {
     return true;
 }
 
-bool Indie::SceneDisplayer::makeCollide(std::unique_ptr<Indie::APlayer> &entity, OIS::KeyCode const& keyCode) {
-    std::vector<std::shared_ptr<Indie::AEntity> >::iterator it = EntityManager::getEntityList().begin();
+bool Indie::SceneDisplayer::makeCollide(Indie::APlayer *entity, OIS::KeyCode const& keyCode) {
+    std::vector<Indie::AEntity* >::iterator it = EntityManager::getEntityList().begin();
 
     if (_collideGetter.find(keyCode) != _collideGetter.end()) {
         while (it != EntityManager::getEntityList().end()) {
-            if (entity.get() != (*it).get()) {
+            if (entity != (*it)) {
                 if (!(this->*_collideGetter[keyCode])(entity, *it))
                     return false;
             }
@@ -198,48 +198,48 @@ bool Indie::SceneDisplayer::makeCollide(std::unique_ptr<Indie::APlayer> &entity,
     return true;
 }
 
-bool    Indie::SceneDisplayer::checkUp(std::unique_ptr<APlayer>& entity, std::shared_ptr<AEntity> const& collider) const {
+bool    Indie::SceneDisplayer::checkUp(APlayer *entity, AEntity const *collider) const {
     bool state = false;
 
     entity->rotate(APlayer::Direction::UP);
     entity->move(Ogre::Vector3(entity->getMoveSpeed(), 0, 0));
-    if (entity->checkCollide(*(collider.get()))) {
+    if (entity->checkCollide(*collider)) {
         state = true;
     }
     entity->move(Ogre::Vector3(-entity->getMoveSpeed(), 0, 0));
     return state;
 }
 
-bool    Indie::SceneDisplayer::checkDown(std::unique_ptr<APlayer>& entity, std::shared_ptr<AEntity> const& collider) const {
+bool    Indie::SceneDisplayer::checkDown(APlayer *entity, AEntity const *collider) const {
     bool state = false;
 
     entity->rotate(APlayer::Direction::DOWN);
     entity->move(Ogre::Vector3(-entity->getMoveSpeed(), 0, 0));
-    if (entity->checkCollide(*(collider.get()))) {
+    if (entity->checkCollide(*collider)) {
         state = true;
     }
     entity->move(Ogre::Vector3(entity->getMoveSpeed(), 0, 0));
     return state;
 }
 
-bool    Indie::SceneDisplayer::checkLeft(std::unique_ptr<APlayer>& entity, std::shared_ptr<AEntity> const& collider) const {
+bool    Indie::SceneDisplayer::checkLeft(APlayer *entity, AEntity const *collider) const {
     bool state = false;
 
     entity->rotate(APlayer::Direction::LEFT);
     entity->move(Ogre::Vector3(0, 0, -entity->getMoveSpeed()));
-    if (entity->checkCollide(*(collider.get()))) {
+    if (entity->checkCollide(*collider)) {
         state = true;
     }
     entity->move(Ogre::Vector3(0, 0, entity->getMoveSpeed()));
     return state;
 }
 
-bool    Indie::SceneDisplayer::checkRight(std::unique_ptr<APlayer>& entity, std::shared_ptr<AEntity> const& collider) const {
+bool    Indie::SceneDisplayer::checkRight(APlayer *entity, AEntity const *collider) const {
     bool state = false;
 
     entity->rotate(APlayer::Direction::RIGHT);
     entity->move(Ogre::Vector3(0, 0, entity->getMoveSpeed()));
-    if (entity->checkCollide(*(collider.get()))) {
+    if (entity->checkCollide(*collider)) {
         state = true;
     }
     entity->move(Ogre::Vector3(0, 0, -entity->getMoveSpeed()));
