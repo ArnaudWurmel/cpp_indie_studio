@@ -27,12 +27,10 @@ void Indie::SceneDisplayer::initScene(RootViewController& delegate) {
     initScoreboard(delegate);
     bool    success = false;
     DataManager *dataManager = Indie::DataManager::getSingloton();
-    EntityManager::lockEntity();
     Ogre::Vector3   posPlayer = dataManager->getPlayerStart(User::getUser()->getLogName(), success);
     if (!success)
         throw GameException();
     EntityManager::createHuman(mSceneManager, Ogre::Vector3(posPlayer.x, 32, posPlayer.z), User::getUser()->getLogName());
-    EntityManager::releaseEntity();
     /*try {
         EntityManager::createEnemy(mSceneManager, Ogre::Vector3(0, 0, 0), "AI001", true);
     } catch (std::exception& e) {
@@ -115,15 +113,9 @@ void    Indie::SceneDisplayer::updaterThread() {
 
     while (true) {
         if (_locker.try_lock()) {
-            EntityManager::getEntityManager()->lockEntity();
             dataManager->updateAllPlayers(User::getUser()->getRoomId(), mSceneManager);
-            EntityManager::getEntityManager()->releaseEntity();
-
-            EntityManager::getEntityManager()->lockEntity();
             if (EntityManager::getMainPlayer()->isAlive())
                 dataManager->updatePlayerPos(User::getUser()->getLogName(), EntityManager::getMainPlayer()->getPosition());
-            else
-                EntityManager::getEntityManager()->releaseEntity();
             dataManager->listBomb(User::getUser()->getRoomId(), User::getUser()->getLogName());
             dataManager->getPowerUpList();
 
@@ -149,9 +141,9 @@ void    Indie::SceneDisplayer::updaterThread() {
 bool    Indie::SceneDisplayer::updateScene() {
     std::vector<std::shared_ptr<AEntity> >::iterator    it;
 
-    EntityManager::getEntityManager()->lockEntity();
+    EntityManager::lockEntities();
     if (!EntityManager::getMainPlayer()->updateFromLoop(mSceneManager)) {
-        EntityManager::getEntityManager()->releaseEntity();
+        EntityManager::unlockEntities();
         return false;
     }
     it = EntityManager::getEntityList().begin();
@@ -187,7 +179,7 @@ bool    Indie::SceneDisplayer::updateScene() {
         (*itPU)->updateFromLoop(mSceneManager);
         ++itPU;
     }
-    EntityManager::getEntityManager()->releaseEntity();
+    EntityManager::unlockEntities();
     return true;
 }
 
@@ -270,8 +262,10 @@ void    Indie::SceneDisplayer::setFPSCameraPosition() {
 Indie::SceneDisplayer::~SceneDisplayer() {
     _locker.lock();
     _thread->join();
+    EntityManager::lockEntities();
+    //mSceneManager->destroyEntity(mGroundEntity);
     EntityManager::removeAllEntities(mSceneManager);
-    EntityManager::getEntityManager(true);
+    //Ogre::MeshManager::getSingleton().remove("ground");
     std::vector<std::unique_ptr<AEntity> >::iterator    it = _groundEntityList.begin();
 
     while (it != _groundEntityList.end()) {
@@ -279,6 +273,8 @@ Indie::SceneDisplayer::~SceneDisplayer() {
         ++it;
     }
     _groundEntityList.clear();
+    EntityManager::unlockEntities();
+    EntityManager::getEntityManager(true);
 }
 
 /**********************************
@@ -301,7 +297,6 @@ void Indie::SceneDisplayer::initEventRegister() {
 void    Indie::SceneDisplayer::registerKeyboardEvent(OIS::Keyboard *keyboard) {
     std::map<OIS::KeyCode, void (Indie::SceneDisplayer::*)(OIS::Keyboard *)>::iterator it;
 
-    EntityManager::getEntityManager()->lockEntity();
     it = _functionPtr.begin();
     while (it != _functionPtr.end()) {
         if (keyboard->isKeyDown((*it).first) && (EntityManager::getMainPlayer()->isGodMode() || makeCollide(EntityManager::getMainPlayer(), (*it).first)))
@@ -315,11 +310,9 @@ void    Indie::SceneDisplayer::registerKeyboardEvent(OIS::Keyboard *keyboard) {
         camera->setPosition(Ogre::Vector3(EntityManager::getMainPlayer()->getPosition().x - 200, camera->getPositionForViewUpdate().y, EntityManager::getMainPlayer()->getPosition().z));
         camera->lookAt(EntityManager::getMainPlayer()->getPosition());
     }
-    EntityManager::getEntityManager()->releaseEntity();
 }
 
 bool    Indie::SceneDisplayer::keyPressed(const OIS::KeyEvent &ke) {
-    EntityManager::getEntityManager()->lockEntity();
     if (ke.key == OIS::KC_SPACE) {
         EntityManager::getMainPlayer()->plantABomb(mSceneManager);
     }
@@ -331,7 +324,6 @@ bool    Indie::SceneDisplayer::keyPressed(const OIS::KeyEvent &ke) {
         mFPSmode = !mFPSmode;
         setFPSCameraPosition();
     }
-    EntityManager::getEntityManager()->releaseEntity();
     return true;
 }
 

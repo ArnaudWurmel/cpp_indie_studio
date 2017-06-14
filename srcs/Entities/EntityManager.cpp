@@ -15,6 +15,7 @@ Indie::EntityManager    *Indie::EntityManager::getEntityManager(bool reset) {
     static Indie::EntityManager *entityManager = NULL;
 
     if (reset && entityManager) {
+        entityManager->_lock->lock();
         delete entityManager;
         entityManager = NULL;
     }
@@ -23,26 +24,20 @@ Indie::EntityManager    *Indie::EntityManager::getEntityManager(bool reset) {
     return (entityManager);
 }
 
-void    Indie::EntityManager::lockEntity() {
-    EntityManager::getEntityManager()->_entityLock->lock();
-}
-
-void    Indie::EntityManager::releaseEntity() {
-    EntityManager::getEntityManager()->_entityLock->unlock();
-}
-
 void    Indie::EntityManager::addEntity(AEntity *entity) {
     Indie::EntityManager    *entityManager = getEntityManager();
 
-    if (entityManager)
+    if (entityManager) {
         entityManager->_entityList.push_back(std::shared_ptr<AEntity>(entity));
+    }
 }
 
 std::vector<std::shared_ptr<Indie::AEntity> >& Indie::EntityManager::getEntityList() {
     Indie::EntityManager    *entityManager = getEntityManager();
 
-    if (entityManager)
+    if (entityManager) {
         return (entityManager->_entityList);
+    }
     throw EntityManagerException();
 }
 
@@ -136,8 +131,20 @@ std::vector<std::unique_ptr<Indie::PowerUp> >&    Indie::EntityManager::getPower
     return Indie::EntityManager::getEntityManager()->_powerUpList;
 }
 
+void    Indie::EntityManager::lockEntities() {
+    Indie::EntityManager    *entityManager = getEntityManager();
+
+    entityManager->_lock->lock();
+}
+
+void    Indie::EntityManager::unlockEntities() {
+    Indie::EntityManager    *entityManager = getEntityManager();
+
+    entityManager->_lock->unlock();
+}
+
 Indie::EntityManager::EntityManager() {
-    _entityLock = std::unique_ptr<std::mutex>(new std::mutex());
+    _lock = std::unique_ptr<std::mutex>(new std::mutex());
 }
 
 Indie::EntityManager::~EntityManager() {
@@ -160,14 +167,18 @@ Indie::AEntity *Indie::EntityManager::createEntity(Indie::EntityManager::EntityT
 Indie::AEntity *Indie::EntityManager::createBlock(Ogre::SceneManager *sceneManager, Ogre::Vector3 const& entityPos) {
     AEntity *entity = new Indie::Block(sceneManager, entityPos);
 
+    EntityManager::lockEntities();
     EntityManager::addEntity(entity);
+    EntityManager::unlockEntities();
     return entity;
 }
 
 Indie::AEntity  *Indie::EntityManager::createDynamicBlock(Ogre::SceneManager *sceneManager, Ogre::Vector3 const& entityPos) {
     AEntity *entity = new Indie::BreakableBlock(sceneManager, entityPos);
 
+    EntityManager::lockEntities();
     EntityManager::addEntity(entity);
+    EntityManager::unlockEntities();
     return (entity);
 }
 

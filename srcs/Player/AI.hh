@@ -35,12 +35,12 @@ namespace   Indie
         };
 
     private:
-		typedef bool (Indie::AI::*fncPtr)();
-		typedef bool (Indie::AI::*posPtr)(std::pair<unsigned int, unsigned int> &, Indie::AI::dir);
+        using fncPtr = bool (AI::*)();
+        using posPtr = bool (AI::*)(std::pair<unsigned int, unsigned int>&, dir);
 
     private:
-        std::vector<fncPtr> fncTab;
-        std::vector<posPtr> posFncTab;
+        static const std::vector<fncPtr> fncTab;
+        static const std::vector<posPtr> posFncTab;
         std::vector<std::vector<map>>     _map;
         std::pair<unsigned int, unsigned int>   _myPos;
         std::pair<unsigned int, unsigned int>   _enemyPos;

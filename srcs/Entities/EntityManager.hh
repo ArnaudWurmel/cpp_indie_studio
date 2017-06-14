@@ -6,7 +6,7 @@
 #define CPP_INDIE_STUDIO_ENTITYMANAGER_HH
 
 # include <vector>
-# include <mutex>
+#include <mutex>
 # include "AEntity.hh"
 # include "../MapParser/MapParser.hh"
 # include "Block.hh"
@@ -42,9 +42,10 @@ namespace Indie {
         static void addBoost(Indie::PowerUp *);
         static std::vector<std::unique_ptr<Indie::PowerUp> >&   getPowerUpList();
 
-        static void lockEntity();
-        static void releaseEntity();
         static void removeAllEntities(Ogre::SceneManager *);
+
+        static void lockEntities();
+        static void unlockEntities();
 
 
     public:
@@ -63,8 +64,7 @@ namespace Indie {
         std::vector<std::unique_ptr<Indie::Bomb> >  _bombList;
         std::vector<std::unique_ptr<Indie::PowerUp> >   _powerUpList;
         std::unique_ptr<Indie::APlayer> _mainPlayer;
-
-        std::unique_ptr<std::mutex>  _entityLock;
+        std::unique_ptr<std::mutex> _lock;
     };
 }
 
