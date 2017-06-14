@@ -16,18 +16,17 @@
 /*
 **  Constructeur
 */
-
 Indie::AI::AI(Ogre::Vector3 const &entityPos, Ogre::SceneManager *sceneManager, std::string const &pId,
               bool mainP) : APlayer(PlayerType::IA, entityPos, sceneManager, "human.mesh", mainP)
 {
-	fncTab.push_back(&Indie::AI::isForward);
-	fncTab.push_back(&Indie::AI::isBackward);
-	fncTab.push_back(&Indie::AI::isLeft);
-	fncTab.push_back(&Indie::AI::isRight);
-	posFncTab.push_back(&Indie::AI::addForward);
-	posFncTab.push_back(&Indie::AI::addBackward);
-	posFncTab.push_back(&Indie::AI::addLeft);
-	posFncTab.push_back(&Indie::AI::addRight);
+    fncTab.push_back(&Indie::AI::isForward);
+    fncTab.push_back(&Indie::AI::isBackward);
+    fncTab.push_back(&Indie::AI::isLeft);
+    fncTab.push_back(&Indie::AI::isRight);
+    posFncTab.push_back(&Indie::AI::addForward);
+    posFncTab.push_back(&Indie::AI::addBackward);
+    posFncTab.push_back(&Indie::AI::addLeft);
+    posFncTab.push_back(&Indie::AI::addRight);
     setScale(Ogre::Vector3(50.0f, 53.459f, 50.0f));
     mTransformation = Ogre::Vector3(50.0f, 50.0f, 50.0f);
     addParticlesColor("Particles/Pink");
@@ -44,8 +43,8 @@ Indie::AI::AI(Ogre::Vector3 const &entityPos, Ogre::SceneManager *sceneManager, 
 
 bool    Indie::AI::updateFromLoop(Ogre::SceneManager *sceneManager) {
     resetMap();
-    addBlock(EntityManager::getEntityList());
-    addPlayers(EntityManager::getPlayerList(), EntityManager::getMainPlayer());
+   // addBlock(EntityManager::getEntityList());
+    //addPlayers(EntityManager::getPlayerList(), EntityManager::getMainPlayer());
     if (findEnemy()) {
         findPath();
         if (_path.size()) {
@@ -243,8 +242,8 @@ void    Indie::AI::createMap()
     else
         return ;
     initMap(height, width);
-    addBlock(Indie::EntityManager::getEntityList());
-    addPlayers(Indie::EntityManager::getPlayerList(), Indie::EntityManager::getMainPlayer());
+    //addBlock(Indie::EntityManager::getEntityList());
+    //addPlayers(Indie::EntityManager::getPlayerList(), Indie::EntityManager::getMainPlayer());
 }
 
 /*
@@ -292,7 +291,7 @@ void    Indie::AI::findPath() {
 
     tmpMap = _map;
     end = false;
-    currentPos = _myPos;
+    //currentPos = _myPos;
     path.push(currentPos);
     if (isANode(currentPos))
         node.push(currentPos);
@@ -306,7 +305,7 @@ void    Indie::AI::findPath() {
                 node.push(currentPos);
             tmpMap[currentPos.first][currentPos.second] = ALREADY_PASS;
         } else if (node.size() > 0) {
-            currentPos = node.top();
+      //      currentPos = node.top();
             node.pop();
         } else
             end = true;
@@ -315,7 +314,7 @@ void    Indie::AI::findPath() {
     }
     while (path.size() > 0)
     {
-        _path.push_back(path.top());
+        //_path.push_back(path.top());
         path.pop();
     }
     std::reverse(_path.begin(), _path.end());
@@ -378,13 +377,13 @@ bool    Indie::AI::findNextPos(std::pair<unsigned int, unsigned int>& currentPos
     i = 0;
     while (i < 4)
     {
-        nextPos = currentPos;
+        //nextPos = currentPos;
         addDir(_heuristic[i], nextPos);
         it = _map.begin() + nextPos.first;
         if (it != _map.end())
             it2 = (*it).begin() + nextPos.second;
         if (it2 != (*it).end() && (*it2) != ALREADY_PASS && (*it2) != STATIC_BLOCK) {
-            currentPos = nextPos;
+          //  currentPos = nextPos;
             return true;
         }
         i++;
@@ -417,7 +416,7 @@ bool    Indie::AI::isANode(const std::pair<unsigned int, unsigned int> &pos) {
     nbPass = 0;
     while (i < 4)
     {
-        nextPos = pos;
+//        nextPos = pos;
         if ((this->*posFncTab[i])(nextPos, _heuristic[i]))
             nbPass += 1;
         i++;
