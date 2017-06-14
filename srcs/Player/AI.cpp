@@ -13,29 +13,6 @@
 #include "../UserManager/User.hh"
 #include "../Exception/Exception.hh"
 
-
-/*
-** Tableau de pointer sur fonction pour trouver l'heuristique
-*/
-
-const std::vector<Indie::AI::fncPtr> Indie::AI::fncTab = {
-        &Indie::AI::isForward,
-        &Indie::AI::isBackward,
-        &Indie::AI::isLeft,
-        &Indie::AI::isRight
-};
-
-/*
-**  Tableau de pointer sur fonction pour changer la position en fonction de la direction
-*/
-
-const std::vector<Indie::AI::posPtr> Indie::AI::posFncTab = {
-        &Indie::AI::addForward,
-        &Indie::AI::addBackward,
-        &Indie::AI::addLeft,
-        &Indie::AI::addRight
-};
-
 /*
 **  Constructeur
 */
@@ -43,6 +20,14 @@ const std::vector<Indie::AI::posPtr> Indie::AI::posFncTab = {
 Indie::AI::AI(Ogre::Vector3 const &entityPos, Ogre::SceneManager *sceneManager, std::string const &pId,
               bool mainP) : APlayer(PlayerType::IA, entityPos, sceneManager, "human.mesh", mainP)
 {
+	fncTab.push_back(&Indie::AI::isForward);
+	fncTab.push_back(&Indie::AI::isBackward);
+	fncTab.push_back(&Indie::AI::isLeft);
+	fncTab.push_back(&Indie::AI::isRight);
+	posFncTab.push_back(&Indie::AI::addForward);
+	posFncTab.push_back(&Indie::AI::addBackward);
+	posFncTab.push_back(&Indie::AI::addLeft);
+	posFncTab.push_back(&Indie::AI::addRight);
     setScale(Ogre::Vector3(50.0f, 53.459f, 50.0f));
     mTransformation = Ogre::Vector3(50.0f, 50.0f, 50.0f);
     addParticlesColor("Particles/Pink");
