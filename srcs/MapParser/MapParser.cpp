@@ -38,6 +38,7 @@ void    Indie::MapParser::loadMap(std::string const& mapPath)
     std::cout << dataManager->getMap(User::getUser()->getRoomId(), map) << std::endl;
     std::vector<std::string>::iterator  it;
 
+    _map.clear();
     it = map.begin();
     while (it != map.end()) {
         std::cout << (*it) << std::endl;

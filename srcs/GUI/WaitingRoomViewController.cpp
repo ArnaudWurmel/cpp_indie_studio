@@ -72,9 +72,11 @@ Indie::AViewController::ExitStatus   Indie::WaitingRoomViewController::updateVie
         mPlayerList->addItem(toDisp, NULL);
         ++it;
     }
-    if (mMenuList->getItemCount() > 1) {
+    if (mMenuList->getItemCount() == 3) {
         mMenuList->setItemNameAt(1, "#FFFFFFMap name : #F1C40F" + _mapName);
     }
+    else if (mMenuList->getItemCount() == 2)
+        mMenuList->setItemNameAt(0, "#FFFFFFMap name : #F1C40F" + _mapName);
     setImageForMap();
     _lock->unlock();
     return _state;
