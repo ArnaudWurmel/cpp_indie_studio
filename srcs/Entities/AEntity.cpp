@@ -129,4 +129,9 @@ void    Indie::AEntity::setMaterialName(std::string const& materialName) {
     mEntity->setMaterialName(materialName);
 }
 
+void    Indie::AEntity::setHidden(bool hidden) {
+    if (isAlive())
+        mEntity->setVisible(!hidden);
+}
+
 Indie::AEntity::~AEntity() {}

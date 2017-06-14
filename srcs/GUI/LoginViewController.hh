@@ -9,10 +9,11 @@
 # include <MYGUI/MyGUI_OgrePlatform.h>
 # include "AViewController.hh"
 # include "RootViewController.hh"
+# include "BackgroundController/BackgroundImageController.hh"
 
 namespace   Indie {
 
-    class LoginViewController : public Indie::AViewController {
+    class LoginViewController : public Indie::AViewController, public Indie::BackgroundImageController {
     public:
         LoginViewController(Indie::RootViewController&);
         ~LoginViewController();
@@ -37,7 +38,6 @@ namespace   Indie {
         MyGUI::ButtonPtr mConnectButton;
 
     private:
-        std::unique_ptr<Ogre::Rectangle2D>  mBackgroundRect;
         Ogre::MaterialPtr mMaterial;
 
     private:

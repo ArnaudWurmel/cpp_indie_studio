@@ -9,8 +9,8 @@
 #include "../UserManager/User.hh"
 #include "GlobalRankingViewController.hh"
 
-Indie::RoomListViewController::RoomListViewController(RootViewController& delegate) : AViewController(delegate) {
-
+Indie::RoomListViewController::RoomListViewController(RootViewController& delegate) : AViewController(delegate), BackgroundMapController(delegate) {
+    _indexSelected = -1;
 }
 
 void    Indie::RoomListViewController::initView() {
@@ -37,15 +37,15 @@ void    Indie::RoomListViewController::initView() {
 void    Indie::RoomListViewController::setUpMenu(unsigned int width, unsigned int height) {
     mMenuList = _delegate.getGUI()->createWidget<MyGUI::ListBox>("ListBoxMenu", 10, 150, width / 3, height - 350, MyGUI::Align::Default, "Main");
     mMenuList->eventListSelectAccept += MyGUI::newDelegate(this, &Indie::RoomListViewController::selectedAction);
-    _functionPtr.push_back(std::make_pair(std::string("#FFFFFFCreate Room"), &Indie::RoomListViewController::createNewRoom));
-    _functionPtr.push_back(std::make_pair(std::string("#FFFFFFRefresh List"), &Indie::RoomListViewController::refreshButton));
-    _functionPtr.push_back(std::make_pair(std::string("#FFFFFFGlobal Ranking"), &Indie::RoomListViewController::showGlobalRanking));
-    _functionPtr.push_back(std::make_pair(std::string("#E74C3CLog out"), &Indie::RoomListViewController::disconnectUser));
+    _functionPtr.push_back({std::string("#FFFFFFCreate Room"), &Indie::RoomListViewController::createNewRoom, 1, BackgroundMapController::GO_THROUGHT});
+    _functionPtr.push_back({std::string("#FFFFFFRefresh List"), &Indie::RoomListViewController::refreshButton, 0, BackgroundMapController::NONE});
+    _functionPtr.push_back({std::string("#FFFFFFGlobal Ranking"), &Indie::RoomListViewController::showGlobalRanking, 1, BackgroundMapController::GO_THROUGHT});
+    _functionPtr.push_back({std::string("#E74C3CLog out"), &Indie::RoomListViewController::disconnectUser, 1, BackgroundMapController::BREAK});
 
-    std::vector<std::pair<std::string, void (Indie::RoomListViewController::*)()> >::iterator it = _functionPtr.begin();
+    std::vector<ActionDelegate>::iterator it = _functionPtr.begin();
 
     while (it != _functionPtr.end()) {
-        mMenuList->addItem((*it).first, *it);
+        mMenuList->addItem((*it).menuName, *it);
         ++it;
     }
 }
@@ -63,7 +63,14 @@ void    Indie::RoomListViewController::selectedAction(MyGUI::ListBox *_sender, s
     static_cast<void>(_sender);
     mMenuList->clearIndexSelected();
     if (index < _functionPtr.size()) {
-        (this->*(this->_functionPtr[index].second))();
+        if (_functionPtr[index].changeScreen) {
+            _indexSelected = index;
+            menuSelected(_delegate, _functionPtr[index].type);
+        }
+        else {
+            if (index < _functionPtr.size())
+                (this->*(this->_functionPtr[index].fctPtr))();
+        }
     }
 }
 
@@ -104,19 +111,28 @@ void    Indie::RoomListViewController::showGlobalRanking() {
 }
 
 void    Indie::RoomListViewController::viewShouldReapear() {
+    _indexSelected = -1;
+    generateBackground(_delegate);
     mRoomList->setVisible(true);
     mMenuList->setVisible(true);
     mTextBox->setVisible(true);
+    setHidden(false);
     _delegate.getGUI()->showPointer();
 }
 
 void    Indie::RoomListViewController::viewShouldDisapear() {
+    _indexSelected = -1;
     mRoomList->setVisible(false);
     mTextBox->setVisible(false);
     mMenuList->setVisible(false);
+    setHidden(true);
 }
 
 Indie::AViewController::ExitStatus   Indie::RoomListViewController::updateView() {
+    if (!updateBackground(_delegate) && _indexSelected >= 0 && _indexSelected < _functionPtr.size()) {
+        (this->*(this->_functionPtr[_indexSelected].fctPtr))();
+        _indexSelected = -1;
+    }
     return _state;
 }
 

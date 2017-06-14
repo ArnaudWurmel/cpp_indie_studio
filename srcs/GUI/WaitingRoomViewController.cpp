@@ -82,6 +82,7 @@ void    Indie::WaitingRoomViewController::viewShouldReapear() {
     mPlayerList->setVisible(true);
     mTextBox->setVisible(true);
     mMenuList->setVisible(true);
+    mMapBox->setVisible(true);
     _lock->unlock();
     _delegate.getGUI()->showPointer();
 }
@@ -91,6 +92,8 @@ void    Indie::WaitingRoomViewController::viewShouldDisapear() {
     mPlayerList->setVisible(false);
     mTextBox->setVisible(false);
     mMenuList->setVisible(false);
+    mMapBox->setVisible(false);
+
     _lock->lock();
 }
 

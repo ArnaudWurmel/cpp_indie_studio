@@ -54,6 +54,8 @@ namespace Indie
 
         virtual void    destroyEntity(Ogre::SceneManager *);
 
+        void    setHidden(bool);
+
     protected:
         Ogre::SceneNode *mSceneNode;
         Ogre::Entity    *mEntity;

@@ -11,9 +11,17 @@
 
 # include "RootViewController.hh"
 # include "../Models/Room.hh"
+# include "BackgroundController/BackgroundMapController.hh"
 
 namespace   Indie {
-    class RoomListViewController : public AViewController {
+    class RoomListViewController : public AViewController, public BackgroundMapController {
+    public:
+        struct  ActionDelegate {
+            std::string menuName;
+            void (Indie::RoomListViewController::*fctPtr)();
+            char    changeScreen;
+            BackgroundMapController::AnimationType type;
+        };
     public:
         RoomListViewController(RootViewController&);
         ~RoomListViewController();
@@ -45,7 +53,9 @@ namespace   Indie {
 
     private:
         std::vector<Room>   _roomList;
-        std::vector<std::pair<std::string, void (Indie::RoomListViewController::*)()> > _functionPtr;
+        std::vector<ActionDelegate> _functionPtr;
+//        std::vector<std::pair<std::string, void (Indie::RoomListViewController::*)()> > _functionPtr;
+        int                 _indexSelected;
     };
 }
 

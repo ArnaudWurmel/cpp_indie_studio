@@ -20,9 +20,7 @@ Indie::GameManager *Indie::GameManager::getSingleton(bool reset) {
     return singleton;
 }
 
-Indie::GameManager::GameManager() {
-
-}
+Indie::GameManager::GameManager() {}
 
 unsigned int const& Indie::GameManager::createRoom(bool& success) {
     try {
