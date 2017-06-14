@@ -45,12 +45,10 @@ void    Indie::WaitingRoomViewController::initView() {
 void    Indie::WaitingRoomViewController::setImageForMap() {
    Ogre::MaterialPtr ptr = Ogre::MaterialManager::getSingleton().getByName("MapOverview/" + _mapName);
 
-    if (ptr) {
+    if (ptr.isNull())
+		mMapBox->setImageTexture("Unknown.png");
+	else
         mMapBox->setImageTexture(_mapName + ".png");
-    }
-    else {
-        mMapBox->setImageTexture("Unknown.png");
-    }
 }
 
 Indie::AViewController::ExitStatus   Indie::WaitingRoomViewController::updateView() {

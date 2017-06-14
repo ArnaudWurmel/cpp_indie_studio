@@ -14,6 +14,13 @@
 #include "../PowerUp/ExtendBoost.hh"
 #include "../PowerUp/BombUp.hh"
 
+#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
+void	bzero(void *s, unsigned int n)
+{
+	memset(s, 0, n);
+}
+#endif
+
 Indie::DataManager::DataManager(const std::string& ip, int port) : _ip(ip), _port(port)  {
 #ifdef WIN32
     WSADATA wsa;

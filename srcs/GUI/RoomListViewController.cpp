@@ -35,12 +35,18 @@ void    Indie::RoomListViewController::initView() {
 }
 
 void    Indie::RoomListViewController::setUpMenu(unsigned int width, unsigned int height) {
+	Indie::RoomListViewController::ActionDelegate createroom = {std::string("#FFFFFFCreate Room"), &Indie::RoomListViewController::createNewRoom, 1, BackgroundMapController::GO_THROUGHT};
+	Indie::RoomListViewController::ActionDelegate refreshlist = {std::string("#FFFFFFRefresh List"), &Indie::RoomListViewController::refreshButton, 0, BackgroundMapController::NONE};
+	Indie::RoomListViewController::ActionDelegate globalranking = {std::string("#FFFFFFGlobal Ranking"), &Indie::RoomListViewController::showGlobalRanking, 1, BackgroundMapController::GO_THROUGHT};
+	Indie::RoomListViewController::ActionDelegate logout = {std::string("#E74C3CLog out"), &Indie::RoomListViewController::disconnectUser, 1, BackgroundMapController::BREAK};
+	Indie::RoomListViewController::ActionDelegate joinroom = {std::string("JOINROOM"), &Indie::RoomListViewController::joinRoom, 1, BackgroundMapController::GO_THROUGHT};
+
     mMenuList = _delegate.getGUI()->createWidget<MyGUI::ListBox>("ListBoxMenu", 10, 150, width / 3, height - 350, MyGUI::Align::Default, "Main");
     mMenuList->eventListSelectAccept += MyGUI::newDelegate(this, &Indie::RoomListViewController::selectedAction);
-    _functionPtr.push_back({std::string("#FFFFFFCreate Room"), &Indie::RoomListViewController::createNewRoom, 1, BackgroundMapController::GO_THROUGHT});
-    _functionPtr.push_back({std::string("#FFFFFFRefresh List"), &Indie::RoomListViewController::refreshButton, 0, BackgroundMapController::NONE});
-    _functionPtr.push_back({std::string("#FFFFFFGlobal Ranking"), &Indie::RoomListViewController::showGlobalRanking, 1, BackgroundMapController::GO_THROUGHT});
-    _functionPtr.push_back({std::string("#E74C3CLog out"), &Indie::RoomListViewController::disconnectUser, 1, BackgroundMapController::BREAK});
+    _functionPtr.push_back(createroom);
+    _functionPtr.push_back(refreshlist);
+    _functionPtr.push_back(globalranking);
+    _functionPtr.push_back(logout);
 
     std::vector<ActionDelegate>::iterator it = _functionPtr.begin();
 
@@ -48,7 +54,7 @@ void    Indie::RoomListViewController::setUpMenu(unsigned int width, unsigned in
         mMenuList->addItem((*it).menuName, *it);
         ++it;
     }
-    _functionPtr.push_back({std::string("JOINROOM"), &Indie::RoomListViewController::joinRoom, 1, BackgroundMapController::GO_THROUGHT});
+    _functionPtr.push_back(joinroom);
 }
 
 void    Indie::RoomListViewController::createNewRoom() {
