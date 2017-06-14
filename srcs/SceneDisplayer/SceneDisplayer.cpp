@@ -27,10 +27,12 @@ void Indie::SceneDisplayer::initScene(RootViewController& delegate) {
     initScoreboard(delegate);
     bool    success = false;
     DataManager *dataManager = Indie::DataManager::getSingloton();
+    EntityManager::lockEntity();
     Ogre::Vector3   posPlayer = dataManager->getPlayerStart(User::getUser()->getLogName(), success);
     if (!success)
         throw GameException();
     EntityManager::createHuman(mSceneManager, Ogre::Vector3(posPlayer.x, 32, posPlayer.z), User::getUser()->getLogName());
+    EntityManager::releaseEntity();
     /*try {
         EntityManager::createEnemy(mSceneManager, Ogre::Vector3(0, 0, 0), "AI001", true);
     } catch (std::exception& e) {
@@ -117,7 +119,8 @@ void    Indie::SceneDisplayer::updaterThread() {
             EntityManager::getEntityManager()->lockEntity();
             if (EntityManager::getMainPlayer()->isAlive())
                 dataManager->updatePlayerPos(User::getUser()->getLogName(), EntityManager::getMainPlayer()->getPosition());
-            dataManager->updatePlayerPos(User::getUser()->getLogName(), EntityManager::getMainPlayer()->getPosition());
+            else
+                EntityManager::getEntityManager()->releaseEntity();
             dataManager->listBomb(User::getUser()->getRoomId(), User::getUser()->getLogName());
             dataManager->getPowerUpList();
 
