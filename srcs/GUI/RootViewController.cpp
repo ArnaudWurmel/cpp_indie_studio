@@ -119,12 +119,16 @@ Indie::RootViewController::~RootViewController() {
         }
     }
     mControllerList.clear();
-    mGUI->shutdown();
-    delete mGUI;
-    mGUI = 0;
-    mPlatform->shutdown();
-    delete mPlatform;
-    mPlatform = 0;
+    try {
+        mGUI->shutdown();
+        delete mGUI;
+        mGUI = 0;
+        mPlatform->shutdown();
+        delete mPlatform;
+        mPlatform = 0;
+    } catch (std::exception& e) {
+        std::cout << e.what() << std::endl;
+    }
     Ogre::WindowEventUtilities::removeWindowEventListener(mRenderWindow, mEventListener.get());
     mEventListener->windowClosed(mRenderWindow);
     mRoot.reset();

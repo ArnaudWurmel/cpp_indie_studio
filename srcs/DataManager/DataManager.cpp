@@ -169,6 +169,7 @@ Ogre::Vector3 Indie::DataManager::getPlayerStart(std::string pName, bool& succes
 void    Indie::DataManager::updatePlayerPos(std::string const &pName, Ogre::Vector3 const& entityPos) {
     std::string route = "/game/updatePlayer ";
 
+    EntityManager::lockEntities();
     route = route + pName + " " + std::to_string(entityPos.z) + " " + std::to_string(entityPos.x) + " " + std::to_string(EntityManager::getMainPlayer()->getRotation());
     std::vector<std::string>    tokenList = sendCommand(route);
     if (tokenList.size() == 0 || std::atoi(tokenList[0].c_str()) != 200)
@@ -251,6 +252,7 @@ void    Indie::DataManager::listBomb(unsigned int roomId, std::string const& pId
     if ((tokenList.size() - 1) % 5 != 0 || tokenList.size() - 1 <= 0)
         return ;
     unsigned int i = 1;
+    EntityManager::lockEntities();
     while (i < tokenList.size()) {
         bool    found = false;
 
@@ -268,6 +270,7 @@ void    Indie::DataManager::listBomb(unsigned int roomId, std::string const& pId
         }
         i += 5;
     }
+    EntityManager::unlockEntities();
 }
 
 std::vector<Indie::Room>    Indie::DataManager::listRoom() {
@@ -373,7 +376,7 @@ void    Indie::DataManager::getPowerUpList() {
     if (tokenList.size() - 1 <= 0 || (tokenList.size() - 1) % 4 != 0)
         return ;
     std::vector<PowerUp *>::iterator it = EntityManager::getPowerUpList().begin();
-
+    EntityManager::lockEntities();
     while (it != EntityManager::getPowerUpList().end()) {
         (*it)->setTaken(true);
         ++it;
@@ -410,6 +413,7 @@ void    Indie::DataManager::getPowerUpList() {
         }
         ++it;
     }
+    EntityManager::unlockEntities();
 }
 
 bool    Indie::DataManager::takePowerUp(int powerUpId) {
