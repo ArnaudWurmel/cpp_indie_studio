@@ -38,6 +38,7 @@ namespace   Indie {
         void    refreshButton();
         void    createNewRoom();
         void    showGlobalRanking();
+        void    joinRoom();
 
     private:
         void    selectedRoom(MyGUI::ListBox *, size_t);
