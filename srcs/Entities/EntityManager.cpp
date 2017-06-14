@@ -2,9 +2,12 @@
 // Created by wurmel on 22/05/17.
 //
 
+#include <thread>
 #include <map>
+#include <sys/types.h>
 #include <functional>
 #include <exception>
+#include <iostream>
 #include "EntityManager.hh"
 #include "../Entities/BreakableBlock.hh"
 #include "../Player/HumanPlayer.hh"
@@ -142,11 +145,13 @@ void    Indie::EntityManager::lockEntities() {
     Indie::EntityManager    *entityManager = getEntityManager();
 
     entityManager->_lock->lock();
+    std::cout << "Locked by " <<  pthread_self() << std::endl;
 }
 
 void    Indie::EntityManager::unlockEntities() {
     Indie::EntityManager    *entityManager = getEntityManager();
 
+    std::cout << "Unlocked by " << pthread_self() << std::endl;
     entityManager->_lock->unlock();
 }
 

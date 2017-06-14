@@ -171,6 +171,7 @@ void    Indie::DataManager::updatePlayerPos(std::string const &pName, Ogre::Vect
 
     EntityManager::lockEntities();
     route = route + pName + " " + std::to_string(entityPos.z) + " " + std::to_string(entityPos.x) + " " + std::to_string(EntityManager::getMainPlayer()->getRotation());
+    EntityManager::unlockEntities();
     std::vector<std::string>    tokenList = sendCommand(route);
     if (tokenList.size() == 0 || std::atoi(tokenList[0].c_str()) != 200)
         std::cerr << "Update player failed" << std::endl;
