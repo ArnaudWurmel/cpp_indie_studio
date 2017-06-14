@@ -48,6 +48,7 @@ void    Indie::RoomListViewController::setUpMenu(unsigned int width, unsigned in
         mMenuList->addItem((*it).menuName, *it);
         ++it;
     }
+    _functionPtr.push_back({std::string("JOINROOM"), &Indie::RoomListViewController::joinRoom, 1, BackgroundMapController::GO_THROUGHT});
 }
 
 void    Indie::RoomListViewController::createNewRoom() {
@@ -83,8 +84,10 @@ void    Indie::RoomListViewController::selectedRoom(MyGUI::ListBox *_sender, siz
     mRoomList->clearIndexSelected();
     if (index < _roomList.size()) {
         DataManager *dataManager = DataManager::getSingloton();
-        if (dataManager->joinRoom(User::getUser()->getLogName(), _roomList[index].getRoomID()))
-            _delegate.addViewController(new Indie::WaitingRoomViewController(_delegate));
+        if (dataManager->joinRoom(User::getUser()->getLogName(), _roomList[index].getRoomID())) {
+            menuSelected(_delegate, _functionPtr[_functionPtr.size() - 1].type);
+            _indexSelected = _functionPtr.size() - 1;
+        }
     }
 }
 
@@ -126,6 +129,10 @@ void    Indie::RoomListViewController::viewShouldDisapear() {
     mTextBox->setVisible(false);
     mMenuList->setVisible(false);
     setHidden(true);
+}
+
+void    Indie::RoomListViewController::joinRoom() {
+    _delegate.addViewController(new Indie::WaitingRoomViewController(_delegate));
 }
 
 Indie::AViewController::ExitStatus   Indie::RoomListViewController::updateView() {
