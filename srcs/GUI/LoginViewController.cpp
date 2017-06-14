@@ -88,10 +88,11 @@ Indie::LoginViewController::ExitStatus    Indie::LoginViewController::updateView
 		Ogre::MaterialManager::getSingleton().remove("Background", "General");
 #endif
         mMaterial = Ogre::MaterialManager::getSingleton().create("Background", "General");
-        mMaterial->getTechnique(0)->getPass(0)->createTextureUnitState("background.jpeg");
+        mMaterial->getTechnique(0)->getPass(0)->createTextureUnitState("background.png");
         mMaterial->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
         mMaterial->getTechnique(0)->getPass(0)->setDepthWriteEnabled(false);
         mMaterial->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+        mMaterial->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setScrollAnimation(-0.05, 0);
         setBackgroundMaterialName("Background");
         ++mSplashscreenTime;
         viewShouldReapear();
