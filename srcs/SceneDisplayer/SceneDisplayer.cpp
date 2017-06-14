@@ -115,7 +115,10 @@ void    Indie::SceneDisplayer::updaterThread() {
 
     while (true) {
         if (_locker.try_lock()) {
+            EntityManager::getEntityManager()->lockEntity();
             dataManager->updateAllPlayers(User::getUser()->getRoomId(), mSceneManager);
+            EntityManager::getEntityManager()->releaseEntity();
+
             EntityManager::getEntityManager()->lockEntity();
             if (EntityManager::getMainPlayer()->isAlive())
                 dataManager->updatePlayerPos(User::getUser()->getLogName(), EntityManager::getMainPlayer()->getPosition());
@@ -267,9 +270,8 @@ void    Indie::SceneDisplayer::setFPSCameraPosition() {
 Indie::SceneDisplayer::~SceneDisplayer() {
     _locker.lock();
     _thread->join();
-    //mSceneManager->destroyEntity(mGroundEntity);
     EntityManager::removeAllEntities(mSceneManager);
-    //Ogre::MeshManager::getSingleton().remove("ground");
+    EntityManager::getEntityManager(true);
     std::vector<std::unique_ptr<AEntity> >::iterator    it = _groundEntityList.begin();
 
     while (it != _groundEntityList.end()) {

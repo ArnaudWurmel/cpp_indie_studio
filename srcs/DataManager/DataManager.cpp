@@ -183,6 +183,7 @@ void Indie::DataManager::updateAllPlayers(unsigned int roomId, Ogre::SceneManage
     std::vector<std::string>    tokenList = sendCommand(route);
     if (tokenList.size() == 0 || std::atoi(tokenList[0].c_str()) != 200)
         return ;
+    EntityManager::lockEntity();
     std::vector<std::unique_ptr<APlayer> >::iterator    it = EntityManager::getPlayerList().begin();
     while (it != EntityManager::getPlayerList().end()) {
         (*it)->setUpdate(false);
@@ -229,6 +230,7 @@ void Indie::DataManager::updateAllPlayers(unsigned int roomId, Ogre::SceneManage
         }
         ++it;
     }
+    EntityManager::releaseEntity();
 }
 
 void    Indie::DataManager::addBomb(unsigned int roomId, std::string const& pId, int x, int y, int power) {
