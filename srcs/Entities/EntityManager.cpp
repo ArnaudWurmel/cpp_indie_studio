@@ -23,6 +23,14 @@ Indie::EntityManager    *Indie::EntityManager::getEntityManager(bool reset) {
     return (entityManager);
 }
 
+void    Indie::EntityManager::lockEntity() {
+    EntityManager::getEntityManager()->_entityLock->lock();
+}
+
+void    Indie::EntityManager::releaseEntity() {
+    EntityManager::getEntityManager()->_entityLock->unlock();
+}
+
 void    Indie::EntityManager::addEntity(AEntity *entity) {
     Indie::EntityManager    *entityManager = getEntityManager();
 
@@ -128,7 +136,9 @@ std::vector<std::unique_ptr<Indie::PowerUp> >&    Indie::EntityManager::getPower
     return Indie::EntityManager::getEntityManager()->_powerUpList;
 }
 
-Indie::EntityManager::EntityManager() {}
+Indie::EntityManager::EntityManager() {
+    _entityLock = std::unique_ptr<std::mutex>(new std::mutex());
+}
 
 Indie::EntityManager::~EntityManager() {
     _entityList.clear();

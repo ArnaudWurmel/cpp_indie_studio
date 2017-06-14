@@ -114,8 +114,10 @@ void    Indie::SceneDisplayer::updaterThread() {
     while (true) {
         if (_locker.try_lock()) {
             dataManager->updateAllPlayers(User::getUser()->getRoomId(), mSceneManager);
+            EntityManager::getEntityManager()->lockEntity();
             if (EntityManager::getMainPlayer()->isAlive())
                 dataManager->updatePlayerPos(User::getUser()->getLogName(), EntityManager::getMainPlayer()->getPosition());
+            dataManager->updatePlayerPos(User::getUser()->getLogName(), EntityManager::getMainPlayer()->getPosition());
             dataManager->listBomb(User::getUser()->getRoomId(), User::getUser()->getLogName());
             dataManager->getPowerUpList();
 
@@ -141,8 +143,11 @@ void    Indie::SceneDisplayer::updaterThread() {
 bool    Indie::SceneDisplayer::updateScene() {
     std::vector<std::shared_ptr<AEntity> >::iterator    it;
 
-    if (!EntityManager::getMainPlayer()->updateFromLoop(mSceneManager))
+    EntityManager::getEntityManager()->lockEntity();
+    if (!EntityManager::getMainPlayer()->updateFromLoop(mSceneManager)) {
+        EntityManager::getEntityManager()->releaseEntity();
         return false;
+    }
     it = EntityManager::getEntityList().begin();
     while (it != EntityManager::getEntityList().end()) {
         if (!(*it)->updateFromLoop(mSceneManager)) {
@@ -176,6 +181,7 @@ bool    Indie::SceneDisplayer::updateScene() {
         (*itPU)->updateFromLoop(mSceneManager);
         ++itPU;
     }
+    EntityManager::getEntityManager()->releaseEntity();
     return true;
 }
 
@@ -290,6 +296,7 @@ void Indie::SceneDisplayer::initEventRegister() {
 void    Indie::SceneDisplayer::registerKeyboardEvent(OIS::Keyboard *keyboard) {
     std::map<OIS::KeyCode, void (Indie::SceneDisplayer::*)(OIS::Keyboard *)>::iterator it;
 
+    EntityManager::getEntityManager()->lockEntity();
     it = _functionPtr.begin();
     while (it != _functionPtr.end()) {
         if (keyboard->isKeyDown((*it).first) && (EntityManager::getMainPlayer()->isGodMode() || makeCollide(EntityManager::getMainPlayer(), (*it).first)))
@@ -303,9 +310,11 @@ void    Indie::SceneDisplayer::registerKeyboardEvent(OIS::Keyboard *keyboard) {
         camera->setPosition(Ogre::Vector3(EntityManager::getMainPlayer()->getPosition().x - 200, camera->getPositionForViewUpdate().y, EntityManager::getMainPlayer()->getPosition().z));
         camera->lookAt(EntityManager::getMainPlayer()->getPosition());
     }
+    EntityManager::getEntityManager()->releaseEntity();
 }
 
 bool    Indie::SceneDisplayer::keyPressed(const OIS::KeyEvent &ke) {
+    EntityManager::getEntityManager()->lockEntity();
     if (ke.key == OIS::KC_SPACE) {
         EntityManager::getMainPlayer()->plantABomb(mSceneManager);
     }
@@ -317,6 +326,7 @@ bool    Indie::SceneDisplayer::keyPressed(const OIS::KeyEvent &ke) {
         mFPSmode = !mFPSmode;
         setFPSCameraPosition();
     }
+    EntityManager::getEntityManager()->releaseEntity();
     return true;
 }
 
