@@ -9,7 +9,7 @@
 #include "RoomListViewController.hh"
 #include "../Config/Config.hh"
 
-Indie::LoginViewController::LoginViewController(Indie::RootViewController& delegate) : AViewController(delegate) {
+Indie::LoginViewController::LoginViewController(Indie::RootViewController& delegate) : AViewController(delegate), BackgroundImageController(delegate) {
     mSplashscreenTime = 0;
 }
 
@@ -42,18 +42,10 @@ void    Indie::LoginViewController::initView() {
     Ogre::TextureUnitState *FadeTextureLayer = mMaterial->getTechnique(0)->getPass(0)->getTextureUnitState(0);
     mMaterial->getTechnique(0)->getPass(0)->setSceneBlending(Ogre::SBT_TRANSPARENT_ALPHA);
     FadeTextureLayer->setAlphaOperation(Ogre::LBX_SOURCE1, Ogre::LBS_MANUAL, Ogre::LBS_CURRENT, 0);
-    mBackgroundRect = std::unique_ptr<Ogre::Rectangle2D>(new Ogre::Rectangle2D(true));
-    mBackgroundRect->setCorners(-1.0, 1.0, 1.0, -1.0);
-    mBackgroundRect->setMaterial("Background");
-    mBackgroundRect->setRenderQueueGroup(Ogre::RENDER_QUEUE_BACKGROUND);
-    Ogre::AxisAlignedBox axisAlignedBox(Ogre::Vector3(0, 0, 0), Ogre::Vector3(height, 0, width));
-    //aabInf.setInfinite();
-    mBackgroundRect->setBoundingBox(axisAlignedBox);
-    Ogre::SceneNode* node = _delegate.getSceneManager()->getRootSceneNode()->createChildSceneNode("Background");
-    node->attachObject(mBackgroundRect.get());
+    setBackgroundMaterialName("Background");
     _delegate.getGUI()->hidePointer();
     viewShouldDisapear();
-    mBackgroundRect->setVisible(true);
+    showBackground();
 }
 
 void    Indie::LoginViewController::viewShouldDisapear() {
@@ -62,6 +54,7 @@ void    Indie::LoginViewController::viewShouldDisapear() {
     mLoginEditBox->setVisible(false);
     mPasswdEditBox->setVisible(false);
     mConnectButton->setVisible(false);
+    hideBackground();
 }
 
 void    Indie::LoginViewController::viewShouldReapear() {
@@ -71,6 +64,7 @@ void    Indie::LoginViewController::viewShouldReapear() {
     mPasswdEditBox->setVisible(true);
     mConnectButton->setVisible(true);
     _delegate.getGUI()->showPointer();
+    showBackground();
 }
 
 Indie::LoginViewController::ExitStatus    Indie::LoginViewController::updateView() {
@@ -98,7 +92,7 @@ Indie::LoginViewController::ExitStatus    Indie::LoginViewController::updateView
         mMaterial->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
         mMaterial->getTechnique(0)->getPass(0)->setDepthWriteEnabled(false);
         mMaterial->getTechnique(0)->getPass(0)->setLightingEnabled(false);
-        mBackgroundRect->setMaterial("Background");
+        setBackgroundMaterialName("Background");
         ++mSplashscreenTime;
         viewShouldReapear();
     }
