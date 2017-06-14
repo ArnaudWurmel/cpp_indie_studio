@@ -23,7 +23,7 @@ Indie::Room::Room() {
 }
 
 bool    Indie::Room::addPlayerToRoom(std::string const& pName) {
-    if (_running && !_game->addPlayerToGame(pName)) {
+    if (_running) {
         return false;
     }
     if (_playerList.size() < 4) {
