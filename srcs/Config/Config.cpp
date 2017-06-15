@@ -39,3 +39,7 @@ std::string     Indie::Config::getGameName() {
 Ogre::Real  Indie::Config::getSpeedBoostIncrease() {
     return Ogre::Real(0.5);
 }
+
+unsigned int    Indie::Config::getWinLoseAnimationTime() {
+    return 360;
+}

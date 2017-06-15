@@ -31,6 +31,11 @@ namespace Indie
          */
         static unsigned int getNbTicks();
         static std::string  getGameName();
+
+        /*
+         * Overlay infos
+         */
+        static unsigned int getWinLoseAnimationTime();
     };
 }
 

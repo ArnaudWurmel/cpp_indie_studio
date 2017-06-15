@@ -6,6 +6,7 @@
 #include "RootViewController.hh"
 #include "../Bomberman/Bomberman.hh"
 #include "LoginViewController.hh"
+#include "../Entities/EntityManager.hh"
 
 Indie::RootViewController::RootViewController() {
 
@@ -60,8 +61,15 @@ void Indie::RootViewController::runApp() {
         }
         std::chrono::time_point<std::chrono::system_clock> started = std::chrono::system_clock::now();
 
-        if (mRenderWindow->isClosed() || !mRoot->renderOneFrame(timeSinceLastFrame))
+        if (mRenderWindow->isClosed())
             return ;
+        Indie::EntityManager::lockEntities();
+        if (!mRoot->renderOneFrame()) {
+            Indie::EntityManager::unlockEntities();
+            return ;
+        }
+        Indie::EntityManager::unlockEntities();
+        std::cout << "Entity release" << std::endl;
         std::chrono::time_point<std::chrono::system_clock> ended = std::chrono::system_clock::now();
         timeSinceLastFrame = (std::chrono::duration_cast<std::chrono::milliseconds>(ended - started).count());
         timeSinceLastFrame = timeSinceLastFrame / 1000.0f;

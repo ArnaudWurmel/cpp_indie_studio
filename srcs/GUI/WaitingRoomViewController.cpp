@@ -141,7 +141,6 @@ void    Indie::WaitingRoomViewController::threadUpdate() {
         try {
             _playerList = dataManager->getPlayerList();
             _gameRunning = dataManager->gameIsRunning(_mapName);
-            std::cout << _mapName << std::endl;
         } catch (std::exception& e) {
             _continue = false;
             std::cout << e.what() << std::endl;
