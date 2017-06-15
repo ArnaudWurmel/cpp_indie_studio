@@ -187,6 +187,7 @@ void Indie::DataManager::updateAllPlayers(unsigned int roomId, Ogre::SceneManage
     if ((tokenList.size() - 1) % 5 != 0 || tokenList.size() - 1 <= 0)
         return ;
     EntityManager::lockEntities();
+    std::cout << "Lock entities" << std::endl;
     std::vector<APlayer *>::iterator    it = EntityManager::getPlayerList().begin();
     while (it != EntityManager::getPlayerList().end()) {
         (*it)->setUpdate(false);
@@ -231,6 +232,7 @@ void Indie::DataManager::updateAllPlayers(unsigned int roomId, Ogre::SceneManage
         }
         ++it;
     }
+    std::cout << "Unlock entities" << std::endl;
     EntityManager::unlockEntities();
 }
 

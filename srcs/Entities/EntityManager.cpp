@@ -145,13 +145,11 @@ void    Indie::EntityManager::lockEntities() {
     Indie::EntityManager    *entityManager = getEntityManager();
 
     entityManager->_lock->lock();
-    std::cout << "Locked by " <<  pthread_self() << std::endl;
 }
 
 void    Indie::EntityManager::unlockEntities() {
     Indie::EntityManager    *entityManager = getEntityManager();
 
-    std::cout << "Unlocked by " << pthread_self() << std::endl;
     entityManager->_lock->unlock();
 }
 
@@ -217,8 +215,6 @@ Indie::APlayer  *Indie::EntityManager::createEnemy(Ogre::SceneManager *sceneMana
     else
         player = new Indie::AI(entityPos, sceneManager, pId);
 
-    EntityManager::lockEntities();
     addPlayer(player);
-    EntityManager::unlockEntities();
     return player;
 }
