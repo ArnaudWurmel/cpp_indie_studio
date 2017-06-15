@@ -55,7 +55,6 @@ namespace   Indie {
     private:
         std::vector<Room>   _roomList;
         std::vector<ActionDelegate> _functionPtr;
-//        std::vector<std::pair<std::string, void (Indie::RoomListViewController::*)()> > _functionPtr;
         int                 _indexSelected;
     };
 }

@@ -6,6 +6,9 @@
 #include <cstring>
 #include <sstream>
 #include <vector>
+#include <sys/select.h>
+#include <sys/time.h>
+#include <sys/types.h>
 #include "DataManager.h"
 #include "../Entities/EntityManager.hh"
 #include "../UserManager/User.hh"
@@ -441,16 +444,29 @@ std::vector<std::string>    Indie::DataManager::sendCommand(std::string const& r
     int                 ret;
     socklen_t           client_size;
     socklen_t           server_size;
+    fd_set              readfds;
+    fd_set              writefds;
+    struct timeval      timeout;
 
     bzero(buf, 4096);
     std::strncpy(buf, route.c_str(), 4096);
     client_size = sizeof(_client);
     server_size = sizeof(_serv);
-    if (sendto(_sockfd, buf, 4096, 0, reinterpret_cast<struct sockaddr *>(&_serv), server_size) == -1)
+    timeout.tv_usec = 0;
+    timeout.tv_sec = 10;
+    FD_ZERO(&writefds);
+    FD_SET(_sockfd, &writefds);
+    if (select(_sockfd + 1, NULL, &writefds, NULL, &timeout) <= 0)
+        throw NetworkException();
+    if (sendto(_sockfd, buf, 4096, 0, reinterpret_cast<struct sockaddr *>(&_serv), server_size) <= 0)
         throw NetworkException();
     bzero(&_client, sizeof(_client));
     bzero(buf, sizeof(buf));
-    if ((ret = recvfrom(_sockfd, buf, 4096, 0, reinterpret_cast<struct sockaddr *>(&_client), &client_size)) == -1)
+    FD_ZERO(&readfds);
+    FD_SET(_sockfd, &readfds);
+    if (select(_sockfd + 1, &readfds, NULL, NULL, &timeout) <= 0)
+        throw NetworkException();
+    if ((ret = recvfrom(_sockfd, buf, 4096, 0, reinterpret_cast<struct sockaddr *>(&_client), &client_size)) <= 0)
         throw NetworkException();
     buf[ret] = 0;
     return getTokenList(buf);

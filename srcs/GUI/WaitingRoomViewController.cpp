@@ -52,6 +52,8 @@ void    Indie::WaitingRoomViewController::setImageForMap() {
 }
 
 Indie::AViewController::ExitStatus   Indie::WaitingRoomViewController::updateView() {
+    if (!_continue)
+        return Indie::AViewController::EXIT;
     if (_gameRunning && _state == Indie::AViewController::GO_ON) {
         _delegate.addViewController(new Indie::Bomberman(_delegate));
         return Indie::AViewController::GO_ON;
@@ -141,7 +143,10 @@ void    Indie::WaitingRoomViewController::threadUpdate() {
             _gameRunning = dataManager->gameIsRunning(_mapName);
             std::cout << _mapName << std::endl;
         } catch (std::exception& e) {
+            _continue = false;
             std::cout << e.what() << std::endl;
+            _lock->unlock();
+            return ;
         }
         _lock->unlock();
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
@@ -150,6 +155,7 @@ void    Indie::WaitingRoomViewController::threadUpdate() {
         dataManager->quitRoom(User::getUser()->getLogName());
     } catch (std::exception& e) {
         std::cout << e.what() << std::endl;
+        _continue = false;
     }
 }
 

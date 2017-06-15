@@ -44,7 +44,6 @@ namespace   Indie
         void    viewShouldDisapear();
 
     private:
-        void    createGround();
         void    createMap();
         void    updaterThread();
 
@@ -92,8 +91,8 @@ namespace   Indie
         std::vector<std::vector<Indie::MapParser::TileType> >   _map;
         std::unique_ptr<std::thread>    _thread;
         std::mutex  _locker;
-        Ogre::Entity    *mGroundEntity;
         bool    mFPSmode;
+        bool    mError;
 
         /*
          * Scoreboard usefull variables

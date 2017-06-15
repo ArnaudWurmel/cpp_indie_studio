@@ -14,6 +14,7 @@ Indie::SceneDisplayer::SceneDisplayer(Ogre::SceneManager *sceneManager) {
     mSceneManager = sceneManager;
     mToggleScoreboard = false;
     mFPSmode = false;
+    mError = false;
 }
 
 void Indie::SceneDisplayer::initScene(RootViewController& delegate) {
@@ -31,31 +32,8 @@ void Indie::SceneDisplayer::initScene(RootViewController& delegate) {
     if (!success)
         throw GameException();
     EntityManager::createHuman(mSceneManager, Ogre::Vector3(posPlayer.x, 32, posPlayer.z), User::getUser()->getLogName());
-    /*try {
-        EntityManager::createEnemy(mSceneManager, Ogre::Vector3(0, 0, 0), "AI001", true);
-    } catch (std::exception& e) {
-        std::cout << e.what() << std::endl;
-    }*/
     initEventRegister();
     _thread = std::unique_ptr<std::thread>(new std::thread(&Indie::SceneDisplayer::updaterThread, this));
-}
-
-void Indie::SceneDisplayer::createGround() {
-
-   /* Ogre::Plane plane(Ogre::Vector3::UNIT_Y, 0);
-    Ogre::MeshManager::getSingleton().createPlane(
-            "ground",
-            Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-            plane,
-            5000, 5000, 20, 20,
-            true,
-            1, 5, 5,
-            Ogre::Vector3::UNIT_Z
-    );
-    mGroundEntity = mSceneManager->createEntity("ground");
-    mSceneManager->getRootSceneNode()->createChildSceneNode()->attachObject(mGroundEntity);
-    mGroundEntity->setCastShadows(false);
-    mGroundEntity->setMaterialName("Bomberman/Ground");*/
 }
 
 void Indie::SceneDisplayer::createMap() {
@@ -113,12 +91,19 @@ void    Indie::SceneDisplayer::updaterThread() {
 
     while (true) {
         if (_locker.try_lock()) {
-            dataManager->updateAllPlayers(User::getUser()->getRoomId(), mSceneManager);
-            if (EntityManager::getMainPlayer()->isAlive())
-                dataManager->updatePlayerPos(User::getUser()->getLogName(), EntityManager::getMainPlayer()->getPosition());
-            dataManager->listBomb(User::getUser()->getRoomId(), User::getUser()->getLogName());
-            dataManager->getPowerUpList();
-
+            try {
+                dataManager->updateAllPlayers(User::getUser()->getRoomId(), mSceneManager);
+                if (EntityManager::getMainPlayer()->isAlive())
+                    dataManager->updatePlayerPos(User::getUser()->getLogName(), EntityManager::getMainPlayer()->getPosition());
+                dataManager->listBomb(User::getUser()->getRoomId(), User::getUser()->getLogName());
+                dataManager->getPowerUpList();
+            } catch (std::exception& e) {
+                std::cout << e.what() << std::endl;
+                mError = true;
+                EntityManager::unlockEntities();
+                _locker.unlock();
+                return ;
+            }
             mScoreboard->removeAllItems();
             mScoreboard->addItem("#F1C40F" + EntityManager::getMainPlayer()->getPlayerId());
             mScoreboard->setSubItemNameAt(1, mScoreboard->getItemCount() - 1, std::to_string(EntityManager::getMainPlayer()->getScore()));
@@ -142,7 +127,8 @@ bool    Indie::SceneDisplayer::updateScene() {
     std::vector<AEntity *>::iterator    it;
 
     EntityManager::lockEntities();
-    if (!EntityManager::getMainPlayer()->updateFromLoop(mSceneManager)) {
+    std::cout << mError << std::endl;
+    if (mError || !EntityManager::getMainPlayer()->updateFromLoop(mSceneManager)) {
         EntityManager::unlockEntities();
         return false;
     }
@@ -263,9 +249,7 @@ Indie::SceneDisplayer::~SceneDisplayer() {
     _locker.lock();
     _thread->join();
     EntityManager::lockEntities();
-    //mSceneManager->destroyEntity(mGroundEntity);
     EntityManager::removeAllEntities(mSceneManager);
-    //Ogre::MeshManager::getSingleton().remove("ground");
     std::vector<std::unique_ptr<AEntity> >::iterator    it = _groundEntityList.begin();
 
     while (it != _groundEntityList.end()) {
