@@ -6,9 +6,6 @@
 #include <cstring>
 #include <sstream>
 #include <vector>
-#include <sys/select.h>
-#include <sys/time.h>
-#include <sys/types.h>
 #include "DataManager.h"
 #include "../Entities/EntityManager.hh"
 #include "../UserManager/User.hh"
@@ -18,10 +15,15 @@
 #include "../PowerUp/BombUp.hh"
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
+#include <WinSock2.h>
 void	bzero(void *s, unsigned int n)
 {
 	memset(s, 0, n);
 }
+#else
+#include <sys/select.h>
+#include <sys/time.h>
+#include <sys/types.h>
 #endif
 
 Indie::DataManager::DataManager(const std::string& ip, int port) : _ip(ip), _port(port)  {
