@@ -19,24 +19,32 @@ Indie::SoundManager *Indie::SoundManager::getSingloton(bool reset) {
 }
 
 Indie::SoundManager::SoundManager() {
-    _currentMusic = NULL;
 }
 
-void    Indie::SoundManager::loadSound(std::string const& fileName) {
-    if (_currentMusic) {
-        _currentMusic->stop();
-    }
-    else
-        _currentMusic = new sf::Music();
-    if (!_currentMusic->openFromFile(fileName))
+void    Indie::SoundManager::loadSound(std::string const& fileName, bool loop) {
+    sf::Music   *music = new sf::Music();
+
+    if (!music->openFromFile(fileName))
         return ;
-    _currentMusic->setLoop(true);
-    _currentMusic->play();
+    music->setLoop(loop);
+    music->play();
+    _musicList.push_back(std::unique_ptr<sf::Music>(music));
+    std::vector<std::unique_ptr<sf::Music> >::iterator  it = _musicList.begin();
+
+    while (it != _musicList.end()) {
+        if ((*it)->getStatus() == sf::SoundSource::Stopped || (*it)->getStatus() == sf::SoundStream::Paused)
+            _musicList.erase(it);
+        else
+            ++it;
+    }
 }
 
 Indie::SoundManager::~SoundManager() {
-    if (_currentMusic) {
-        _currentMusic->stop();
-        delete _currentMusic;
+    std::vector<std::unique_ptr<sf::Music> >::iterator  it = _musicList.begin();
+
+    while (it != _musicList.end()) {
+        (*it)->stop();
+        ++it;
     }
+    _musicList.clear();
 }

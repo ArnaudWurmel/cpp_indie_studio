@@ -7,6 +7,7 @@
 #include "../Player/APlayer.hh"
 #include "EntityManager.hh"
 #include "../DataManager/DataManager.h"
+#include "../SoundManager/SoundManager.hh"
 
 Ogre::Vector3   Indie::Bomb::getBombPosition(const APlayer& player) {
     Ogre::Vector3   ret;
@@ -93,6 +94,8 @@ bool    Indie::Bomb::updateFromLoop(Ogre::SceneManager *sceneManager) {
             ++it;
     }
     if (mIsAlive) {
+        if (_explodeTime == 45)
+            SoundManager::getSingloton()->loadSound("resources/sound/bomb.ogg");
         if (!_explodeTime)
         {
             createAllParticles(sceneManager, getPosition(), getSize().y);

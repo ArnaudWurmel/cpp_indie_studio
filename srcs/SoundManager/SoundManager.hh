@@ -16,10 +16,10 @@ namespace Indie {
         ~SoundManager();
 
     public:
-        void    loadSound(std::string const&);
+        void    loadSound(std::string const&, bool loop = false);
 
     private:
-        sf::Music   *_currentMusic;
+        std::vector<std::unique_ptr<sf::Music> >    _musicList;
     };
 }
 
