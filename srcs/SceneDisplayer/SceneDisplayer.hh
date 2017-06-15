@@ -5,6 +5,7 @@
 #ifndef CPP_INDIE_STUDIO_SCENEMANAGER_HH
 #define CPP_INDIE_STUDIO_SCENEMANAGER_HH
 
+# include <OgreRectangle2D.h>
 # include <memory>
 # include <map>
 # include <Ogre.h>
@@ -71,8 +72,6 @@ namespace   Indie
         void    toggleScoreboard();
         void    initScoreboard(RootViewController&);
 
-    private:
-        void    setFPSCameraPosition();
 
     private:
         void    movePlayerUp(OIS::Keyboard *);
@@ -91,7 +90,6 @@ namespace   Indie
         std::vector<std::vector<Indie::MapParser::TileType> >   _map;
         std::unique_ptr<std::thread>    _thread;
         std::mutex  _locker;
-        bool    mFPSmode;
         bool    mError;
 
         /*
@@ -100,6 +98,10 @@ namespace   Indie
     private:
         bool    mToggleScoreboard;
         MyGUI::MultiListBox  *mScoreboard;
+
+    private:
+        MyGUI::ImageBox     *mResultHUD;
+        unsigned int         mAnimationTime;
 
     private:
         std::vector<std::unique_ptr<AEntity> >  _groundEntityList;

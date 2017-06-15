@@ -69,7 +69,6 @@ void Indie::RootViewController::runApp() {
             return ;
         }
         Indie::EntityManager::unlockEntities();
-        std::cout << "Entity release" << std::endl;
         std::chrono::time_point<std::chrono::system_clock> ended = std::chrono::system_clock::now();
         timeSinceLastFrame = (std::chrono::duration_cast<std::chrono::milliseconds>(ended - started).count());
         timeSinceLastFrame = timeSinceLastFrame / 1000.0f;

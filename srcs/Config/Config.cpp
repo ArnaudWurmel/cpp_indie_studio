@@ -41,5 +41,5 @@ Ogre::Real  Indie::Config::getSpeedBoostIncrease() {
 }
 
 unsigned int    Indie::Config::getWinLoseAnimationTime() {
-    return 360;
+    return 180;
 }

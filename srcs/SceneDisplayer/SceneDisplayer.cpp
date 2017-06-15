@@ -13,12 +13,17 @@
 Indie::SceneDisplayer::SceneDisplayer(Ogre::SceneManager *sceneManager) {
     mSceneManager = sceneManager;
     mToggleScoreboard = false;
-    mFPSmode = false;
     mError = false;
 }
 
 void Indie::SceneDisplayer::initScene(RootViewController& delegate) {
     MapParser&  mapParser = MapParser::getMapParser("resources/maps/level0");
+    unsigned int width;
+    unsigned int height;
+    unsigned int depth;
+    int          left;
+    int          top;
+
 
     mapParser.loadMap("");
     _map = mapParser.getMap();
@@ -33,6 +38,9 @@ void Indie::SceneDisplayer::initScene(RootViewController& delegate) {
         throw GameException();
     EntityManager::createHuman(mSceneManager, Ogre::Vector3(posPlayer.x, 32, posPlayer.z), User::getUser()->getLogName());
     initEventRegister();
+    delegate.getRenderWindow()->getMetrics(width, height, depth, left, top);
+    mResultHUD = delegate.getGUI()->createWidget<MyGUI::ImageBox>("ImageBox", (width - (width / 3)) / 2, (height - (height / 3)) / 2, width / 3, height / 3, MyGUI::Align::Default, "Main");
+    mResultHUD->setVisible(false);
     _thread = std::unique_ptr<std::thread>(new std::thread(&Indie::SceneDisplayer::updaterThread, this));
 }
 
@@ -127,7 +135,24 @@ bool    Indie::SceneDisplayer::updateScene() {
     std::vector<AEntity *>::iterator    it;
 
     EntityManager::lockEntities();
-    if (mError || !EntityManager::getMainPlayer()->updateFromLoop(mSceneManager)) {
+    if (!mResultHUD->getVisible() && !EntityManager::getMainPlayer()->isAlive()) {
+        mResultHUD->setVisible(true);
+        DataManager::getSingloton()->quitRoom(User::getUser()->getLogName());
+        mResultHUD->setImageTexture("ImageDefaite.png");
+        mAnimationTime = Config::getWinLoseAnimationTime();
+    }
+    else if (!mResultHUD->getVisible() && EntityManager::getPlayerList().size() == 0) {
+        mResultHUD->setVisible(true);
+        mResultHUD->setImageTexture("ImageVictoire.png");
+        mAnimationTime = Config::getWinLoseAnimationTime();
+    }
+    if (mResultHUD->getVisible() && mAnimationTime == 0) {
+        EntityManager::unlockEntities();
+        return false;
+    }
+    else if (mResultHUD->getVisible())
+        mAnimationTime -= 1;
+    if (mError || (!EntityManager::getMainPlayer()->updateFromLoop(mSceneManager) && !mResultHUD->getVisible())) {
         EntityManager::unlockEntities();
         return false;
     }
@@ -231,19 +256,6 @@ bool    Indie::SceneDisplayer::checkRight(APlayer *entity, AEntity const *collid
     return state;
 }
 
-void    Indie::SceneDisplayer::setFPSCameraPosition() {
-    Ogre::Camera    *camera = mSceneManager->getCamera("MainCam");
-
-    if (camera && EntityManager::getMainPlayer()->isAlive()) {
-        camera->setPosition(Ogre::Vector3(EntityManager::getMainPlayer()->getPosition().x, EntityManager::getMainPlayer()->getPosition().y + 20, EntityManager::getMainPlayer()->getPosition().z));
-        Ogre::Vector3   lookAt;
-        lookAt.x = EntityManager::getMainPlayer()->getPosition().x + sin(EntityManager::getMainPlayer()->getRotation() * (2 * 3.14f / 360.0));
-        lookAt.y = EntityManager::getMainPlayer()->getPosition().y + 20;
-        lookAt.z = EntityManager::getMainPlayer()->getPosition().z + cos(EntityManager::getMainPlayer()->getRotation()* (2 * 3.14f / 360.0));
-        camera->lookAt(lookAt);
-    }
-}
-
 Indie::SceneDisplayer::~SceneDisplayer() {
     _locker.lock();
     _thread->join();
@@ -256,6 +268,7 @@ Indie::SceneDisplayer::~SceneDisplayer() {
         ++it;
     }
     _groundEntityList.clear();
+    mResultHUD->setVisible(false);
     EntityManager::unlockEntities();
     EntityManager::getEntityManager(true);
 }
@@ -280,7 +293,6 @@ void Indie::SceneDisplayer::initEventRegister() {
 void    Indie::SceneDisplayer::registerKeyboardEvent(OIS::Keyboard *keyboard) {
     std::map<OIS::KeyCode, void (Indie::SceneDisplayer::*)(OIS::Keyboard *)>::iterator it;
 
-   // EntityManager::lockEntities();
     it = _functionPtr.begin();
     while (it != _functionPtr.end()) {
         if (keyboard->isKeyDown((*it).first) && (EntityManager::getMainPlayer()->isGodMode() || makeCollide(EntityManager::getMainPlayer(), (*it).first)))
@@ -288,17 +300,13 @@ void    Indie::SceneDisplayer::registerKeyboardEvent(OIS::Keyboard *keyboard) {
         ++it;
     }
     Ogre::Camera    *camera = mSceneManager->getCamera("MainCam");
-    if (camera && mFPSmode)
-        setFPSCameraPosition();
-    else if (camera && EntityManager::getMainPlayer()->isAlive()) {
+    if (camera && EntityManager::getMainPlayer()->isAlive()) {
         camera->setPosition(Ogre::Vector3(EntityManager::getMainPlayer()->getPosition().x - 200, camera->getPositionForViewUpdate().y, EntityManager::getMainPlayer()->getPosition().z));
         camera->lookAt(EntityManager::getMainPlayer()->getPosition());
     }
- //   EntityManager::unlockEntities();
 }
 
 bool    Indie::SceneDisplayer::keyPressed(const OIS::KeyEvent &ke) {
-   // EntityManager::lockEntities();
     if (ke.key == OIS::KC_SPACE) {
         EntityManager::getMainPlayer()->plantABomb(mSceneManager);
     }
@@ -306,11 +314,6 @@ bool    Indie::SceneDisplayer::keyPressed(const OIS::KeyEvent &ke) {
         EntityManager::getMainPlayer()->godMode();
     else if (ke.key == OIS::KC_TAB)
         toggleScoreboard();
-    else if (ke.key == OIS::KC_F) {
-        mFPSmode = !mFPSmode;
-        setFPSCameraPosition();
-    }
-    //EntityManager::unlockEntities();
     return true;
 }
 
@@ -368,7 +371,7 @@ void    Indie::SceneDisplayer::moveCameraUp(OIS::Keyboard *keyboard) {
     Ogre::Camera    *camera = mSceneManager->getCamera("MainCam");
 
     static_cast<void>(keyboard);
-    if (camera && !mFPSmode) {
+    if (camera) {
         camera->setPosition(Ogre::Vector3(EntityManager::getMainPlayer()->getPosition().x - 200, camera->getPositionForViewUpdate().y + 10, EntityManager::getMainPlayer()->getPosition().z));
         camera->lookAt(EntityManager::getMainPlayer()->getPosition());
     }
@@ -378,7 +381,7 @@ void    Indie::SceneDisplayer::moveCameraDown(OIS::Keyboard *keyboard) {
     Ogre::Camera    *camera = mSceneManager->getCamera("MainCam");
 
     static_cast<void>(keyboard);
-    if (camera && !mFPSmode) {
+    if (camera) {
         camera->setPosition(Ogre::Vector3(EntityManager::getMainPlayer()->getPosition().x - 200, camera->getPositionForViewUpdate().y - 10, EntityManager::getMainPlayer()->getPosition().z));
         camera->lookAt(EntityManager::getMainPlayer()->getPosition());
     }
