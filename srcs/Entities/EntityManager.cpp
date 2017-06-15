@@ -156,10 +156,12 @@ void    Indie::EntityManager::unlockEntities() {
 }
 
 Indie::EntityManager::EntityManager() {
-    _lock = std::unique_ptr<std::mutex>(new std::mutex());
+    _lock = new std::mutex();
 }
 
 Indie::EntityManager::~EntityManager() {
+    delete _lock;
+    _lock = NULL;
     _entityList.clear();
 }
 
@@ -198,7 +200,9 @@ Indie::AEntity  *Indie::EntityManager::createHuman(Ogre::SceneManager *sceneMana
 
     Indie::HumanPlayer  *player = new Indie::HumanPlayer(entityPos, sceneManager, pName, true);
 
+    EntityManager::lockEntities();
     setMainPlayer(player);
+    EntityManager::unlockEntities();
     return player;
 }
 
@@ -213,6 +217,8 @@ Indie::APlayer  *Indie::EntityManager::createEnemy(Ogre::SceneManager *sceneMana
     else
         player = new Indie::AI(entityPos, sceneManager, pId);
 
+    EntityManager::lockEntities();
     addPlayer(player);
+    EntityManager::unlockEntities();
     return player;
 }

@@ -64,7 +64,7 @@ namespace Indie {
         std::vector<Indie::Bomb* >  _bombList;
         std::vector<Indie::PowerUp* >   _powerUpList;
         Indie::APlayer *_mainPlayer;
-        std::unique_ptr<std::mutex> _lock;
+        std::mutex *_lock;
     };
 }
 
