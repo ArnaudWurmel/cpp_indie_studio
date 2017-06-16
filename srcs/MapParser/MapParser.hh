@@ -13,7 +13,7 @@
 namespace   Indie {
     class MapParser {
     public:
-        static MapParser&   getMapParser(std::string const&);
+        static MapParser&   getMapParser();
     public:
         enum TileType {
             EMPTY = 0,
@@ -22,14 +22,14 @@ namespace   Indie {
         };
 
     public:
-        MapParser(std::string const&);
+        MapParser();
         ~MapParser();
 
     public:
         std::vector<std::vector<TileType> > const& getMap();
 
     public:
-        void    loadMap(std::string const&);
+        void    loadMap();
 
     private:
         std::vector<std::vector<TileType> > _map;

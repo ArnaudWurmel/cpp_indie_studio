@@ -9,15 +9,15 @@
 #include "../DataManager/DataManager.h"
 #include "../UserManager/User.hh"
 
-Indie::MapParser&   Indie::MapParser::getMapParser(std::string const& mapPath) {
+Indie::MapParser&   Indie::MapParser::getMapParser() {
     static Indie::MapParser *mapParser = NULL;
 
     if (mapParser == NULL)
-        mapParser = new Indie::MapParser(mapPath);
+        mapParser = new Indie::MapParser();
     return (*mapParser);
 }
 
-Indie::MapParser::MapParser(std::string const& mapPath) : _map(0)
+Indie::MapParser::MapParser() : _map(0)
 {
     _convert.insert(std::make_pair(' ', Indie::MapParser::TileType::EMPTY));
     _convert.insert(std::make_pair('#', Indie::MapParser::TileType::STATIC_BLOCK));
@@ -30,12 +30,12 @@ std::vector<std::vector<Indie::MapParser::TileType>> const& Indie::MapParser::ge
     return _map;
 }
 
-void    Indie::MapParser::loadMap(std::string const& mapPath)
+void    Indie::MapParser::loadMap()
 {
     std::vector<std::string>    map;
     DataManager *dataManager = DataManager::getSingloton("127.0.0.1", 4242);
 
-    std::cout << dataManager->getMap(User::getUser()->getRoomId(), map) << std::endl;
+    dataManager->getMap(User::getUser()->getRoomId(), map);
     std::vector<std::string>::iterator  it;
 
     _map.clear();
@@ -53,7 +53,6 @@ void    Indie::MapParser::loadMap(std::string const& mapPath)
                 lineVec.push_back(MapParser::TileType::EMPTY);
             ++itString;
         }
-        std::cout << lineVec.size() << std::endl;
         _map.push_back(lineVec);
         ++it;
     }

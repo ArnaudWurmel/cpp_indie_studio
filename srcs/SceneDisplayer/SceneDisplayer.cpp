@@ -17,7 +17,7 @@ Indie::SceneDisplayer::SceneDisplayer(Ogre::SceneManager *sceneManager) {
 }
 
 void Indie::SceneDisplayer::initScene(RootViewController& delegate) {
-    MapParser&  mapParser = MapParser::getMapParser("resources/maps/level0");
+    MapParser&  mapParser = MapParser::getMapParser();
     unsigned int width;
     unsigned int height;
     unsigned int depth;
@@ -25,7 +25,7 @@ void Indie::SceneDisplayer::initScene(RootViewController& delegate) {
     int          top;
 
 
-    mapParser.loadMap("");
+    mapParser.loadMap();
     _map = mapParser.getMap();
     if (_map.size() > 0) {
         this->createMap();
@@ -384,20 +384,20 @@ void    Indie::SceneDisplayer::moveCameraDown(OIS::Keyboard *keyboard) {
     }
 }
 
-bool Indie::SceneDisplayer::mouseMoved( const OIS::MouseEvent &arg)
+bool Indie::SceneDisplayer::mouseMoved(const OIS::MouseEvent &arg)
 {
     static_cast<void>(arg);
     return true;
 }
 
-bool Indie::SceneDisplayer::mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id)
+bool Indie::SceneDisplayer::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 {
     static_cast<void>(arg);
     static_cast<void>(id);
     return true;
 }
 
-bool Indie::SceneDisplayer::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id)
+bool Indie::SceneDisplayer::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 {
     static_cast<void>(arg);
     static_cast<void>(id);

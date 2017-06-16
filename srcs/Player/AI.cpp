@@ -231,7 +231,7 @@ void    Indie::AI::addPlayers(std::vector<std::unique_ptr<Indie::APlayer>>& play
 
 void    Indie::AI::createMap()
 {
-    Indie::MapParser&   mapParser = Indie::MapParser::getMapParser("");
+    Indie::MapParser&   mapParser = Indie::MapParser::getMapParser();
     std::vector<std::vector<Indie::MapParser::TileType>> const&   tmp = mapParser.getMap();
     unsigned long   height;
     unsigned long   width;

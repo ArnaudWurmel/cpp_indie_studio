@@ -14,7 +14,7 @@ Ogre::Vector3   Indie::Bomb::getBombPosition(const APlayer& player) {
 
     if (player.getPosition().x >= 0) {
         ret.x = player.getPosition().x - (static_cast<int>(player.getPosition().x) % 100);
-        if (MapParser::getMapParser("").getMap().size() % 2)
+        if (MapParser::getMapParser().getMap().size() % 2)
             ret.x += 50;
         else if (static_cast<int>(player.getPosition().x) % 100 >= 50) {
             ret.x += 100;
@@ -22,7 +22,7 @@ Ogre::Vector3   Indie::Bomb::getBombPosition(const APlayer& player) {
     }
     else {
         ret.x = player.getPosition().x - (static_cast<int>(player.getPosition().x) % 100);
-        if (MapParser::getMapParser("").getMap().size() % 2)
+        if (MapParser::getMapParser().getMap().size() % 2)
             ret.x -= 50;
         else if (static_cast<int>(player.getPosition().x) % 100 <= -50) {
             ret.x -= 100;
@@ -30,7 +30,7 @@ Ogre::Vector3   Indie::Bomb::getBombPosition(const APlayer& player) {
     }
     if (player.getPosition().z >= 0) {
         ret.z = player.getPosition().z - (static_cast<int>(player.getPosition().z) % 100);
-        if ((*MapParser::getMapParser("").getMap().begin()).size() % 2)
+        if ((*MapParser::getMapParser().getMap().begin()).size() % 2)
             ret.z += 50;
         else if (static_cast<int>(player.getPosition().z) % 100 >= 50) {
             ret.z += 100;
@@ -38,7 +38,7 @@ Ogre::Vector3   Indie::Bomb::getBombPosition(const APlayer& player) {
     }
     else {
         ret.z = player.getPosition().z - (static_cast<int>(player.getPosition().z) % 100);
-        if ((*MapParser::getMapParser("").getMap().begin()).size() % 2)
+        if ((*MapParser::getMapParser().getMap().begin()).size() % 2)
             ret.z -= 50;
         else if (static_cast<int>(player.getPosition().z) % 100 <= -50)
             ret.z -= 100;
@@ -135,7 +135,6 @@ void    Indie::Bomb::explode(Ogre::SceneManager *sceneManager) {
     i = 0;
     _explosionList.push_back(std::unique_ptr<Indie::AEntity>(new Indie::Explosion(sceneManager, Ogre::Vector3(getPosition().x, getPosition().y - 35, getPosition().z))));
     while (i < _explodeSize) {
-
         if (downContinue && !haveEntityWithPos(Ogre::Vector3(getPosition().x - (100 * (i + 1)), getPosition().y - 35, getPosition().z), downContinue))
             _explosionList.push_back(std::unique_ptr<Indie::AEntity>(new Indie::Explosion(sceneManager, Ogre::Vector3(getPosition().x - (100 * (i + 1)), getPosition().y - 35, getPosition().z))));
         if (upContinue && !haveEntityWithPos(Ogre::Vector3(getPosition().x + (100 * (i + 1)), getPosition().y - 35, getPosition().z), upContinue))
