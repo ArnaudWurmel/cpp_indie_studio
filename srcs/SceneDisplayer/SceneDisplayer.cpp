@@ -135,15 +135,13 @@ bool    Indie::SceneDisplayer::updateScene() {
     std::vector<AEntity *>::iterator    it;
 
     EntityManager::lockEntities();
-    if (!mResultHUD->getVisible() && !EntityManager::getMainPlayer()->isAlive()) {
-        mResultHUD->setVisible(true);
-        DataManager::getSingloton()->quitRoom(User::getUser()->getLogName());
-        mResultHUD->setImageTexture("ImageDefaite.png");
-        mAnimationTime = Config::getWinLoseAnimationTime();
-    }
-    else if (!mResultHUD->getVisible() && EntityManager::getPlayerList().size() == 0) {
+    if (!mResultHUD->getVisible() && (!EntityManager::getMainPlayer()->isAlive() || EntityManager::getPlayerList().size() == 0)) {
         mResultHUD->setVisible(true);
         mResultHUD->setImageTexture("ImageVictoire.png");
+        if (!EntityManager::getMainPlayer()->isAlive()) {
+            DataManager::getSingloton()->quitRoom(User::getUser()->getLogName());
+            mResultHUD->setImageTexture("ImageDefaite.png");
+        }
         mAnimationTime = Config::getWinLoseAnimationTime();
     }
     if (mResultHUD->getVisible() && mAnimationTime == 0) {
@@ -307,9 +305,8 @@ void    Indie::SceneDisplayer::registerKeyboardEvent(OIS::Keyboard *keyboard) {
 }
 
 bool    Indie::SceneDisplayer::keyPressed(const OIS::KeyEvent &ke) {
-    if (ke.key == OIS::KC_SPACE) {
+    if (ke.key == OIS::KC_SPACE)
         EntityManager::getMainPlayer()->plantABomb(mSceneManager);
-    }
     else if (ke.key == OIS::KC_G)
         EntityManager::getMainPlayer()->godMode();
     else if (ke.key == OIS::KC_TAB)
