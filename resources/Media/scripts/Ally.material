@@ -1,82 +1,12 @@
-// Material.001 genrated by blender2ogre 0.6.0
+// Ally/Material.001 genrated by blender2ogre 0.6.0
 
-material Material.001 
+material Ally/Material.001 
 {
     receive_shadows on 
 
     technique
     {
-        pass Material.001
-        {
-            ambient 0.8000000715255737 0.020694594830274582 0.6468655467033386 1.0
-            diffuse 0.640000066757203 0.01655567611091846 0.5174924450739091 1.0
-            specular 0.5 0.5 0.5 1.0 12.5
-            emissive 0.0 0.0 0.0 1.0
-
-            alpha_to_coverage off
-            colour_write on
-            cull_hardware clockwise
-            depth_check on
-            depth_func less_equal
-            depth_write on
-            illumination_stage 
-            light_clip_planes off
-            light_scissor off
-            lighting on
-            normalise_normals off
-            polygon_mode solid
-            scene_blend one zero
-            scene_blend_op add
-            shading gouraud
-            transparent_sorting on
-
-        }
-    }
-}
-// Material.002 genrated by blender2ogre 0.6.0
-
-material Material.002 
-{
-    receive_shadows on 
-
-    technique
-    {
-        pass Material.002
-        {
-            ambient 0.9372549057006836 0.47843137383461 0.27843138575553894 1.0
-            diffuse 0.749803935733496 0.3827451047710344 0.22274511192359192 1.0
-            specular 0.5 0.5 0.5 1.0 12.5
-            emissive 0.0 0.0 0.0 1.0
-
-            alpha_to_coverage off
-            colour_write on
-            cull_hardware clockwise
-            depth_check on
-            depth_func less_equal
-            depth_write on
-            illumination_stage 
-            light_clip_planes off
-            light_scissor off
-            lighting on
-            normalise_normals off
-            polygon_mode solid
-            scene_blend one zero
-            scene_blend_op add
-            shading gouraud
-            transparent_sorting on
-
-        }
-    }
-}
-// Material.003 genrated by blender2ogre 0.6.0
-
-material Material.003 
-{
-    receive_shadows on 
-
-    technique
-    {
-        pass Material.003
+        pass Ally/Material.001
         {
             ambient 0.0 0.0 0.0 1.0
             diffuse 0.0 0.0 0.0 1.0
@@ -103,18 +33,18 @@ material Material.003
         }
     }
 }
-// Material.004 genrated by blender2ogre 0.6.0
+// Ally/Material.003 genrated by blender2ogre 0.6.0
 
-material Material.004 
+material Ally/Material.003 
 {
     receive_shadows on 
 
     technique
     {
-        pass Material.004
+        pass Ally/Material.003
         {
-            ambient 1.0 0.041783519089221954 0.5549755692481995 1.0
-            diffuse 0.800000011920929 0.033426815769475926 0.4439804620143839 1.0
+            ambient 0.0 0.725972056388855 1.0 1.0
+            diffuse 0.0 0.5807776537653453 0.800000011920929 1.0
             specular 0.5 0.5 0.5 1.0 12.5
             emissive 0.0 0.0 0.0 1.0
 
@@ -138,18 +68,18 @@ material Material.004
         }
     }
 }
-// Material.005 genrated by blender2ogre 0.6.0
+// Ally/Material.004 genrated by blender2ogre 0.6.0
 
-material Material.005 
+material Ally/Material.004 
 {
     receive_shadows on 
 
     technique
     {
-        pass Material.005
+        pass Ally/Material.004
         {
-            ambient 1.0 1.0 1.0 1.0
-            diffuse 0.800000011920929 0.800000011920929 0.800000011920929 1.0
+            ambient 0.0 0.5442692041397095 1.0 1.0
+            diffuse 0.0 0.4354153697999621 0.800000011920929 1.0
             specular 0.5 0.5 0.5 1.0 12.5
             emissive 0.0 0.0 0.0 1.0
 
@@ -173,18 +103,18 @@ material Material.005
         }
     }
 }
-// Material.006 genrated by blender2ogre 0.6.0
+// Ally/Material.005 genrated by blender2ogre 0.6.0
 
-material Material.006 
+material Ally/Material.005 
 {
     receive_shadows on 
 
     technique
     {
-        pass Material.006
+        pass Ally/Material.005
         {
-            ambient 0.800000011920929 0.0941176488995552 0.0117647061124444 1.0
-            diffuse 0.6400000190734865 0.07529412024161397 0.009411765030201746 1.0
+            ambient 0.0 0.0 0.0 1.0
+            diffuse 0.0 0.0 0.0 1.0
             specular 0.5 0.5 0.5 1.0 12.5
             emissive 0.0 0.0 0.0 1.0
 
@@ -208,18 +138,123 @@ material Material.006
         }
     }
 }
-// Material genrated by blender2ogre 0.6.0
+// Ally/Material.006 genrated by blender2ogre 0.6.0
 
-material Material 
+material Ally/Material.006 
 {
     receive_shadows on 
 
     technique
     {
-        pass Material
+        pass Ally/Material.006
         {
-            ambient 0.800000011920929 0.01568627543747425 0.47058823704719543 1.0
-            diffuse 0.6400000190734865 0.012549020536974376 0.3764705952476053 1.0
+            ambient 0.0 0.5702650547027588 1.0 1.0
+            diffuse 0.0 0.45621205056029623 0.800000011920929 1.0
+            specular 0.5 0.5 0.5 1.0 12.5
+            emissive 0.0 0.0 0.0 1.0
+
+            alpha_to_coverage off
+            colour_write on
+            cull_hardware clockwise
+            depth_check on
+            depth_func less_equal
+            depth_write on
+            illumination_stage 
+            light_clip_planes off
+            light_scissor off
+            lighting on
+            normalise_normals off
+            polygon_mode solid
+            scene_blend one zero
+            scene_blend_op add
+            shading gouraud
+            transparent_sorting on
+
+        }
+    }
+}
+// Ally/Material.007 genrated by blender2ogre 0.6.0
+
+material Ally/Material.007 
+{
+    receive_shadows on 
+
+    technique
+    {
+        pass Ally/Material.007
+        {
+            ambient 0.0 0.0 0.0 1.0
+            diffuse 0.0 0.0 0.0 1.0
+            specular 0.5 0.5 0.5 1.0 12.5
+            emissive 0.0 0.0 0.0 1.0
+
+            alpha_to_coverage off
+            colour_write on
+            cull_hardware clockwise
+            depth_check on
+            depth_func less_equal
+            depth_write on
+            illumination_stage 
+            light_clip_planes off
+            light_scissor off
+            lighting on
+            normalise_normals off
+            polygon_mode solid
+            scene_blend one zero
+            scene_blend_op add
+            shading gouraud
+            transparent_sorting on
+
+        }
+    }
+}
+// Ally/Material.008 genrated by blender2ogre 0.6.0
+
+material Ally/Material.008 
+{
+    receive_shadows on 
+
+    technique
+    {
+        pass Ally/Material.008
+        {
+            ambient 0.800000011920929 0.800000011920929 0.800000011920929 1.0
+            diffuse 0.6400000190734865 0.6400000190734865 0.6400000190734865 1.0
+            specular 0.5 0.5 0.5 1.0 12.5
+            emissive 0.0 0.0 0.0 1.0
+
+            alpha_to_coverage off
+            colour_write on
+            cull_hardware clockwise
+            depth_check on
+            depth_func less_equal
+            depth_write on
+            illumination_stage 
+            light_clip_planes off
+            light_scissor off
+            lighting on
+            normalise_normals off
+            polygon_mode solid
+            scene_blend one zero
+            scene_blend_op add
+            shading gouraud
+            transparent_sorting on
+
+        }
+    }
+}
+// Ally/Material genrated by blender2ogre 0.6.0
+
+material Ally/Material 
+{
+    receive_shadows on 
+
+    technique
+    {
+        pass Ally/Material
+        {
+            ambient 0.0 0.6939209699630737 1.0 1.0
+            diffuse 0.0 0.5551367842426416 0.800000011920929 1.0
             specular 0.5 0.5 0.5 1.0 12.5
             emissive 0.0 0.0 0.0 1.0
 
