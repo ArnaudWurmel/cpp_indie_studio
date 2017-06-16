@@ -11,7 +11,6 @@
 #include "EntityManager.hh"
 #include "../Entities/BreakableBlock.hh"
 #include "../Player/HumanPlayer.hh"
-#include "../Player/AI.hh"
 #include "../Exception/Exception.hh"
 
 Indie::EntityManager    *Indie::EntityManager::getEntityManager(bool reset) {
@@ -212,9 +211,6 @@ Indie::APlayer  *Indie::EntityManager::createEnemy(Ogre::SceneManager *sceneMana
     Indie::APlayer  *player;
     if (!AI)
         player = new Indie::HumanPlayer(entityPos, sceneManager, pId);
-    else
-        player = new Indie::AIPlayer(entityPos, sceneManager, pId);
-
     addPlayer(player);
     return player;
 }
