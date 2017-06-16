@@ -10,76 +10,65 @@
 # include <utility>
 # include "APlayer.hh"
 # include "../Entities/ExplosableEntity.hh"
+#include "../Map/Map.h"
 
 namespace   Indie
 {
-    class   AI : public APlayer
-    {
-    private:
-        enum map
-        {
-            EMPTY = 0,
-            STATIC_BLOCK = 1,
-            DYNAMIC_BLOCK = 2,
-            ENEMY_PLAYER = 3,
-            AI_PLAYER = 4,
-            BOMB = 5,
-            ALREADY_PASS = 6
-        };
+    class   AIPlayer : public APlayer {
+    public:
         enum dir
         {
-            FORWARD,
+            FORWARD = 0,
             BACKWARD,
             LEFT,
-            RIGHT
+            RIGHT,
+            NOTHING
         };
 
     private:
-        typedef bool (AI::*fncPtr)();
-        typedef bool (AI::*posPtr)(std::pair<unsigned int, unsigned int>&, dir);
+        using fncPtr = bool (AIPlayer::*)(std::pair<int, int>, std::pair<int, int>);
+        using posPtr = bool (AIPlayer::*)(std::pair<int, int>&, dir);
+        using dirPtr = bool (AIPlayer::*)(std::pair<int, int>&, std::pair<int, int>&);
+
 
     private:
-        std::vector<fncPtr> fncTab;
-        std::vector<posPtr> posFncTab;
-        std::vector<std::vector<map>>     _map;
-        std::pair<unsigned int, unsigned int>   _myPos;
-        std::pair<unsigned int, unsigned int>   _enemyPos;
-        std::vector<std::pair<unsigned int, unsigned int>>  _path;
         dir     _heuristic[4];
+        static const std::vector<fncPtr> fncTab;
+        static const std::vector<dirPtr> dirTab;
+        std::vector<std::pair<int, int>> _path;
+        static const std::vector<posPtr> posFncTab;
+
+    private:
+        bool    isForward(std::pair<int, int>, std::pair<int, int>);
+        bool    isBackward(std::pair<int, int>, std::pair<int, int>);
+        bool    isRight(std::pair<int, int>, std::pair<int, int>);
+        bool    isLeft(std::pair<int, int>, std::pair<int, int>);
+        bool    addForward(std::pair<int, int>&, dir);
+        bool    addBackward(std::pair<int, int>&, dir);
+        bool    addLeft(std::pair<int, int>&, dir);
+        bool    addRight(std::pair<int, int>&, dir);
+        bool    onTop(std::pair<int, int>&, std::pair<int, int>&);
+        bool    onBot(std::pair<int, int>&, std::pair<int, int>&);
+        bool    onLeft(std::pair<int, int>&, std::pair<int, int>&);
+        bool    onRight(std::pair<int, int>&, std::pair<int, int>&);
+
 
     public:
-        AI(Ogre::Vector3 const& entityPos, Ogre::SceneManager *sceneManager, std::string const& pId, bool mainP = false);
-        ~AI();
+        dir     getDir();
 
-    public:
+    private:
+        void    findHeuristic(std::pair<int, int>, std::pair<int, int>);
+        void    findPath(Indie::Map);
+        void    addDir(dir, std::pair<int, int>&);
+        bool    findNextPos(std::pair<int, int>&, std::vector<std::vector<Indie::Map::map>>);
+        bool    isANode(const std::pair<int, int>&);
+        std::pair<int, int>     getMyPos(int, int);
+        std::pair<int, int>     getClosestEnemy(int, int);
         bool    updateFromLoop(Ogre::SceneManager *);
 
-    private:
-        bool    isForward();
-        bool    isBackward();
-        bool    isRight();
-        bool    isLeft();
-
-    private:
-        bool    addForward(std::pair<unsigned int, unsigned int>&, dir);
-        bool    addBackward(std::pair<unsigned int, unsigned int>&, dir);
-        bool    addLeft(std::pair<unsigned int, unsigned int>&, dir);
-        bool    addRight(std::pair<unsigned int, unsigned int>&, dir);
-
-    private:
-        void    createMap();
-        void    addPlayers(std::vector<std::unique_ptr<Indie::APlayer>>&, std::unique_ptr<Indie::APlayer>&);
-        void    addBlock(std::vector<std::shared_ptr<Indie::AEntity>>& blockList);
-        void    initMap(unsigned long, unsigned long);
-        void    resetMap();
-        void    drawMap();
-        bool    findEnemy();
-        void    findPath();
-        void    findHeuristic();
-        void    addDir(dir, std::pair<unsigned int, unsigned int>&);
-        bool    findNextPos(std::pair<unsigned int, unsigned int>&);
-        bool    isANode(const std::pair<unsigned int, unsigned int>&);
-        void    escapeBomb();
+    public:
+        AIPlayer(Ogre::Vector3 const& entityPos, Ogre::SceneManager *sceneManager, std::string const& pId, bool mainP = false);
+        ~AIPlayer();
     };
 }
 

@@ -2,31 +2,48 @@
 // Created by ballet_e on 6/7/17.
 //
 
-#include <memory>
+//
+// Created by kirrays on 15/06/17.
+//
+
 #include <vector>
 #include <stack>
+#include <algorithm>
 #include <iostream>
 #include "AI.hh"
-#include "../MapParser/MapParser.hh"
-#include "../Entities/EntityManager.hh"
 #include "../DataManager/DataManager.h"
 #include "../UserManager/User.hh"
 #include "../Exception/Exception.hh"
+#include "../Entities/EntityManager.hh"
 
 /*
-**  Constructeur
+** Tableau de pointer sur fonction pour trouver l'heuristique
 */
-Indie::AI::AI(Ogre::Vector3 const &entityPos, Ogre::SceneManager *sceneManager, std::string const &pId,
+
+const std::vector<Indie::AIPlayer::fncPtr> Indie::AIPlayer::fncTab = {
+        &Indie::AIPlayer::isForward,
+        &Indie::AIPlayer::isBackward,
+        &Indie::AIPlayer::isLeft,
+        &Indie::AIPlayer::isRight
+};
+
+const std::vector<Indie::AIPlayer::posPtr> Indie::AIPlayer::posFncTab = {
+        &Indie::AIPlayer::addForward,
+        &Indie::AIPlayer::addBackward,
+        &Indie::AIPlayer::addLeft,
+        &Indie::AIPlayer::addRight
+};
+
+const std::vector<Indie::AIPlayer::dirPtr> Indie::AIPlayer::dirTab = {
+        &Indie::AIPlayer::onBot,
+        &Indie::AIPlayer::onLeft,
+        &Indie::AIPlayer::onRight,
+        &Indie::AIPlayer::onTop
+};
+
+Indie::AIPlayer::AIPlayer(Ogre::Vector3 const &entityPos, Ogre::SceneManager *sceneManager, std::string const &pId,
               bool mainP) : APlayer(PlayerType::IA, entityPos, sceneManager, "human.mesh", mainP)
 {
-    fncTab.push_back(&Indie::AI::isForward);
-    fncTab.push_back(&Indie::AI::isBackward);
-    fncTab.push_back(&Indie::AI::isLeft);
-    fncTab.push_back(&Indie::AI::isRight);
-    posFncTab.push_back(&Indie::AI::addForward);
-    posFncTab.push_back(&Indie::AI::addBackward);
-    posFncTab.push_back(&Indie::AI::addLeft);
-    posFncTab.push_back(&Indie::AI::addRight);
     setScale(Ogre::Vector3(50.0f, 53.459f, 50.0f));
     mTransformation = Ogre::Vector3(50.0f, 50.0f, 50.0f);
     addParticlesColor("Particles/Pink");
@@ -37,29 +54,22 @@ Indie::AI::AI(Ogre::Vector3 const &entityPos, Ogre::SceneManager *sceneManager, 
     DataManager::getSingloton()->getPlayerStart(pId, success);
     if (!success)
         throw GameException();
-    _pId = pId;
-    createMap();
 }
 
-bool    Indie::AI::updateFromLoop(Ogre::SceneManager *sceneManager) {
-    resetMap();
-   // addBlock(EntityManager::getEntityList());
-    //addPlayers(EntityManager::getPlayerList(), EntityManager::getMainPlayer());
-    if (findEnemy()) {
-        findPath();
-        if (_path.size()) {
+Indie::AIPlayer::~AIPlayer() {
 
-        }
-    }
-    return APlayer::updateFromLoop(sceneManager);
 }
 
-/*
-**  Les fonctions qui determine l'heuristique
-*/
+void Indie::AIPlayer::findHeuristic(std::pair<int, int> currentPos, std::pair<int, int> enemyPos) {
+    int i;
 
-bool    Indie::AI::isForward() {
-    if (_myPos.first < _enemyPos.first && _myPos.second <= _enemyPos.second) {
+    i = 0;
+    while (!(this->*fncTab[i])(currentPos, enemyPos))
+        i += 1;
+}
+
+bool Indie::AIPlayer::isForward(std::pair<int, int> currentPos, std::pair<int, int> enemyPos) {
+    if (currentPos.first < enemyPos.first && currentPos.second <= enemyPos.second) {
         _heuristic[0] = FORWARD;
         _heuristic[1] = RIGHT;
         _heuristic[2] = LEFT;
@@ -69,8 +79,8 @@ bool    Indie::AI::isForward() {
         return false;
 }
 
-bool    Indie::AI::isBackward() {
-    if (_myPos.first > _enemyPos.first && _myPos.second >= _enemyPos.second)
+bool    Indie::AIPlayer::isBackward(std::pair<int, int> currentPos, std::pair<int, int> enemyPos) {
+    if (currentPos.first > enemyPos.first && currentPos.second >= enemyPos.second)
     {
         _heuristic[0] = BACKWARD;
         _heuristic[1] = LEFT;
@@ -81,8 +91,8 @@ bool    Indie::AI::isBackward() {
         return false;
 }
 
-bool    Indie::AI::isLeft() {
-    if (_myPos.first <= _enemyPos.first && _myPos.second > _enemyPos.second) {
+bool    Indie::AIPlayer::isLeft(std::pair<int, int> currentPos, std::pair<int, int> enemyPos) {
+    if (currentPos.first <= enemyPos.first && currentPos.second > enemyPos.second) {
         _heuristic[0] = LEFT;
         _heuristic[1] = FORWARD;
         _heuristic[2] = BACKWARD;
@@ -92,22 +102,18 @@ bool    Indie::AI::isLeft() {
         return false;
 }
 
-bool    Indie::AI::isRight() {
-    if (_myPos.first >= _enemyPos.first && _myPos.second <= _enemyPos.second) {
+bool    Indie::AIPlayer::isRight(std::pair<int, int> currentPos, std::pair<int, int> enemyPos) {
+    if (currentPos.first >= enemyPos.first && currentPos.second <= enemyPos.second) {
         _heuristic[0] = RIGHT;
         _heuristic[1] = BACKWARD;
         _heuristic[2] = FORWARD;
         _heuristic[3] = LEFT;
         return true;
     } else
-    return false;
+        return false;
 }
 
-/*
-**  Les fonctions pour changer la position en fonction de la direction
-*/
-
-bool    Indie::AI::addForward(std::pair<unsigned int, unsigned int> &pos, Indie::AI::dir direction) {
+bool    Indie::AIPlayer::addForward(std::pair<int, int> &pos, Indie::AIPlayer::dir direction) {
     if (direction == FORWARD) {
         pos.first += 1;
         return true;
@@ -115,7 +121,7 @@ bool    Indie::AI::addForward(std::pair<unsigned int, unsigned int> &pos, Indie:
         return false;
 }
 
-bool    Indie::AI::addBackward(std::pair<unsigned int, unsigned int> &pos, Indie::AI::dir direction) {
+bool    Indie::AIPlayer::addBackward(std::pair<int, int> &pos, Indie::AIPlayer::dir direction) {
     if (direction == BACKWARD) {
         pos.first -= 1;
         return true;
@@ -123,279 +129,21 @@ bool    Indie::AI::addBackward(std::pair<unsigned int, unsigned int> &pos, Indie
         return false;
 }
 
-bool    Indie::AI::addRight(std::pair<unsigned int, unsigned int> &pos, Indie::AI::dir direction) {
+bool    Indie::AIPlayer::addRight(std::pair<int, int> &pos, Indie::AIPlayer::dir direction) {
     if (direction == RIGHT) {
         pos.second += 1;
     } else
         return false;
 }
 
-bool    Indie::AI::addLeft(std::pair<unsigned int, unsigned int> &pos, Indie::AI::dir direction) {
+bool    Indie::AIPlayer::addLeft(std::pair<int, int> &pos, Indie::AIPlayer::dir direction) {
     if (direction == LEFT) {
         pos.second -= 1;
     } else
         return false;
 }
 
-/*
-** Fonction d'initialisation de la map. Rempli la map de 0 avec la bonne taille (height * width)
-*/
-
-void    Indie::AI::initMap(unsigned long height, unsigned long width) {
-    unsigned long i;
-    unsigned long j;
-
-    i = 0;
-    j = 0;
-    while (i < height)
-    {
-        j = 0;
-        _map.push_back(std::vector<Indie::AI::map>());
-        while (j < width)
-        {
-            _map[i].push_back(Indie::AI::EMPTY);
-            j += 1;
-        }
-        i += 1;
-    }
-}
-
-/*
-**  Fonction de reset de la map. Remple la map de 0
-*/
-
-void    Indie::AI::resetMap()
-{
-    unsigned long   height;
-    unsigned long   width;
-    unsigned long   i;
-    unsigned long   j;
-
-    height = _map.size();
-    if (width > 0)
-        width = _map[0].size();
-    else
-        return ;
-    i = 0;
-    while (i < height)
-    {
-        j = 0;
-        while (j < width)
-        {
-            _map[i][j] = EMPTY;
-            j++;
-        }
-        i++;
-    }
-}
-
-/*
-**  Fonction d'ajout des blocks sur la map (destructible et fixe)
-*/
-
-void    Indie::AI::addBlock(std::vector<std::shared_ptr<Indie::AEntity>>& blockList)
-{
-    std::vector<std::shared_ptr<Indie::AEntity>>::iterator  it = blockList.begin();
-
-    while (it != blockList.end())
-    {
-        if ((*it)->hittedByExplosion())
-            _map[static_cast<int>(((*it)->getPosition().x + 1000) / 100) - 1][static_cast<int>(((*it)->getPosition().z + 1000) / 100) - 1] = DYNAMIC_BLOCK;
-        else
-            _map[static_cast<int>(((*it)->getPosition().x + 1000) / 100) - 1][static_cast<int>(((*it)->getPosition().z + 1000) / 100) - 1] = STATIC_BLOCK;
-        it++;
-    }
-}
-
-/*
-**  Fonction d'ajout des joueurs sur la map (adversaire et sois-même)
-*/
-
-void    Indie::AI::addPlayers(std::vector<std::unique_ptr<Indie::APlayer>>& playerList, std::unique_ptr<Indie::APlayer>& mainPlayer)
-{
-    std::vector<std::unique_ptr<Indie::APlayer>>::iterator  it = playerList.begin();
-
-    while (it != playerList.end())
-    {
-        _map[static_cast<int>(((*it)->getPosition().x + 1000) / 100) - 1][static_cast<int>(((*it)->getPosition().z + 1000) / 100) - 1] = ENEMY_PLAYER;
-        it++;
-    }
-    _map[static_cast<int>((mainPlayer->getPosition().x + 1000) / 100) - 1][static_cast<int>((mainPlayer->getPosition().z + 1000) / 100) - 1] = AI_PLAYER;
-    _myPos.first = static_cast<unsigned int>((mainPlayer->getPosition().x + 1000) / 100 - 1);
-    _myPos.second = static_cast<unsigned int>((mainPlayer->getPosition().z + 1000) / 100 - 1);
-}
-
-/*
-**  Fonction de création de la map (marche que si la map n'a jamais été créée)
-*/
-
-void    Indie::AI::createMap()
-{
-    Indie::MapParser&   mapParser = Indie::MapParser::getMapParser("");
-    std::vector<std::vector<Indie::MapParser::TileType>> const&   tmp = mapParser.getMap();
-    unsigned long   height;
-    unsigned long   width;
-
-    height = tmp.size();
-    if (height > 0)
-        width = tmp[0].size();
-    else
-        return ;
-    initMap(height, width);
-    //addBlock(Indie::EntityManager::getEntityList());
-    //addPlayers(Indie::EntityManager::getPlayerList(), Indie::EntityManager::getMainPlayer());
-}
-
-/*
-**  Trouve le premier ennemi sur la map
-*/
-
-bool    Indie::AI::findEnemy() {
-    std::vector<std::vector<Indie::AI::map>>::iterator     it;
-    std::vector<Indie::AI::map>::iterator  it2;
-    unsigned int    x;
-    unsigned int    z;
-
-    it = _map.begin();
-    x = 0;
-    while (it != _map.end())
-    {
-        it2 = (*it).begin();
-        z = 0;
-        while (it2 != (*it).end())
-        {
-            if ((*it2) == ENEMY_PLAYER) {
-                _enemyPos.first = x;
-                _enemyPos.second = z;
-                return true;
-            }
-            it2++;
-            z += 1;
-        }
-        it++;
-        x += 1;
-    }
-    return false;
-}
-
-/*
-**  Utilisation du A* pour trouver le chemin vers l'ennemi
-*/
-
-void    Indie::AI::findPath() {
-    std::stack<std::pair<unsigned int, unsigned int>>   path;
-    std::stack<std::pair<unsigned int, unsigned int>>   node;
-    std::pair<unsigned int, unsigned int>   currentPos;
-    std::vector<std::vector<map>>     tmpMap;
-    bool    end;
-
-    tmpMap = _map;
-    end = false;
-    //currentPos = _myPos;
-    path.push(currentPos);
-    if (isANode(currentPos))
-        node.push(currentPos);
-    tmpMap[currentPos.first][currentPos.second] = ALREADY_PASS;
-    findHeuristic();
-    while (!end)
-    {
-        if (findNextPos(currentPos)) {
-            path.push(currentPos);
-            if (isANode(currentPos))
-                node.push(currentPos);
-            tmpMap[currentPos.first][currentPos.second] = ALREADY_PASS;
-        } else if (node.size() > 0) {
-      //      currentPos = node.top();
-            node.pop();
-        } else
-            end = true;
-        if (currentPos == _enemyPos)
-            end = true;
-    }
-    while (path.size() > 0)
-    {
-        //_path.push_back(path.top());
-        path.pop();
-    }
-    std::reverse(_path.begin(), _path.end());
-}
-
-/*
-**  Fonction determinant le path pour éviter une bomb
-*/
-
-void    Indie::AI::escapeBomb() {
-    
-}
-
-/*
-**  Affiche la map en askii (fonction de debug)
-*/
-
-void    Indie::AI::drawMap() {
-    std::vector<std::vector<map>>::iterator     it1;
-    std::vector<map>::iterator                  it2;
-
-    std::cout << "\n\n=-=-=-=-=-=-=-=-=-= MAP =-=-=-=-=-=-=-=-=-=\n" << std::endl;
-    it1 = _map.begin();
-    while (it1 != _map.end())
-    {
-        it2 = (*it1).begin();
-        while (it2 != (*it1).end())
-        {
-            std::cout << (*it2);
-            it2++;
-        }
-        it1++;
-        std::cout << std::endl;
-    }
-    std::cout << "\n=-=-=-=-=-=-=-=-=-= END =-=-=-=-=-=-=-=-=-=\n" << std::endl;
-}
-
-/*
-**  Fonction qui assigne l'heuristique dans la classe
-*/
-
-void    Indie::AI::findHeuristic() {
-    int i;
-
-    i = 0;
-    while (!(this->*fncTab[i])())
-        i += 1;
-}
-
-/*
-**  fonction qui dertermine la prochaine position en fonction de l'heuristique
-*/
-
-bool    Indie::AI::findNextPos(std::pair<unsigned int, unsigned int>& currentPos) {
-    int i;
-    std::pair<unsigned int, unsigned int>   nextPos;
-    std::vector<std::vector<map>>::iterator it;
-    std::vector<map>::iterator              it2;
-
-    i = 0;
-    while (i < 4)
-    {
-        //nextPos = currentPos;
-        addDir(_heuristic[i], nextPos);
-        it = _map.begin() + nextPos.first;
-        if (it != _map.end())
-            it2 = (*it).begin() + nextPos.second;
-        if (it2 != (*it).end() && (*it2) != ALREADY_PASS && (*it2) != STATIC_BLOCK) {
-          //  currentPos = nextPos;
-            return true;
-        }
-        i++;
-    }
-    return false;
-}
-
-/*
-**  Fonction qui change la position en fonction de la direction
-*/
-
-void        Indie::AI::addDir(Indie::AI::dir direction, std::pair<unsigned int, unsigned int> &currentPos) {
+void    Indie::AIPlayer::addDir(Indie::AIPlayer::dir direction, std::pair<int, int>& currentPos) {
     int     i;
 
     i = 0;
@@ -403,12 +151,8 @@ void        Indie::AI::addDir(Indie::AI::dir direction, std::pair<unsigned int, 
         i++;
 }
 
-/*
-**  Fonction qui determine si une pos est une node ou non (un croisement)
-*/
-
-bool    Indie::AI::isANode(const std::pair<unsigned int, unsigned int> &pos) {
-    std::pair<unsigned int, unsigned int>   nextPos;
+bool Indie::AIPlayer::isANode(const std::pair<int, int> &pos) {
+    std::pair<int, int>   nextPos;
     int     nbPass;
     int     i;
 
@@ -416,7 +160,7 @@ bool    Indie::AI::isANode(const std::pair<unsigned int, unsigned int> &pos) {
     nbPass = 0;
     while (i < 4)
     {
-//        nextPos = pos;
+        nextPos = pos;
         if ((this->*posFncTab[i])(nextPos, _heuristic[i]))
             nbPass += 1;
         i++;
@@ -424,10 +168,158 @@ bool    Indie::AI::isANode(const std::pair<unsigned int, unsigned int> &pos) {
     return nbPass > 1;
 }
 
-/*
-**  Destructeur
-*/
+bool Indie::AIPlayer::findNextPos(std::pair<int, int> &currentPos, std::vector<std::vector<Indie::Map::map>> map) {
+    int i;
+    std::pair<int, int>   nextPos;
+    std::vector<std::vector<Indie::Map::map>>::iterator it;
+    std::vector<Indie::Map::map>::iterator              it2;
 
-Indie::AI::~AI() {
-    DataManager::getSingloton()->quitRoom(_pId);
+    i = 0;
+    while (i < 4)
+    {
+        nextPos = currentPos;
+        addDir(_heuristic[i], nextPos);
+        it = map.begin() + nextPos.first;
+        if (it != map.end())
+            it2 = (*it).begin() + nextPos.second;
+        if (it2 != (*it).end() && (*it2) != Indie::Map::ALREADY_PASS && (*it2) != Indie::Map::STATIC_BLOCK) {
+            currentPos = nextPos;
+            return true;
+        }
+        i++;
+    }
+    return false;
+}
+
+void Indie::AIPlayer::findPath(Indie::Map map) {
+    std::stack<std::pair<int, int>>   path;
+    std::stack<std::pair<int, int>>   node;
+    std::pair<int, int>   currentPos;
+    std::pair<int, int>   enemyPos;
+    std::vector<std::vector<Indie::Map::map>>     tmpMap;
+    bool    end;
+    int     i = 0;
+
+    tmpMap = map.getMap();
+    end = false;
+    currentPos = getMyPos(tmpMap.size(), tmpMap[0].size());
+    enemyPos = getClosestEnemy(tmpMap.size(), tmpMap[0].size());
+    path.push(currentPos);
+    if (isANode(currentPos))
+        node.push(currentPos);
+    tmpMap[currentPos.first][currentPos.second] = Indie::Map::ALREADY_PASS;
+    while (!end)
+    {
+        findHeuristic(currentPos, enemyPos);
+        if (findNextPos(currentPos, tmpMap)) {
+            path.push(currentPos);
+            if (isANode(currentPos))
+                node.push(currentPos);
+            std::cout << "currentPos :" << currentPos.first << "|" << currentPos.second << " enemyPos :" << enemyPos.first << "|" << enemyPos.second << std::endl;
+            if (currentPos == enemyPos)
+                end = true;
+            tmpMap[currentPos.first][currentPos.second] = Indie::Map::ALREADY_PASS;
+        } else if (node.size() > 0) {
+            currentPos = node.top();
+            node.pop();
+        } else
+            end = true;
+        ++i;
+    }
+    while (path.size() > 0)
+    {
+        _path.push_back(path.top());
+        path.pop();
+    }
+    std::reverse(_path.begin(), _path.end());
+}
+
+Indie::AIPlayer::dir Indie::AIPlayer::getDir() {
+    Indie::Map  map;
+    const dir   tab[5] = {BACKWARD, LEFT, RIGHT, FORWARD, NOTHING};
+    std::vector<std::pair<int, int>>::iterator  it;
+    std::pair<int, int> currentPos;
+    int i;
+
+    findPath(map);
+    it = _path.begin();
+    while (it != _path.end()) {
+        std::cout << (*it).first << "|" << (*it).second << " ";
+        it++;
+    } std::cout << std::endl;
+    currentPos = getMyPos(map.getMap().size(), map.getMap()[0].size());
+    if (_path.size() > 1) {
+        i = 0;
+        while (i < 4 && !(this->*dirTab[i])(currentPos, _path[1])) {
+            i += 1;
+        }
+        return tab[i];
+    } else {
+        return NOTHING;
+    }
+}
+
+bool Indie::AIPlayer::onTop(std::pair<int, int> &currentPos, std::pair<int, int> &toGo) {
+    std::cout << "TOP" << std::endl;
+    return currentPos.first > toGo.first;
+}
+
+bool Indie::AIPlayer::onBot(std::pair<int, int> &currentPos, std::pair<int, int> &toGo) {
+    std::cout << "BOT :" << currentPos.first << "|" << toGo.second << std::endl;
+    return currentPos.first < toGo.first;
+}
+
+bool Indie::AIPlayer::onLeft(std::pair<int, int> &currentPos, std::pair<int, int> &toGo) {
+    std::cout << "LEFT" << std::endl;
+    return currentPos.second < toGo.second;
+}
+
+bool Indie::AIPlayer::onRight(std::pair<int, int> &currentPos, std::pair<int, int> &toGo) {
+    std::cout << "RIGHT " << std::endl;
+    return currentPos.second > toGo.second;
+}
+
+std::pair<int, int> Indie::AIPlayer::getMyPos(int height, int width) {
+    Ogre::Vector3   pos3D;
+    std::pair<int, int> pos;
+
+    pos3D = this->getPosition();
+    pos.first = static_cast<int>((this->getPosition().x + ((height / 2) * 100)) / 100);
+    pos.second = static_cast<int>((this->getPosition().z + ((width / 2) * 100)) / 100);
+    return pos;
+}
+
+std::pair<int, int> Indie::AIPlayer::getClosestEnemy(int height, int width) {
+    std::vector<Indie::APlayer*>                playerList;
+    std::vector<Indie::APlayer*>::iterator      it;
+    Indie::APlayer*     mainPlayer;
+    std::pair<int, int>     myPos;
+    std::pair<int, int>     res;
+
+    myPos = getMyPos(height, width);
+    playerList = Indie::EntityManager::getPlayerList();
+    it = playerList.begin();
+    res.first = height;
+    res.second = width;
+    while (it != playerList.end()) {
+        if (myPos.first != (*it)->getPosition().x && myPos.second != (*it)->getPosition().y && abs(res.first - myPos.first) + abs(res.second - myPos.second) >= abs((*it)->getPosition().x - myPos.first) + abs((*it)->getPosition().y)) {
+            res.first = (*it)->getPosition().x;
+            res.second = (*it)->getPosition().z;
+        }
+        it++;
+    }
+    mainPlayer = Indie::EntityManager::getMainPlayer();
+    if (myPos.first != mainPlayer->getPosition().x && myPos.second != mainPlayer->getPosition().y && abs(res.first - myPos.first) + abs(res.second - myPos.second) >= abs(mainPlayer->getPosition().x - myPos.first) + abs(mainPlayer->getPosition().y)) {
+        res.first = (*it)->getPosition().x;
+        res.second = (*it)->getPosition().z;
+    }
+    return res;
+}
+
+bool Indie::AIPlayer::updateFromLoop(Ogre::SceneManager *sceneManager) {
+    dir     direction;
+
+    direction = getDir();
+    std::cout << direction << std::endl;
+    return (Indie::APlayer::updateFromLoop(sceneManager));
 }
