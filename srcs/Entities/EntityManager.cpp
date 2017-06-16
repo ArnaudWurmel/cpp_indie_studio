@@ -213,7 +213,7 @@ Indie::APlayer  *Indie::EntityManager::createEnemy(Ogre::SceneManager *sceneMana
     if (!AI)
         player = new Indie::HumanPlayer(entityPos, sceneManager, pId);
     else
-        player = new Indie::AI(entityPos, sceneManager, pId);
+        player = new Indie::AIPlayer(entityPos, sceneManager, pId);
 
     addPlayer(player);
     return player;
