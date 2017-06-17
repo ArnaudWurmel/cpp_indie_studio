@@ -15,6 +15,7 @@ bool Indie::Explosion::hittedByExplosion() const {
 }
 
 bool    Indie::Explosion::updateFromLoop(Ogre::SceneManager *sceneManager) {
+    static_cast<void>(sceneManager);
     if (_explosionTime)
         _explosionTime -= 1;
     else

@@ -69,7 +69,6 @@ namespace Indie
          */
     private:
         bool            mWaiting;
-        std::string     mMaterialName;
         std::string     mEntityName;
         Ogre::Vector3   mEntityPos;
     };
