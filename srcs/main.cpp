@@ -21,7 +21,7 @@
 #endif
 {
     Indie::SoundManager *soundManager = Indie::SoundManager::getSingloton();
-    Indie::DataManager  *dataManager = Indie::DataManager::getSingloton("127.0.0.1", 4242);
+    Indie::DataManager  *dataManager = Indie::DataManager::getSingloton("192.168.1.1", 4242);
 
     soundManager->loadSound("resources/sound/main.ogg");
     std::srand(std::time(0));
